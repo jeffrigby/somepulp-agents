@@ -23,7 +23,13 @@ AI-powered developer assistants for code auditing, research, and multi-model con
 
 ## Installation
 
-### From GitHub
+### Quick Install (recommended)
+
+```bash
+claude plugins add github:jeffrigby/somepulp-agents
+```
+
+### Manual Installation
 
 ```bash
 # Clone the repository
@@ -32,12 +38,6 @@ git clone https://github.com/jeffrigby/somepulp-agents.git
 # Add to Claude Code
 claude plugins add /path/to/somepulp-agents
 ```
-
-### Manual Installation
-
-1. Clone or download this repository
-2. Place in a directory accessible to Claude Code
-3. Add the plugin path to your Claude Code configuration
 
 ## Requirements
 
