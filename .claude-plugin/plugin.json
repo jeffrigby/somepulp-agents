@@ -1,0 +1,17 @@
+{
+  "name": "somepulp-agents",
+  "version": "1.0.0",
+  "description": "AI-powered developer assistants for code auditing, research, and multi-model consultation (Codex, Gemini)",
+  "author": {
+    "name": "Some Pulp LLC"
+  },
+  "keywords": [
+    "code-review",
+    "code-audit",
+    "research",
+    "codex",
+    "gemini",
+    "second-opinion"
+  ],
+  "license": "MIT"
+}
