@@ -52,11 +52,7 @@ ${YELLOW}COMMON CONSULTATION TYPES:${NC}
 ${YELLOW}NOTES:${NC}
     • This script is READ-ONLY - codex cannot modify files
     • The prompt should be specific and include file names
-    • For more examples, see skills/ai-consultation/references/examples.md
-
-${YELLOW}INSTALLATION:${NC}
-    Codex CLI must be installed. Install via:
-    ${BLUE}npm install -g @openai/codex${NC}
+    • Requires Codex CLI: ${BLUE}https://github.com/openai/codex${NC}
 
 EOF
 }
@@ -64,20 +60,8 @@ EOF
 # Check if codex command is available - do this early with helpful message
 check_codex_installed() {
     if ! command -v codex &> /dev/null; then
-        echo -e "${RED}╔══════════════════════════════════════════════════════════════╗${NC}" >&2
-        echo -e "${RED}║  ERROR: Codex CLI is not installed                           ║${NC}" >&2
-        echo -e "${RED}╚══════════════════════════════════════════════════════════════╝${NC}" >&2
-        echo "" >&2
-        echo -e "${YELLOW}To install Codex CLI:${NC}" >&2
-        echo -e "  ${BLUE}npm install -g @openai/codex${NC}" >&2
-        echo "" >&2
-        echo -e "${YELLOW}After installation, ensure you have:${NC}" >&2
-        echo -e "  1. Set your OpenAI API key: ${BLUE}export OPENAI_API_KEY='your-key'${NC}" >&2
-        echo -e "  2. Verified installation: ${BLUE}codex --version${NC}" >&2
-        echo "" >&2
-        echo -e "${YELLOW}Documentation:${NC}" >&2
-        echo -e "  https://github.com/openai/codex" >&2
-        echo "" >&2
+        echo -e "${RED}ERROR: Codex CLI is not installed${NC}" >&2
+        echo -e "See: ${BLUE}https://github.com/openai/codex${NC}" >&2
         return 1
     fi
     return 0

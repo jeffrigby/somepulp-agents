@@ -43,25 +43,11 @@ claude plugins add /path/to/somepulp-agents
 
 ### For Codex Consultant
 
-The codex-consultant agent requires OpenAI Codex CLI:
-
-```bash
-npm install -g @openai/codex
-export OPENAI_API_KEY='your-api-key'
-```
-
-See [docs/CODEX_SETUP.md](docs/CODEX_SETUP.md) for detailed setup instructions.
+The codex-consultant agent requires [OpenAI Codex CLI](https://github.com/openai/codex).
 
 ### For Gemini Consultant
 
-The gemini-consultant agent requires Google Gemini CLI:
-
-```bash
-# Follow Google's official installation guide
-gemini auth login
-```
-
-See [docs/GEMINI_SETUP.md](docs/GEMINI_SETUP.md) for detailed setup instructions.
+The gemini-consultant agent requires [Google Gemini CLI](https://github.com/google-gemini/gemini-cli).
 
 ## Usage
 
@@ -202,9 +188,6 @@ somepulp-agents/
 ├── scripts/
 │   ├── codex-review.sh      # Helper for Codex consultations
 │   └── gemini-review.sh     # Helper for Gemini consultations
-├── docs/
-│   ├── CODEX_SETUP.md
-│   └── GEMINI_SETUP.md
 ├── README.md
 ├── LICENSE
 └── CHANGELOG.md
@@ -230,5 +213,5 @@ Some Pulp LLC
 ## Links
 
 - [Claude Code Documentation](https://docs.anthropic.com/claude-code)
-- [OpenAI Codex](https://github.com/openai/codex)
-- [Google Gemini](https://ai.google.dev/gemini-api/docs)
+- [OpenAI Codex CLI](https://github.com/openai/codex)
+- [Google Gemini CLI](https://github.com/google-gemini/gemini-cli)

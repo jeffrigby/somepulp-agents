@@ -52,11 +52,7 @@ ${YELLOW}COMMON CONSULTATION TYPES:${NC}
 ${YELLOW}NOTES:${NC}
     • This script is READ-ONLY - gemini cannot modify files (sandbox mode)
     • The prompt should be specific and include file names
-    • Gemini CLI works from the current directory by default
-
-${YELLOW}INSTALLATION:${NC}
-    Gemini CLI must be installed. Follow Google's official installation guide:
-    ${BLUE}https://github.com/google-gemini/gemini-cli${NC}
+    • Requires Gemini CLI: ${BLUE}https://github.com/google-gemini/gemini-cli${NC}
 
 EOF
 }
@@ -64,20 +60,8 @@ EOF
 # Check if gemini command is available - do this early with helpful message
 check_gemini_installed() {
     if ! command -v gemini &> /dev/null; then
-        echo -e "${RED}╔══════════════════════════════════════════════════════════════╗${NC}" >&2
-        echo -e "${RED}║  ERROR: Gemini CLI is not installed                          ║${NC}" >&2
-        echo -e "${RED}╚══════════════════════════════════════════════════════════════╝${NC}" >&2
-        echo "" >&2
-        echo -e "${YELLOW}To install Gemini CLI:${NC}" >&2
-        echo -e "  Follow Google's official installation guide" >&2
-        echo "" >&2
-        echo -e "${YELLOW}After installation, ensure you have:${NC}" >&2
-        echo -e "  1. Authenticated with Google: ${BLUE}gemini auth login${NC}" >&2
-        echo -e "  2. Verified installation: ${BLUE}gemini --version${NC}" >&2
-        echo "" >&2
-        echo -e "${YELLOW}Documentation:${NC}" >&2
-        echo -e "  https://ai.google.dev/gemini-api/docs" >&2
-        echo "" >&2
+        echo -e "${RED}ERROR: Gemini CLI is not installed${NC}" >&2
+        echo -e "See: ${BLUE}https://github.com/google-gemini/gemini-cli${NC}" >&2
         return 1
     fi
     return 0
