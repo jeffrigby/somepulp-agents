@@ -1,6 +1,7 @@
 ---
 name: ai-consultation
-description: This skill provides guidance on AI consultation workflows, prompt templates for code review, security audit, architecture analysis, and debugging. Use when the user needs to consult with external AI models (Codex, Gemini) or wants best practices for multi-model consultation.
+description: Provides AI consultation workflows, prompt templates, and best practices for multi-model consultation. Use when user asks for "second opinion", "ask codex", "ask gemini", "AI code review", "external AI consultation", or needs prompt templates for code review, security audit, or architecture analysis.
+allowed-tools: Read, Bash
 ---
 
 # AI Consultation Skill

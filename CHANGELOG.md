@@ -5,7 +5,48 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.0.0] - 2024-11-29
+## [1.0.2] - 2025-11-29
+
+### Fixed
+- **gemini-review.sh**: Corrected installation instructions (was incorrectly referencing `@anthropic-ai/gemini`)
+- **audit-methodology.md**: Fixed MCP tool casing (`mcp__Context7__*` → `mcp__context7__*`)
+- **CLAUDE.md**: Clarified Task tool documentation (available to main Claude, not agents/skills)
+- **CHANGELOG.md**: Fixed version 1.0.0 date typo (2024 → 2025)
+
+### Added
+- **plugin.json**: Added explicit `skills` field for better discoverability
+- **All agents**: Added `examples` frontmatter field for better invocation matching
+- **All commands**: Added structured `arguments` definitions
+- **code-auditor.md**: Added MCP tool fallback documentation
+- **research-assistant.md**: Added MCP tool fallback documentation
+- **Skills**: Enhanced descriptions with trigger phrases for better discovery
+
+### Changed
+- **code-quality-auditor.md**: Restructured description (moved examples to dedicated field)
+
+## [1.0.1] - 2025-11-29
+
+### Fixed
+- **code-auditor.md**: Fixed MCP tool naming (lowercase `mcp__context7__*`)
+- **code-auditor.md**: Removed invalid tools (`Task`, `LS`)
+- **code-quality-auditor.md**: Added missing `tools:` frontmatter field
+- **code-quality-auditor.md**: Removed `model: sonnet` to inherit user's model
+- **README.md**: Fixed repository URL (`jeffrigby/somepulp-agents`)
+
+### Added
+- **Slash Commands**: New `commands/` directory with quick-access commands
+  - `/audit` - Run comprehensive code audit
+  - `/research` - Research libraries and technical topics
+  - `/second-opinion` - Get second opinion from Codex or Gemini
+- **plugin.json**: Added `agents`, `commands`, `repository`, `homepage` fields
+- **Skills**: Added `allowed-tools` field to both SKILL.md files
+- **CLAUDE.md**: Added tool naming conventions section
+
+### Changed
+- Updated plugin manifest to full Claude Code schema compliance
+- Agents now inherit user's model (removed explicit model overrides)
+
+## [1.0.0] - 2025-11-29
 
 ### Added
 

@@ -2,6 +2,11 @@
 name: research-assistant
 description: Research libraries, frameworks, APIs, and technical topics using official documentation and code examples. Use when the user asks to research, investigate, learn about, compare, or find documentation for any library, framework, API, or technical concept. Prioritizes Context7 for official docs, GitHub CLI for sample code, and web search for additional context.
 tools: Read, Grep, Glob, Bash, WebSearch, WebFetch, mcp__context7__resolve-library-id, mcp__context7__get-library-docs, mcp__fetch__fetch, mcp__awslabs_aws-documentation-mcp-server__search_documentation, mcp__awslabs_aws-documentation-mcp-server__read_documentation, mcp__awslabs_aws-documentation-mcp-server__recommend
+examples:
+  - "Research best practices for React hooks"
+  - "Find documentation for the Zod validation library"
+  - "How do I use AWS Lambda Powertools for TypeScript?"
+  - "Compare Redux vs Zustand for state management"
 ---
 
 # Research Assistant Agent
@@ -252,6 +257,17 @@ Actionable next steps based on research.
 3. Check dates (may be outdated)
 4. Note the conflict in response
 5. Recommend official docs as authoritative
+
+**MCP Tools Unavailable:**
+Some MCP tools may not be configured. Use these fallbacks:
+
+| Primary Tool | Fallback | Notes |
+|--------------|----------|-------|
+| `mcp__context7__*` | WebSearch + WebFetch | Search for official docs sites |
+| `mcp__fetch__fetch` | WebFetch | Built-in tool, always available |
+| `mcp__awslabs_aws-documentation-mcp-server__*` | WebSearch for AWS docs | Search docs.aws.amazon.com |
+
+If an MCP tool fails, log the limitation and proceed with fallbacks rather than failing the research.
 
 ## Success Criteria
 

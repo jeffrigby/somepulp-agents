@@ -1,6 +1,7 @@
 ---
 name: code-auditing
-description: This skill provides code auditing methodology, checklists, and best practices. Use when performing comprehensive code quality audits, security reviews, or identifying technical debt.
+description: Provides code auditing methodology, checklists, and best practices. Use when user asks to "audit code", "find technical debt", "security review", "identify dead code", "analyze code quality", or "check best practices".
+allowed-tools: Read, Grep, Glob, Bash, TodoWrite
 ---
 
 # Code Auditing Skill

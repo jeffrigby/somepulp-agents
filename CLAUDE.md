@@ -10,6 +10,7 @@ This is a Claude Code plugin called `somepulp-agents` that provides specialized 
 
 - **`.claude-plugin/plugin.json`** - Plugin manifest defining name, version, and metadata
 - **`agents/`** - Markdown-based agent definitions with YAML frontmatter for configuration
+- **`commands/`** - Slash command definitions (`/audit`, `/research`, `/second-opinion`)
 - **`skills/`** - Skill definitions with reference documentation in subdirectories
 - **`scripts/`** - Helper shell scripts for external AI tool invocations
 
@@ -21,7 +22,6 @@ This is a Claude Code plugin called `somepulp-agents` that provides specialized 
 name: agent-name
 description: When this agent should be triggered
 tools: Comma-separated list of tools the agent can use
-model: Optional model override (e.g., sonnet)
 ---
 
 System prompt content defining agent behavior...
@@ -32,12 +32,39 @@ System prompt content defining agent behavior...
 ---
 name: skill-name
 description: When this skill should be invoked
+allowed-tools: Read, Grep, Glob, Bash
 ---
 
 Skill methodology and guidance...
 ```
 
 Reference materials go in `skills/*/references/*.md`.
+
+### Command Files (`commands/*.md`)
+```yaml
+---
+description: Brief description of what the command does
+---
+
+Command prompt content...
+$ARGUMENTS
+```
+
+## Tool Naming Conventions
+
+### MCP Tools
+MCP tool names must be **lowercase**. Examples:
+- `mcp__context7__resolve-library-id` (correct)
+- `mcp__context7__get-library-docs` (correct)
+- `mcp__fetch__fetch` (correct)
+- ~~`mcp__Context7__resolve-library-id`~~ (incorrect - wrong casing)
+
+### Valid Claude Code Tools
+Standard tools: `Read`, `Write`, `Edit`, `Grep`, `Glob`, `Bash`, `WebSearch`, `WebFetch`, `TodoWrite`, `AskUserQuestion`
+
+**Tools NOT available to agents/skills** (do not use in agent/skill definitions):
+- `Task` - Only available to main Claude, not to agents or skills
+- `LS` - Use `Glob` or `Bash` instead
 
 ## External Tool Integration
 

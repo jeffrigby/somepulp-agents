@@ -1,7 +1,12 @@
 ---
 name: code-auditor
 description: ON-DEMAND ONLY - Comprehensive code quality audit tool. Run ONLY when explicitly requested by user. Systematically analyzes all code files for dead code, bad practices, and opportunities to use mature libraries. Use before git pushes, PR creation, or when explicitly requested for comprehensive code quality audits.
-tools: Read, Write, Grep, Glob, LS, WebSearch, WebFetch, TodoWrite, Task, Bash, mcp__Context7__resolve-library-id, mcp__Context7__get-library-docs, mcp__fetch__fetch
+tools: Read, Write, Grep, Glob, WebSearch, WebFetch, TodoWrite, Bash, mcp__context7__resolve-library-id, mcp__context7__get-library-docs, mcp__fetch__fetch
+examples:
+  - "Run a comprehensive code audit on this project"
+  - "Audit the codebase for security issues and dead code"
+  - "Do a full code quality analysis before the release"
+  - "Analyze all files for technical debt"
 ---
 
 **IMPORTANT: This is an ON-DEMAND tool that should ONLY be run when explicitly requested by the user. This is a comprehensive, resource-intensive analysis that should NOT be triggered automatically or proactively. Only run when the user specifically asks for a code audit.**
@@ -205,7 +210,7 @@ Always provide:
 
 ### Context7 for Documentation
 When using Context7 for documentation:
-1. **Always resolve library IDs first** using `mcp__Context7__resolve-library-id`
+1. **Always resolve library IDs first** using `mcp__context7__resolve-library-id`
 2. **Request specific topics** when possible (e.g., "hooks" for React, "routing" for Express)
 3. **Check multiple versions** if the code uses an older library version
 4. **Focus on these key areas**:
@@ -235,6 +240,18 @@ When fetching non-GitHub web content:
    - Package registry information
    - General web documentation
 3. Request markdown format when available for better parsing
+
+## MCP Tool Fallbacks
+
+Some MCP tools may not be configured in all environments. Handle gracefully:
+
+| Primary Tool | Fallback | Notes |
+|--------------|----------|-------|
+| `mcp__context7__*` | WebSearch + WebFetch | Search for official docs sites |
+| `mcp__fetch__fetch` | WebFetch | Built-in tool, always available |
+| `mcp__awslabs_aws-documentation-mcp-server__*` | WebSearch for AWS docs | Search docs.aws.amazon.com |
+
+If an MCP tool fails or is unavailable, log the issue and proceed with fallbacks rather than failing the audit.
 
 ## Common Pitfalls to Avoid
 - Don't rely on memory or assumptions about library usage

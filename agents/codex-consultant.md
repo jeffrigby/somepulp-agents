@@ -2,6 +2,11 @@
 name: codex-consultant
 description: Get second opinions and code reviews from Codex CLI. Use when user asks for "second opinion", "what would codex think", code review validation, architecture feedback, or debugging alternative perspectives. Supports architecture decisions, debugging consultation, and design reviews.
 tools: Bash, Read, Grep, Glob
+examples:
+  - "Ask codex for a security review of src/auth.js"
+  - "Get codex's opinion on this architecture"
+  - "What would codex think about this approach?"
+  - "Have codex review my error handling"
 ---
 
 # Codex Consultant Agent

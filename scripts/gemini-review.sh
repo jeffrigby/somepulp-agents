@@ -55,10 +55,8 @@ ${YELLOW}NOTES:${NC}
     • Gemini CLI works from the current directory by default
 
 ${YELLOW}INSTALLATION:${NC}
-    Gemini CLI must be installed. Install via:
-    ${BLUE}npm install -g @anthropic-ai/gemini${NC}
-
-    Or follow Google's official installation guide.
+    Gemini CLI must be installed. Follow Google's official installation guide:
+    ${BLUE}https://github.com/google-gemini/gemini-cli${NC}
 
 EOF
 }

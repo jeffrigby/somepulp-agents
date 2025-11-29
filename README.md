@@ -27,7 +27,7 @@ AI-powered developer assistants for code auditing, research, and multi-model con
 
 ```bash
 # Clone the repository
-git clone https://github.com/somepulp/somepulp-agents.git
+git clone https://github.com/jeffrigby/somepulp-agents.git
 
 # Add to Claude Code
 claude plugins add /path/to/somepulp-agents
@@ -94,6 +94,16 @@ Get gemini's opinion on our API architecture
 
 ```
 Research the best practices for React hooks
+```
+
+### Slash Commands
+
+Quick access via slash commands:
+
+```
+/audit                    # Run comprehensive code audit
+/research <topic>         # Research a library or technical topic
+/second-opinion <request> # Get second opinion from Codex or Gemini
 ```
 
 ## Agent Details
@@ -172,6 +182,10 @@ somepulp-agents/
 │   ├── codex-consultant.md
 │   ├── gemini-consultant.md
 │   └── research-assistant.md
+├── commands/
+│   ├── audit.md             # /audit slash command
+│   ├── research.md          # /research slash command
+│   └── second-opinion.md    # /second-opinion slash command
 ├── skills/
 │   ├── ai-consultation/
 │   │   ├── SKILL.md
