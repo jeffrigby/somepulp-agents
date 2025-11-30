@@ -11,7 +11,7 @@
   "plugins": [
     {
       "name": "somepulp-agents",
-      "source": ".",
+      "source": "./",
       "description": "AI-powered code auditing, research, and multi-model consultation (Codex, Gemini)"
     }
   ]
