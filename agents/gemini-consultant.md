@@ -65,9 +65,14 @@ ${CLAUDE_PLUGIN_ROOT}/scripts/gemini-review.sh "<prompt>"
 # Review with additional directory included
 ${CLAUDE_PLUGIN_ROOT}/scripts/gemini-review.sh -d /path/to/lib "<prompt>"
 
+# Get output in JSON format (for parsing)
+${CLAUDE_PLUGIN_ROOT}/scripts/gemini-review.sh -o json "<prompt>"
+
 # Show all options
 ${CLAUDE_PLUGIN_ROOT}/scripts/gemini-review.sh --help
 ```
+
+**Note on `-o` option:** The `-o` flag sets the output *format* (text, json, stream-json), not an output file path. Use it when you need structured output for further processing.
 
 **Or invoke gemini directly:**
 ```bash
@@ -123,10 +128,15 @@ User Request -> What is the consultation goal?
     |   |-- Focus: vulnerabilities, OWASP, auth, data exposure
     |   +-- Prompt: Specific files, threat model, severity ratings
     |
-    +-- PERFORMANCE REVIEW
+    |-- PERFORMANCE REVIEW
+    |   |-- Mode: Sandbox (read-only)
+    |   |-- Focus: bottlenecks, algorithms, optimization opportunities
+    |   +-- Prompt: Specific operations, current metrics, targets
+    |
+    +-- SECOND OPINION / VALIDATION
         |-- Mode: Sandbox (read-only)
-        |-- Focus: bottlenecks, algorithms, optimization opportunities
-        +-- Prompt: Specific operations, current metrics, targets
+        |-- Focus: validating decisions, comparing approaches, gut checks
+        +-- Prompt: Current approach, alternatives considered, specific concerns
 ```
 
 ## Mode Quick Reference
@@ -138,7 +148,7 @@ User Request -> What is the consultation goal?
 | Architecture opinion | Sandbox | Evaluation, not modification |
 | Debugging analysis | Sandbox | Investigation, not fixes |
 | Performance review | Sandbox | Analysis first |
-| Second opinion | Sandbox | Consultation only |
+| Second opinion / validation | Sandbox | Consultation only |
 
 ## Example Prompts by Type
 
@@ -193,6 +203,20 @@ Analyze [FILE] for performance issues. Look for:
 - Missing caching opportunities
 - Database query inefficiencies
 For each issue, estimate impact and suggest optimizations.
+```
+
+### Second Opinion / Validation
+```
+I'm considering [APPROACH] for [PROBLEM].
+My current implementation is in [FILE].
+Alternatives I considered: [LIST ALTERNATIVES]
+Specific concerns: [CONCERNS]
+
+Please evaluate:
+1. Is this the right approach for this use case?
+2. What are the tradeoffs I might be missing?
+3. Would you recommend a different approach? Why?
+4. Any gotchas or edge cases I should watch for?
 ```
 
 ## Important Guidelines

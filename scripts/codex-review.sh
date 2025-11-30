@@ -14,8 +14,8 @@ NC='\033[0m' # No Color
 # Default values - ALWAYS read-only
 DIR="$(pwd)"
 SANDBOX="read-only"
-OUTPUT=""
-FULL_AUTO="--full-auto"
+OUTPUT_FILE=""
+FULL_AUTO="yes"
 PROMPT=""
 
 # Function to show help
@@ -71,15 +71,23 @@ check_codex_installed() {
 while [[ $# -gt 0 ]]; do
     case $1 in
         -d|--dir)
+            if [[ $# -lt 2 || "$2" == -* ]]; then
+                echo -e "${RED}Error: -d/--dir requires a directory path${NC}" >&2
+                exit 1
+            fi
             DIR="$2"
             shift 2
             ;;
         -o|--output)
-            OUTPUT="--output-last-message $2"
+            if [[ $# -lt 2 || "$2" == -* ]]; then
+                echo -e "${RED}Error: -o/--output requires a file path${NC}" >&2
+                exit 1
+            fi
+            OUTPUT_FILE="$2"
             shift 2
             ;;
         -n|--no-auto)
-            FULL_AUTO=""
+            FULL_AUTO="no"
             shift
             ;;
         -h|--help)
@@ -92,8 +100,9 @@ while [[ $# -gt 0 ]]; do
             exit 1
             ;;
         *)
-            PROMPT="$1"
-            shift
+            # Collect all remaining positional arguments as the prompt
+            PROMPT="$*"
+            break
             ;;
     esac
 done
@@ -121,23 +130,33 @@ fi
 echo -e "${GREEN}╔══════════════════════════════════════════════════════════════╗${NC}" >&2
 echo -e "${GREEN}║  Codex Consultation (READ-ONLY)                              ║${NC}" >&2
 echo -e "${GREEN}╚══════════════════════════════════════════════════════════════╝${NC}" >&2
-echo -e "  Directory:  $DIR" >&2
-echo -e "  Sandbox:    $SANDBOX" >&2
-echo -e "  Full-auto:  ${FULL_AUTO:-disabled}" >&2
-if [[ -n "$OUTPUT" ]]; then
-    echo -e "  Output:     ${OUTPUT#--output-last-message }" >&2
+printf '  Directory:  %s\n' "$DIR" >&2
+printf '  Sandbox:    %s\n' "$SANDBOX" >&2
+printf '  Full-auto:  %s\n' "$FULL_AUTO" >&2
+if [[ -n "$OUTPUT_FILE" ]]; then
+    printf '  Output:     %s\n' "$OUTPUT_FILE" >&2
 fi
-echo -e "  Prompt:     \"$PROMPT\"" >&2
+printf '  Prompt:     "%s"\n' "$PROMPT" >&2
 echo "" >&2
 
-# Execute codex - ALWAYS read-only
-CMD="codex exec --sandbox \"$SANDBOX\" $FULL_AUTO -C \"$DIR\" $OUTPUT \"$PROMPT\""
+# Build command array - ALWAYS read-only (no eval, no injection possible)
+cmd=(codex exec --sandbox "$SANDBOX" -C "$DIR")
+
+if [[ "$FULL_AUTO" == "yes" ]]; then
+    cmd+=(--full-auto)
+fi
+
+if [[ -n "$OUTPUT_FILE" ]]; then
+    cmd+=(--output-last-message "$OUTPUT_FILE")
+fi
+
+cmd+=("$PROMPT")
 
 echo -e "${GREEN}Executing codex...${NC}" >&2
 echo "" >&2
 
-# Execute the command
-eval "$CMD"
+# Execute the command safely using array expansion
+"${cmd[@]}"
 
 # Capture exit code
 EXIT_CODE=$?

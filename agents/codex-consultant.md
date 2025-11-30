@@ -67,9 +67,17 @@ ${CLAUDE_PLUGIN_ROOT}/scripts/codex-review.sh -d /path/to/project "<prompt>"
 # Save output to file
 ${CLAUDE_PLUGIN_ROOT}/scripts/codex-review.sh -o output.txt "<prompt>"
 
+# Disable full-auto mode (require manual approval for each action)
+${CLAUDE_PLUGIN_ROOT}/scripts/codex-review.sh -n "<prompt>"
+
 # Show all options
 ${CLAUDE_PLUGIN_ROOT}/scripts/codex-review.sh --help
 ```
+
+**When to use `-n/--no-auto`:**
+- Reviewing sensitive or production code where you want to approve each file read
+- When the user explicitly requests manual approval mode
+- For large codebases where you want visibility into what Codex is accessing
 
 ### Phase 4: Synthesis and Presentation
 
@@ -119,10 +127,15 @@ User Request -> What is the consultation goal?
     |   |-- Focus: vulnerabilities, OWASP, auth, data exposure
     |   +-- Prompt: Specific files, threat model, severity ratings
     |
-    +-- PERFORMANCE REVIEW
+    |-- PERFORMANCE REVIEW
+    |   |-- Sandbox: read-only
+    |   |-- Focus: bottlenecks, algorithms, optimization opportunities
+    |   +-- Prompt: Specific operations, current metrics, targets
+    |
+    +-- SECOND OPINION / VALIDATION
         |-- Sandbox: read-only
-        |-- Focus: bottlenecks, algorithms, optimization opportunities
-        +-- Prompt: Specific operations, current metrics, targets
+        |-- Focus: validating decisions, comparing approaches, gut checks
+        +-- Prompt: Current approach, alternatives considered, specific concerns
 ```
 
 ## Sandbox Mode Quick Reference
@@ -134,7 +147,7 @@ User Request -> What is the consultation goal?
 | Architecture opinion | `read-only` | Evaluation, not modification |
 | Debugging analysis | `read-only` | Investigation, not fixes |
 | Performance review | `read-only` | Analysis first |
-| Second opinion | `read-only` | Consultation only |
+| Second opinion / validation | `read-only` | Consultation only |
 
 ## Example Prompts by Type
 
@@ -189,6 +202,20 @@ Analyze [FILE] for performance issues. Look for:
 - Missing caching opportunities
 - Database query inefficiencies
 For each issue, estimate impact and suggest optimizations.
+```
+
+### Second Opinion / Validation
+```
+I'm considering [APPROACH] for [PROBLEM].
+My current implementation is in [FILE].
+Alternatives I considered: [LIST ALTERNATIVES]
+Specific concerns: [CONCERNS]
+
+Please evaluate:
+1. Is this the right approach for this use case?
+2. What are the tradeoffs I might be missing?
+3. Would you recommend a different approach? Why?
+4. Any gotchas or edge cases I should watch for?
 ```
 
 ## Important Guidelines

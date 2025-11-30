@@ -2,6 +2,18 @@
 
 This document provides detailed information about Codex CLI options for consultations. These patterns also apply to other AI CLI tools like Gemini.
 
+> **Note:** This plugin provides a helper script (`scripts/codex-review.sh`) that wraps the Codex CLI with safety defaults. The script **always enforces read-only mode** and provides a simplified interface. Some options documented below (like `--sandbox workspace-write` or `--model`) are only available when using the Codex CLI directly, not through the plugin wrapper.
+
+## Plugin Wrapper vs Direct CLI
+
+| Feature | Plugin Wrapper (`codex-review.sh`) | Direct CLI (`codex exec`) |
+|---------|-----------------------------------|---------------------------|
+| Sandbox mode | Always `read-only` (enforced) | Configurable |
+| Full-auto | Default on, disable with `-n` | Configurable |
+| Output capture | `-o filename` | `--output-last-message filename` |
+| Directory | `-d path` | `-C path` |
+| Model selection | Not supported | `--model` |
+
 ## Core Options
 
 ### --sandbox MODE
@@ -14,17 +26,19 @@ Controls what modifications the AI can make to the workspace.
   - Files can be read but not modified
   - Safe for production code review
 
-- `workspace-write`: Allow file modifications
+- `workspace-write`: Allow file modifications (**Direct CLI only**)
   - Use for: Refactoring, implementation changes, fixes
   - AI can create, edit, and delete files
   - **Caution**: Only use with user confirmation
+  - **Not available through plugin wrapper** - use `codex exec` directly
 
 **Examples:**
 ```bash
-# Safe review
+# Safe review (plugin wrapper or direct CLI)
 codex exec --sandbox read-only --full-auto -C "$(pwd)" "Review security issues"
 
-# Allow changes (use carefully!)
+# Allow changes - DIRECT CLI ONLY (use carefully!)
+# Note: The plugin wrapper always enforces read-only mode
 codex exec --sandbox workspace-write --full-auto -C "$(pwd)" "Refactor error handling"
 ```
 
@@ -47,9 +61,22 @@ Run without user approval for each tool use.
 - When making actual code changes
 - In sensitive codebases where you want to approve each read
 
-**Example:**
+**Examples:**
 ```bash
+# Direct CLI with full-auto enabled
 codex exec --sandbox read-only --full-auto -C "$(pwd)" "Analyze performance bottlenecks"
+
+# Direct CLI without full-auto (manual approval required)
+codex exec --sandbox read-only -C "$(pwd)" "Analyze performance bottlenecks"
+```
+
+**Plugin wrapper:**
+```bash
+# Full-auto enabled (default)
+codex-review.sh "Analyze performance bottlenecks"
+
+# Full-auto disabled (manual approval)
+codex-review.sh -n "Analyze performance bottlenecks"
 ```
 
 ### -C, --directory DIRECTORY
@@ -107,24 +134,52 @@ cat /tmp/codex-review.txt
 ## Common Patterns
 
 ### Safe Code Review
+
+**Plugin wrapper (recommended):**
+```bash
+codex-review.sh "Review [FILE] for [CONCERNS]"
+```
+
+**Direct CLI:**
 ```bash
 codex exec --sandbox read-only --full-auto -C "$(pwd)" \
   "Review [FILE] for [CONCERNS]"
 ```
 
 ### Architecture Discussion
+
+**Plugin wrapper:**
+```bash
+codex-review.sh "Analyze architecture and suggest improvements"
+```
+
+**Direct CLI:**
 ```bash
 codex exec --sandbox read-only --full-auto -C "$(pwd)" \
   "Analyze architecture and suggest improvements"
 ```
 
 ### Debugging Consultation
+
+**Plugin wrapper:**
+```bash
+codex-review.sh "Investigate [PROBLEM] in [FILE]. What are likely causes?"
+```
+
+**Direct CLI:**
 ```bash
 codex exec --sandbox read-only --full-auto -C "$(pwd)" \
   "Investigate [PROBLEM] in [FILE]. What are likely causes?"
 ```
 
 ### With Output Capture
+
+**Plugin wrapper:**
+```bash
+codex-review.sh -o ./codex-output.txt "Comprehensive code review"
+```
+
+**Direct CLI:**
 ```bash
 codex exec --sandbox read-only --full-auto \
   -C "$(pwd)" \
@@ -132,9 +187,9 @@ codex exec --sandbox read-only --full-auto \
   "Comprehensive code review"
 ```
 
-### Allowing Modifications (Careful!)
+### Allowing Modifications (Direct CLI Only!)
 ```bash
-# Only use after user confirmation
+# Only use after user confirmation - NOT available through plugin wrapper
 codex exec --sandbox workspace-write --full-auto -C "$(pwd)" \
   "Refactor [COMPONENT] to improve [ASPECT]"
 ```

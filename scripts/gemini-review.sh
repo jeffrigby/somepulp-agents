@@ -12,12 +12,8 @@ BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
 # Default values - ALWAYS sandbox (read-only)
-DIR="$(pwd)"
-SANDBOX="--sandbox"
 OUTPUT_FORMAT=""
-YOLO="--yolo"
 PROMPT=""
-INCLUDE_DIRS=""
 
 # Function to show help
 show_help() {
@@ -67,19 +63,30 @@ check_gemini_installed() {
     return 0
 }
 
+# Array to hold additional directories
+declare -a INCLUDE_DIRS_ARRAY=()
+
 # Parse command line arguments
 while [[ $# -gt 0 ]]; do
     case $1 in
         -d|--dir)
-            if [[ -n "$INCLUDE_DIRS" ]]; then
-                INCLUDE_DIRS="$INCLUDE_DIRS --include-directories $2"
-            else
-                INCLUDE_DIRS="--include-directories $2"
+            if [[ $# -lt 2 || "$2" == -* ]]; then
+                echo -e "${RED}Error: -d/--dir requires a directory path${NC}" >&2
+                exit 1
             fi
+            if [[ ! -d "$2" ]]; then
+                echo -e "${RED}Error: Directory does not exist: $2${NC}" >&2
+                exit 1
+            fi
+            INCLUDE_DIRS_ARRAY+=("$2")
             shift 2
             ;;
         -o|--output)
-            OUTPUT_FORMAT="-o $2"
+            if [[ $# -lt 2 || "$2" == -* ]]; then
+                echo -e "${RED}Error: -o/--output requires a format (text, json, stream-json)${NC}" >&2
+                exit 1
+            fi
+            OUTPUT_FORMAT="$2"
             shift 2
             ;;
         -h|--help)
@@ -92,8 +99,9 @@ while [[ $# -gt 0 ]]; do
             exit 1
             ;;
         *)
-            PROMPT="$1"
-            shift
+            # Collect all remaining positional arguments as the prompt
+            PROMPT="$*"
+            break
             ;;
     esac
 done
@@ -115,25 +123,36 @@ fi
 echo -e "${GREEN}╔══════════════════════════════════════════════════════════════╗${NC}" >&2
 echo -e "${GREEN}║  Gemini Consultation (READ-ONLY)                             ║${NC}" >&2
 echo -e "${GREEN}╚══════════════════════════════════════════════════════════════╝${NC}" >&2
-echo -e "  Directory:  $(pwd)" >&2
-echo -e "  Sandbox:    enabled (read-only)" >&2
-if [[ -n "$INCLUDE_DIRS" ]]; then
-    echo -e "  Include:    ${INCLUDE_DIRS}" >&2
+printf '  Directory:  %s\n' "$(pwd)" >&2
+printf '  Sandbox:    %s\n' "enabled (read-only)" >&2
+if [[ ${#INCLUDE_DIRS_ARRAY[@]} -gt 0 ]]; then
+    printf '  Include:    %s\n' "${INCLUDE_DIRS_ARRAY[*]}" >&2
 fi
 if [[ -n "$OUTPUT_FORMAT" ]]; then
-    echo -e "  Output:     ${OUTPUT_FORMAT}" >&2
+    printf '  Output:     %s\n' "$OUTPUT_FORMAT" >&2
 fi
-echo -e "  Prompt:     \"$PROMPT\"" >&2
+printf '  Prompt:     "%s"\n' "$PROMPT" >&2
 echo "" >&2
 
-# Build and execute command - ALWAYS sandbox (read-only)
-CMD="gemini $YOLO $SANDBOX $OUTPUT_FORMAT $INCLUDE_DIRS \"$PROMPT\""
+# Build command array - ALWAYS sandbox (read-only, no eval, no injection possible)
+cmd=(gemini --yolo --sandbox)
+
+if [[ -n "$OUTPUT_FORMAT" ]]; then
+    cmd+=(-o "$OUTPUT_FORMAT")
+fi
+
+# Add each include directory separately
+for dir in "${INCLUDE_DIRS_ARRAY[@]}"; do
+    cmd+=(--include-directories "$dir")
+done
+
+cmd+=("$PROMPT")
 
 echo -e "${GREEN}Executing gemini...${NC}" >&2
 echo "" >&2
 
-# Execute the command
-eval "$CMD"
+# Execute the command safely using array expansion
+"${cmd[@]}"
 
 # Capture exit code
 EXIT_CODE=$?
