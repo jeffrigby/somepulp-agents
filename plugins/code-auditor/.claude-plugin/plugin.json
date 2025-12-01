@@ -8,7 +8,7 @@
   },
   "license": "MIT",
   "keywords": ["code-review", "code-audit", "security", "dead-code"],
-  "agents": "./agents/",
-  "commands": "./commands/",
-  "skills": "./skills/"
+  "agents": ["./agents/code-auditor.md"],
+  "commands": ["./commands/audit.md"],
+  "skills": ["./skills/code-auditing/SKILL.md"]
 }

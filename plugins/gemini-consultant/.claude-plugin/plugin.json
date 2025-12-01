@@ -8,7 +8,7 @@
   },
   "license": "MIT",
   "keywords": ["gemini", "google", "second-opinion", "consultation"],
-  "agents": "./agents/",
-  "commands": "./commands/",
-  "skills": "./skills/"
+  "agents": ["./agents/gemini-consultant.md"],
+  "commands": ["./commands/gemini-opinion.md"],
+  "skills": ["./skills/ai-consultation/SKILL.md"]
 }

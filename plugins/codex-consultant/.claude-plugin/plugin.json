@@ -8,7 +8,7 @@
   },
   "license": "MIT",
   "keywords": ["codex", "openai", "second-opinion", "consultation"],
-  "agents": "./agents/",
-  "commands": "./commands/",
-  "skills": "./skills/"
+  "agents": ["./agents/codex-consultant.md"],
+  "commands": ["./commands/codex-opinion.md"],
+  "skills": ["./skills/ai-consultation/SKILL.md"]
 }

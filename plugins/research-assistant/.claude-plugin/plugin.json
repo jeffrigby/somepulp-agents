@@ -8,6 +8,6 @@
   },
   "license": "MIT",
   "keywords": ["research", "documentation", "libraries", "apis"],
-  "agents": "./agents/",
-  "commands": "./commands/"
+  "agents": ["./agents/research-assistant.md"],
+  "commands": ["./commands/research.md"]
 }
