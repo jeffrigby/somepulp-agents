@@ -1,0 +1,14 @@
+{
+  "name": "gemini-consultant",
+  "version": "1.0.2",
+  "description": "Get second opinions from Google Gemini CLI on code reviews and architecture",
+  "author": {
+    "name": "Some Pulp LLC",
+    "url": "https://github.com/jeffrigby"
+  },
+  "license": "MIT",
+  "keywords": ["gemini", "google", "second-opinion", "consultation"],
+  "agents": "./agents/",
+  "commands": "./commands/",
+  "skills": "./skills/"
+}

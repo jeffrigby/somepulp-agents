@@ -1,0 +1,13 @@
+{
+  "name": "research-assistant",
+  "version": "1.0.2",
+  "description": "Research libraries, frameworks, and APIs using official documentation",
+  "author": {
+    "name": "Some Pulp LLC",
+    "url": "https://github.com/jeffrigby"
+  },
+  "license": "MIT",
+  "keywords": ["research", "documentation", "libraries", "apis"],
+  "agents": "./agents/",
+  "commands": "./commands/"
+}

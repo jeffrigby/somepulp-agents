@@ -1,0 +1,12 @@
+{
+  "name": "code-quality-auditor",
+  "version": "1.0.2",
+  "description": "Fast post-implementation quality checks for recently modified files",
+  "author": {
+    "name": "Some Pulp LLC",
+    "url": "https://github.com/jeffrigby"
+  },
+  "license": "MIT",
+  "keywords": ["code-review", "quality", "linting"],
+  "agents": "./agents/"
+}

@@ -10,9 +10,29 @@
   },
   "plugins": [
     {
-      "name": "somepulp-agents",
-      "source": "./",
-      "description": "AI-powered code auditing, research, and multi-model consultation (Codex, Gemini)"
+      "name": "code-auditor",
+      "source": "./plugins/code-auditor",
+      "description": "Comprehensive code quality audits with dead code detection, security analysis, and library recommendations"
+    },
+    {
+      "name": "code-quality-auditor",
+      "source": "./plugins/code-quality-auditor",
+      "description": "Fast post-implementation quality checks for recently modified files"
+    },
+    {
+      "name": "codex-consultant",
+      "source": "./plugins/codex-consultant",
+      "description": "Get second opinions from OpenAI Codex CLI on code reviews and architecture"
+    },
+    {
+      "name": "gemini-consultant",
+      "source": "./plugins/gemini-consultant",
+      "description": "Get second opinions from Google Gemini CLI on code reviews and architecture"
+    },
+    {
+      "name": "research-assistant",
+      "source": "./plugins/research-assistant",
+      "description": "Research libraries, frameworks, and APIs using official documentation"
     }
   ]
 }

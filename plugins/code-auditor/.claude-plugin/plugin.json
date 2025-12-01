@@ -1,0 +1,14 @@
+{
+  "name": "code-auditor",
+  "version": "1.0.2",
+  "description": "Comprehensive code quality audits with dead code detection, security analysis, and library recommendations",
+  "author": {
+    "name": "Some Pulp LLC",
+    "url": "https://github.com/jeffrigby"
+  },
+  "license": "MIT",
+  "keywords": ["code-review", "code-audit", "security", "dead-code"],
+  "agents": "./agents/",
+  "commands": "./commands/",
+  "skills": "./skills/"
+}

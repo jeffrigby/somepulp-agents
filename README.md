@@ -1,38 +1,33 @@
 # somepulp-agents
 
-AI-powered developer assistants for code auditing, research, and multi-model consultation. A Claude Code plugin providing specialized agents and skills for comprehensive code analysis.
+AI-powered developer assistants for code auditing, research, and multi-model consultation. A Claude Code plugin marketplace providing specialized agents that can be installed individually.
 
-## Features
+## Available Plugins
 
-### Agents
-
-| Agent | Description |
-|-------|-------------|
-| **code-auditor** | Comprehensive code quality audits with dead code detection, security analysis, and library recommendations |
-| **code-quality-auditor** | Fast post-implementation quality checks for recently modified files |
-| **research-assistant** | Research libraries, frameworks, and APIs using official documentation |
-| **codex-consultant** | Get second opinions from OpenAI Codex CLI on code reviews and architecture |
-| **gemini-consultant** | Get second opinions from Google Gemini CLI on code reviews and architecture |
-
-### Skills
-
-| Skill | Description |
-|-------|-------------|
-| **ai-consultation** | Guidance on AI consultation workflows, prompt templates, and best practices |
-| **code-auditing** | Comprehensive code auditing methodology and checklists |
+| Plugin | Description | Commands |
+|--------|-------------|----------|
+| **code-auditor** | Comprehensive code quality audits with dead code detection, security analysis, and library recommendations | `/audit` |
+| **code-quality-auditor** | Fast post-implementation quality checks for recently modified files | - |
+| **codex-consultant** | Get second opinions from OpenAI Codex CLI on code reviews and architecture | `/codex-opinion` |
+| **gemini-consultant** | Get second opinions from Google Gemini CLI on code reviews and architecture | `/gemini-opinion` |
+| **research-assistant** | Research libraries, frameworks, and APIs using official documentation | `/research` |
 
 ## Installation
 
-### From GitHub (recommended)
+### From GitHub
 
 1. Add the marketplace to Claude Code:
    ```
    /plugin marketplace add jeffrigby/somepulp-agents
    ```
 
-2. Install the plugin:
+2. Install the plugins you want:
    ```
-   /plugin install somepulp-agents@somepulp-agents
+   /plugin install code-auditor@somepulp-agents
+   /plugin install code-quality-auditor@somepulp-agents
+   /plugin install codex-consultant@somepulp-agents
+   /plugin install gemini-consultant@somepulp-agents
+   /plugin install research-assistant@somepulp-agents
    ```
 
 Or use the interactive `/plugin` command to browse and install.
@@ -46,64 +41,21 @@ git clone https://github.com/jeffrigby/somepulp-agents.git
 # In Claude Code, add as local marketplace
 /plugin marketplace add /path/to/somepulp-agents
 
-# Then install
-/plugin install somepulp-agents@somepulp-agents
+# Then install the plugins you want
+/plugin install code-auditor@somepulp-agents
 ```
 
 ## Requirements
 
 ### For Codex Consultant
 
-The codex-consultant agent requires [OpenAI Codex CLI](https://github.com/openai/codex).
+The codex-consultant plugin requires [OpenAI Codex CLI](https://github.com/openai/codex).
 
 ### For Gemini Consultant
 
-The gemini-consultant agent requires [Google Gemini CLI](https://github.com/google-gemini/gemini-cli).
+The gemini-consultant plugin requires [Google Gemini CLI](https://github.com/google-gemini/gemini-cli).
 
-## Usage
-
-### Code Auditing
-
-```
-Use the code-auditor agent to perform a comprehensive code audit
-```
-
-The code-auditor will:
-- Analyze all code files for issues
-- Check for dead code and unused dependencies
-- Identify security vulnerabilities
-- Recommend mature libraries for custom implementations
-- Generate a detailed report with prioritized findings
-
-### Multi-Model Consultation
-
-Get a second opinion from Codex or Gemini:
-
-```
-Ask codex for a security review of src/auth.js
-```
-
-```
-Get gemini's opinion on our API architecture
-```
-
-### Research
-
-```
-Research the best practices for React hooks
-```
-
-### Slash Commands
-
-Quick access via slash commands:
-
-```
-/audit                    # Run comprehensive code audit
-/research <topic>         # Research a library or technical topic
-/second-opinion <request> # Get second opinion from Codex or Gemini
-```
-
-## Agent Details
+## Plugin Details
 
 ### code-auditor
 
@@ -149,56 +101,42 @@ Consultation types:
 
 Always operates in read-only/sandbox mode for safety.
 
-## Skills Reference
-
-### ai-consultation
-
-Provides:
-- Prompt templates for different consultation types
-- Decision tree for choosing consultation approach
-- Quality checklist for thorough consultations
-- CLI options reference
-
-### code-auditing
-
-Provides:
-- 6-phase audit methodology
-- Issue priority classification
-- Analysis categories (security, performance, TypeScript)
-- Report format guidelines
-
 ## Project Structure
 
 ```
 somepulp-agents/
 ├── .claude-plugin/
-│   └── plugin.json          # Plugin manifest
-├── agents/
-│   ├── code-auditor.md
-│   ├── code-quality-auditor.md
-│   ├── codex-consultant.md
-│   ├── gemini-consultant.md
-│   └── research-assistant.md
-├── commands/
-│   ├── audit.md             # /audit slash command
-│   ├── research.md          # /research slash command
-│   └── second-opinion.md    # /second-opinion slash command
-├── skills/
-│   ├── ai-consultation/
-│   │   ├── SKILL.md
-│   │   └── references/
-│   │       ├── prompt-templates.md
-│   │       ├── examples.md
-│   │       ├── decision-tree.md
-│   │       ├── consultation-checklist.md
-│   │       └── codex-options.md
-│   └── code-auditing/
-│       ├── SKILL.md
-│       └── references/
-│           └── audit-methodology.md
-├── scripts/
-│   ├── codex-review.sh      # Helper for Codex consultations
-│   └── gemini-review.sh     # Helper for Gemini consultations
+│   └── marketplace.json        # Marketplace manifest
+├── plugins/
+│   ├── code-auditor/
+│   │   ├── .claude-plugin/
+│   │   │   └── plugin.json
+│   │   ├── agents/
+│   │   ├── commands/
+│   │   └── skills/
+│   ├── code-quality-auditor/
+│   │   ├── .claude-plugin/
+│   │   │   └── plugin.json
+│   │   └── agents/
+│   ├── codex-consultant/
+│   │   ├── .claude-plugin/
+│   │   │   └── plugin.json
+│   │   ├── agents/
+│   │   ├── commands/
+│   │   ├── scripts/
+│   │   └── skills/
+│   ├── gemini-consultant/
+│   │   ├── .claude-plugin/
+│   │   │   └── plugin.json
+│   │   ├── agents/
+│   │   ├── commands/
+│   │   ├── scripts/
+│   │   └── skills/
+│   └── research-assistant/
+│       ├── .claude-plugin/
+│       │   └── plugin.json
+│       ├── agents/
+│       └── commands/
 ├── README.md
 ├── LICENSE
 └── CHANGELOG.md
