@@ -62,9 +62,9 @@ MCP tool names must be **lowercase**. Examples:
 ### Valid Claude Code Tools
 Standard tools: `Read`, `Write`, `Edit`, `Grep`, `Glob`, `Bash`, `WebSearch`, `WebFetch`, `TodoWrite`, `AskUserQuestion`
 
-**Tools NOT available to agents/skills** (do not use in agent/skill definitions):
-- `Task` - Only available to main Claude, not to agents or skills
-- `LS` - Use `Glob` or `Bash` instead
+**Tools unavailable in subagent context** (cannot be used in agent/skill tool lists):
+- `Task` - Used by main Claude to spawn subagents; subagents cannot spawn other subagents
+- `LS` - Not a standard Claude Code tool; use `Glob` for file discovery or `Bash` with `ls`
 
 ## External Tool Integration
 

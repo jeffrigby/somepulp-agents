@@ -1,18 +1,17 @@
-# Codex CLI Options Reference
+# AI CLI Options Reference
 
-This document provides detailed information about Codex CLI options for consultations. These patterns also apply to other AI CLI tools like Gemini.
+This document provides detailed information about CLI options for AI consultations. While examples show Codex CLI syntax, the patterns apply to Gemini CLI and other AI CLI tools as well.
 
-> **Note:** This plugin provides a helper script (`scripts/codex-review.sh`) that wraps the Codex CLI with safety defaults. The script **always enforces read-only mode** and provides a simplified interface. Some options documented below (like `--sandbox workspace-write` or `--model`) are only available when using the Codex CLI directly, not through the plugin wrapper.
+> **Note:** This plugin provides a helper script (`scripts/gemini-review.sh`) that wraps the Gemini CLI with safety defaults. The script **always enforces sandbox (read-only) mode** and provides a simplified interface. Some options documented below are only available when using the CLI directly, not through the plugin wrapper.
 
 ## Plugin Wrapper vs Direct CLI
 
-| Feature | Plugin Wrapper (`codex-review.sh`) | Direct CLI (`codex exec`) |
-|---------|-----------------------------------|---------------------------|
-| Sandbox mode | Always `read-only` (enforced) | Configurable |
-| Full-auto | Default on, disable with `-n` | Configurable |
-| Output capture | `-o filename` | `--output-last-message filename` |
-| Directory | `-d path` | `-C path` |
-| Model selection | Not supported | `--model` |
+| Feature | Plugin Wrapper (`gemini-review.sh`) | Direct CLI (`gemini`) |
+|---------|-------------------------------------|----------------------|
+| Sandbox mode | Always enabled (enforced) | `--sandbox` flag |
+| Auto-approve | Always enabled (`--yolo`) | `--yolo` flag |
+| Output format | `-o format` | `--output-format format` |
+| Include directories | `-d path` (repeatable) | `--include-directories path` |
 
 ## Core Options
 

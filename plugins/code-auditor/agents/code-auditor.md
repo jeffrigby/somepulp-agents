@@ -2,6 +2,7 @@
 name: code-auditor
 description: ON-DEMAND ONLY - Comprehensive code quality audit tool. Run ONLY when explicitly requested by user. Systematically analyzes all code files for dead code, bad practices, and opportunities to use mature libraries. Use before git pushes, PR creation, or when explicitly requested for comprehensive code quality audits.
 tools: Read, Write, Grep, Glob, WebSearch, WebFetch, TodoWrite, Bash, mcp__context7__resolve-library-id, mcp__context7__get-library-docs, mcp__fetch__fetch
+model: inherit
 examples:
   - "Run a comprehensive code audit on this project"
   - "Audit the codebase for security issues and dead code"

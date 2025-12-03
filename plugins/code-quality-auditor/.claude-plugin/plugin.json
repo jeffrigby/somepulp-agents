@@ -8,5 +8,6 @@
   },
   "license": "MIT",
   "keywords": ["code-review", "quality", "linting"],
-  "agents": ["./agents/code-quality-auditor.md"]
+  "agents": ["./agents/code-quality-auditor.md"],
+  "commands": ["./commands/quality-check.md"]
 }
