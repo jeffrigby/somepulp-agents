@@ -4,7 +4,7 @@
 
 set -euo pipefail
 
-# Colors for output (only if stdout is a terminal)
+# Colors for output (only if stderr is a terminal)
 if [[ -t 2 ]]; then
     RED='\033[0;31m'
     GREEN='\033[0;32m'
@@ -161,7 +161,8 @@ if [[ -n "$OUTPUT_FILE" ]]; then
     cmd+=(--output-last-message "$OUTPUT_FILE")
 fi
 
-cmd+=("$PROMPT")
+# Use -- to prevent prompt from being interpreted as options
+cmd+=(-- "$PROMPT")
 
 echo -e "${GREEN}Executing codex...${NC}" >&2
 echo "" >&2

@@ -152,12 +152,15 @@ if [[ -n "$OUTPUT_FORMAT" ]]; then
     cmd+=(-o "$OUTPUT_FORMAT")
 fi
 
-# Add each include directory separately
-for dir in "${INCLUDE_DIRS_ARRAY[@]}"; do
-    cmd+=(--include-directories "$dir")
-done
+# Add each include directory separately (safe for empty array with set -u)
+if [[ ${#INCLUDE_DIRS_ARRAY[@]} -gt 0 ]]; then
+    for dir in "${INCLUDE_DIRS_ARRAY[@]}"; do
+        cmd+=(--include-directories "$dir")
+    done
+fi
 
-cmd+=("$PROMPT")
+# Use -- to prevent prompt from being interpreted as options
+cmd+=(-- "$PROMPT")
 
 echo -e "${GREEN}Executing gemini...${NC}" >&2
 echo "" >&2
