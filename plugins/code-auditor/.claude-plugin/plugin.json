@@ -1,14 +1,20 @@
 {
   "name": "code-auditor",
-  "version": "1.0.2",
-  "description": "Comprehensive code quality audits with dead code detection, security analysis, and library recommendations",
+  "version": "2.0.0",
+  "description": "Comprehensive code quality tools with deep audits and quick checks for dead code detection, security analysis, and best practices",
   "author": {
     "name": "Some Pulp LLC",
     "url": "https://github.com/jeffrigby"
   },
   "license": "MIT",
-  "keywords": ["code-review", "code-audit", "security", "dead-code"],
-  "agents": ["./agents/code-auditor.md"],
-  "commands": ["./commands/audit.md"],
+  "keywords": ["code-review", "code-audit", "security", "dead-code", "quality-check"],
+  "agents": [
+    "./agents/deep-audit.md",
+    "./agents/quick-check.md"
+  ],
+  "commands": [
+    "./commands/deep-audit.md",
+    "./commands/quick-check.md"
+  ],
   "skills": ["./skills/code-auditing/SKILL.md"]
 }

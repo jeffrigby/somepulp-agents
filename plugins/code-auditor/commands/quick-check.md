@@ -1,15 +1,17 @@
 ---
-description: Run a code quality audit on specific files or recent changes
+description: Run a quick quality check on recent changes or specific files
 arguments:
   - name: scope
-    description: Files, directories, or patterns to audit (e.g., "src/auth.ts", "src/**/*.ts", or leave empty for recent changes)
+    description: Files, directories, or patterns to check (e.g., "src/auth.ts", "src/**/*.ts", or leave empty for recent changes)
     type: string
     required: false
 ---
 
-# Code Quality Check
+# Quick Quality Check
 
-Perform a focused code quality audit on the specified files or scope.
+Perform a fast, focused code quality check on the specified files or scope.
+
+**Note**: This is a lightweight check for routine use. For comprehensive full-codebase audits, use `/deep-audit` instead.
 
 ## What to Analyze
 
