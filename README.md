@@ -68,7 +68,7 @@ The gemini-consultant plugin requires [Google Gemini CLI](https://github.com/goo
 - `/quick-check` - Fast quality check on recent changes
 - `/dead-code` - Detect and clean up unused code with guided removal
 
-**Dead Code Detection (v2.1.0):**
+**Dead Code Detection:**
 - Integrates **knip** for JavaScript/TypeScript projects
 - Integrates **deadcode** for Python projects
 - Auto-detects project type
@@ -100,7 +100,7 @@ Uses:
 - GitHub CLI for code examples
 - Web search for additional context
 
-**Official Docs Agent (v1.3.0):**
+**Official Docs Agent:**
 - Strict source hierarchy: Context7 → Official sites → Official GitHub repos
 - Never uses blogs, Stack Overflow, tutorials, or community content
 - Honest "not found" reporting when official docs don't exist
@@ -126,28 +126,28 @@ somepulp-agents/
 ├── .claude-plugin/
 │   └── marketplace.json          # Marketplace manifest
 ├── plugins/
-│   ├── code-auditor/             # v2.1.0
+│   ├── code-auditor/
 │   │   ├── .claude-plugin/
 │   │   │   └── plugin.json
 │   │   ├── agents/               # deep-audit, quick-check, dead-code-cleanup
 │   │   ├── commands/             # /deep-audit, /quick-check, /dead-code
 │   │   ├── scripts/              # dead-code-detect.sh
 │   │   └── skills/               # code-auditing methodology
-│   ├── codex-consultant/         # v1.0.2
+│   ├── codex-consultant/
 │   │   ├── .claude-plugin/
 │   │   │   └── plugin.json
 │   │   ├── agents/               # codex-consultant
 │   │   ├── commands/             # /codex-opinion
 │   │   ├── scripts/              # codex-review.sh
 │   │   └── skills/               # ai-consultation
-│   ├── gemini-consultant/        # v1.0.2
+│   ├── gemini-consultant/
 │   │   ├── .claude-plugin/
 │   │   │   └── plugin.json
 │   │   ├── agents/               # gemini-consultant
 │   │   ├── commands/             # /gemini-opinion
 │   │   ├── scripts/              # gemini-review.sh
 │   │   └── skills/               # ai-consultation
-│   └── research-assistant/       # v1.3.0
+│   └── research-assistant/
 │       ├── .claude-plugin/
 │       │   └── plugin.json
 │       ├── .mcp.json             # Bundled MCP servers (Context7, Fetch)
@@ -171,10 +171,6 @@ Contributions are welcome! Please:
 ## License
 
 MIT License - see [LICENSE](LICENSE) for details.
-
-## Author
-
-Some Pulp LLC
 
 ## Links
 
