@@ -1,13 +1,13 @@
 {
   "name": "research-assistant",
-  "version": "1.1.0",
-  "description": "Research libraries, frameworks, and APIs using official documentation",
+  "version": "1.3.0",
+  "description": "Research libraries, frameworks, and APIs using official documentation. Includes /research for comprehensive investigation and /official-docs for pre-task doc lookups.",
   "author": {
     "name": "Some Pulp LLC",
     "url": "https://github.com/jeffrigby"
   },
   "license": "MIT",
-  "keywords": ["research", "documentation", "libraries", "apis"],
-  "agents": ["./agents/research-assistant.md"],
-  "commands": ["./commands/research.md"]
+  "keywords": ["research", "documentation", "libraries", "apis", "official-docs", "pre-task"],
+  "agents": ["./agents/research-assistant.md", "./agents/official-docs.md"],
+  "commands": ["./commands/research.md", "./commands/official-docs.md"]
 }

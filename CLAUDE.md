@@ -10,7 +10,7 @@ This is a Claude Code plugin called `somepulp-agents` that provides specialized 
 
 - **`.claude-plugin/plugin.json`** - Plugin manifest defining name, version, and metadata
 - **`agents/`** - Markdown-based agent definitions with YAML frontmatter for configuration
-- **`commands/`** - Slash command definitions (`/audit`, `/research`, `/second-opinion`)
+- **`commands/`** - Slash command definitions (`/audit`, `/research`, `/official-docs`, `/second-opinion`)
 - **`skills/`** - Skill definitions with reference documentation in subdirectories
 - **`scripts/`** - Helper shell scripts for external AI tool invocations
 
@@ -86,6 +86,17 @@ Standard tools: `Read`, `Write`, `Edit`, `Grep`, `Glob`, `Bash`, `WebSearch`, `W
 - Prioritizes Context7 MCP for official documentation
 - Uses `gh` CLI for GitHub operations and code examples
 - Falls back to WebSearch/WebFetch if MCP tools unavailable
+
+**Two commands available:**
+- `/research <topic>` - Comprehensive research including community sources
+- `/official-docs <topic>` - Pre-task documentation from official sources only
+
+### Official Docs Agent (`/official-docs`)
+- **Purpose**: Quick pre-task lookup of official documentation
+- **Strict sources only**: Context7, official docs sites (*.dev, docs.*), official GitHub repos
+- **Never uses**: Stack Overflow, Medium, Dev.to, blogs, tutorials, forums
+- **Honest reporting**: Explicitly states what couldn't be found
+- **Output format**: Reference summary (overview, quick start, key APIs, example, sources)
 
 ## Key Patterns
 
