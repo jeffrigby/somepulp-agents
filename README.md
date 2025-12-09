@@ -83,8 +83,11 @@ Fast quality checks for:
 
 **Trigger:** User asks to research libraries or APIs
 
+**Bundled MCP Servers:** This plugin includes [Context7](https://github.com/upstash/context7) and [Fetch](https://github.com/modelcontextprotocol/servers/tree/main/src/fetch) MCP servers. They start automatically when the plugin is enabled (requires Claude Code restart).
+
 Uses:
-- Context7 for official documentation
+- Context7 MCP for official documentation (bundled)
+- Fetch MCP for web content retrieval (bundled)
 - GitHub CLI for code examples
 - Web search for additional context
 
@@ -135,6 +138,7 @@ somepulp-agents/
 │   └── research-assistant/
 │       ├── .claude-plugin/
 │       │   └── plugin.json
+│       ├── .mcp.json              # Bundled MCP servers (Context7, Fetch)
 │       ├── agents/
 │       └── commands/
 ├── README.md
@@ -164,3 +168,5 @@ Some Pulp LLC
 - [Claude Code Documentation](https://docs.anthropic.com/claude-code)
 - [OpenAI Codex CLI](https://github.com/openai/codex)
 - [Google Gemini CLI](https://github.com/google-gemini/gemini-cli)
+- [Context7 MCP](https://github.com/upstash/context7) - Official documentation lookup
+- [Fetch MCP](https://github.com/modelcontextprotocol/servers/tree/main/src/fetch) - Web content retrieval

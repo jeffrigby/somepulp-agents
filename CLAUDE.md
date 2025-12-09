@@ -81,9 +81,11 @@ Standard tools: `Read`, `Write`, `Edit`, `Grep`, `Glob`, `Bash`, `WebSearch`, `W
 - Invocation: `${CLAUDE_PLUGIN_ROOT}/scripts/gemini-review.sh "<prompt>"`
 
 ### Research Assistant
+- **Bundles MCP servers** via `.mcp.json`: Context7 and Fetch
+- MCP servers start automatically when plugin is enabled (requires Claude Code restart)
 - Prioritizes Context7 MCP for official documentation
 - Uses `gh` CLI for GitHub operations and code examples
-- Falls back to WebSearch/Fetch for supplementary research
+- Falls back to WebSearch/WebFetch if MCP tools unavailable
 
 ## Key Patterns
 
