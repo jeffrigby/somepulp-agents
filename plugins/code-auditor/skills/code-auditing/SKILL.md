@@ -109,11 +109,30 @@ Generate detailed report with:
 - Unhandled promise rejections
 - Callback hell
 
+### Dead Code
+- Unused imports and exports
+- Unused functions, classes, and methods
+- Unused variables and types
+- Unreachable code blocks
+- Unused files (not imported anywhere)
+- Unused dependencies
+
+**Tools:**
+- JavaScript/TypeScript: `npx knip --reporter json`
+- Python: `deadcode . --dry`
+
+**Important:** Always verify tool findings before reporting. Check for:
+- Dynamic imports (`import(variable)`)
+- Framework patterns (React components, decorators)
+- Re-exports for public API
+- Entry points (CLI scripts, serverless handlers)
+
 ## Resources
 
-See the reference document for the complete audit methodology:
+See the reference documents for complete methodologies:
 
 - `references/audit-methodology.md` - Full 6-phase audit process with detailed checklists
+- `references/dead-code-methodology.md` - Dead code detection tools, verification, and cleanup workflows
 
 ## Quick Reference
 

@@ -1,7 +1,7 @@
 ---
 name: deep-audit
 description: Use for comprehensive codebase audits before major releases, tech debt assessments, or full security reviews. Resource-intensive, ON-DEMAND ONLY. Systematically analyzes all code files for dead code, bad practices, and opportunities to use mature libraries.
-tools: Read, Write, Grep, Glob, WebSearch, WebFetch, TodoWrite, Bash, mcp__context7__resolve-library-id, mcp__context7__get-library-docs, mcp__fetch__fetch
+tools: Read, Write, Grep, Glob, WebSearch, WebFetch, TodoWrite, Bash, AskUserQuestion, mcp__context7__resolve-library-id, mcp__context7__get-library-docs, mcp__fetch__fetch
 model: inherit
 examples:
   - "Run a comprehensive code audit on this project"
@@ -84,6 +84,59 @@ For each file:
      - Large objects retained unnecessarily
 4. Generate a detailed report for the file
 5. Mark file as completed in todo list
+
+## Phase 2.5: Dead Code Detection (Automated)
+
+Run automated dead code detection using specialized tools:
+
+### Auto-Detection
+Determine project type and select appropriate tool:
+- **package.json or tsconfig.json** present → Use knip for JavaScript/TypeScript
+- **requirements.txt, setup.py, or pyproject.toml** present → Use deadcode for Python
+- **Both present** → Run both tools
+
+### For JavaScript/TypeScript Projects
+```bash
+npx knip --reporter json
+```
+
+If knip is available, parse the JSON output for:
+- Unused exports
+- Unused files
+- Unused dependencies
+- Unused type exports
+
+### For Python Projects
+```bash
+deadcode .
+```
+
+If deadcode is available, parse output for:
+- Unused imports
+- Unused variables
+- Unused functions/classes
+
+### Verification (CRITICAL)
+**Do NOT blindly include tool output.** Verify each finding:
+1. Read the flagged code
+2. Check for dynamic imports (`import(variable)`, `require(variable)`)
+3. Check for framework patterns (React components, decorators)
+4. Check for re-exports in index files
+5. Mark as "verified" or "false_positive"
+
+### If Tools Not Available
+- Note in report that automated detection was skipped
+- Recommend installing tools for future audits:
+  - JS/TS: `npm install -g knip` or use `npx knip`
+  - Python: `pip install deadcode`
+
+### Include in Phase 6 Report
+Add a dedicated "Dead Code Findings" section:
+- List verified dead code by category
+- Include file:line references
+- Provide commands to fix: `npx knip --fix` or `deadcode --fix`
+- Note: Do NOT auto-fix during audit; let user decide
+- Recommend using `/dead-code cleanup` for guided removal
 
 ## Phase 3: Best Practices Verification (CRITICAL)
 **This is an essential step - DO NOT skip this phase!**
