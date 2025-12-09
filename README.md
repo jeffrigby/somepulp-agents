@@ -1,15 +1,19 @@
-# somepulp-agents
+# Somepulp Agents
 
-AI-powered developer assistants for code auditing, research, and multi-model consultation. A Claude Code plugin marketplace providing specialized agents that can be installed individually.
+A plugin marketplace for [Claude Code](https://docs.anthropic.com/claude-code) providing specialized agents for code auditing, research, and multi-model consultation.
+
+## What Are These Plugins?
+
+Claude Code plugins extend functionality through custom slash commands, specialized agents, and skills. Each plugin in this marketplace can be installed independently, letting you pick the tools that fit your workflow.
 
 ## Available Plugins
 
-| Plugin | Description | Commands |
+| Plugin | Description | Contents |
 |--------|-------------|----------|
-| **code-auditor** | Comprehensive code quality audits with dead code detection, security analysis, and library recommendations | `/deep-audit`, `/quick-check`, `/dead-code` |
-| **codex-consultant** | Get second opinions from OpenAI Codex CLI on code reviews and architecture | `/codex-opinion` |
-| **gemini-consultant** | Get second opinions from Google Gemini CLI on code reviews and architecture | `/gemini-opinion` |
-| **research-assistant** | Research libraries, frameworks, and APIs using official documentation | `/research`, `/official-docs` |
+| [code-auditor](./plugins/code-auditor/) | Comprehensive code quality audits with dead code detection and library recommendations | **Commands:** `/deep-audit`, `/quick-check`, `/dead-code`<br>**Agents:** `deep-audit`, `quick-check`, `dead-code-cleanup`<br>**Skill:** `code-auditing` |
+| [codex-consultant](./plugins/codex-consultant/) | Get second opinions from OpenAI Codex CLI | **Command:** `/codex-opinion`<br>**Agent:** `codex-consultant`<br>**Skill:** `ai-consultation` |
+| [gemini-consultant](./plugins/gemini-consultant/) | Get second opinions from Google Gemini CLI | **Command:** `/gemini-opinion`<br>**Agent:** `gemini-consultant`<br>**Skill:** `ai-consultation` |
+| [research-assistant](./plugins/research-assistant/) | Research libraries and APIs using official documentation | **Commands:** `/research`, `/official-docs`<br>**Agents:** `research-assistant`, `official-docs`<br>**MCP:** Context7, Fetch |
 
 ## Installation
 
@@ -45,118 +49,26 @@ git clone https://github.com/jeffrigby/somepulp-agents.git
 
 ## Requirements
 
-### For Research Assistant
+| Plugin | Requirements |
+|--------|--------------|
+| **research-assistant** | Bundled MCP servers start automatically. **Requires Claude Code restart** after enabling. |
+| **codex-consultant** | [OpenAI Codex CLI](https://github.com/openai/codex) + `OPENAI_API_KEY` environment variable |
+| **gemini-consultant** | [Google Gemini CLI](https://github.com/google-gemini/gemini-cli) with authentication configured |
 
-The research-assistant plugin includes bundled MCP servers (Context7, Fetch) that start automatically. **Requires Claude Code restart after enabling the plugin** for MCP servers to initialize.
+## Plugin Structure
 
-### For Codex Consultant
-
-The codex-consultant plugin requires [OpenAI Codex CLI](https://github.com/openai/codex). See the official repo for installation instructions. Requires `OPENAI_API_KEY` environment variable.
-
-### For Gemini Consultant
-
-The gemini-consultant plugin requires [Google Gemini CLI](https://github.com/google-gemini/gemini-cli). See the official repo for installation and authentication instructions.
-
-## Plugin Details
-
-### code-auditor
-
-**Trigger:** User explicitly requests a code audit or dead code cleanup
-
-**Commands:**
-- `/deep-audit` - Comprehensive 7-phase codebase audit
-- `/quick-check` - Fast quality check on recent changes
-- `/dead-code` - Detect and clean up unused code with guided removal
-
-**Dead Code Detection:**
-- Integrates **knip** for JavaScript/TypeScript projects
-- Integrates **deadcode** for Python projects
-- Auto-detects project type
-- Verifies findings to filter false positives before reporting
-- Guided cleanup with user approval before removal
-
-**Deep Audit Phases:**
-1. Pre-Analysis Setup - Identify tech stack and run baseline linting
-2. Discovery - Find all code files and group by module
-3. File-by-File Analysis - Check each file for issues
-4. **Dead Code Detection** - Run knip/deadcode with verification
-5. Best Practices Verification - Cross-reference with official documentation
-6. Library Recommendations - Find mature replacements for custom code
-7. Report Generation - Create prioritized action plan
-
-### research-assistant
-
-**Trigger:** User asks to research libraries or APIs, or needs official documentation
-
-**Commands:**
-- `/research <topic>` - Comprehensive research including community sources
-- `/official-docs <topic>` - Pre-task documentation from official sources only
-
-**Bundled MCP Servers:** This plugin includes [Context7](https://github.com/upstash/context7) and [Fetch](https://github.com/modelcontextprotocol/servers/tree/main/src/fetch) MCP servers. They start automatically when the plugin is enabled (requires Claude Code restart).
-
-Uses:
-- Context7 MCP for official documentation (bundled)
-- Fetch MCP for web content retrieval (bundled)
-- GitHub CLI for code examples
-- Web search for additional context
-
-**Official Docs Agent:**
-- Strict source hierarchy: Context7 → Official sites → Official GitHub repos
-- Never uses blogs, Stack Overflow, tutorials, or community content
-- Honest "not found" reporting when official docs don't exist
-- Reference summary output: overview, quick start, key APIs, examples, sources
-
-### codex-consultant / gemini-consultant
-
-**Trigger:** User requests a "second opinion" or asks "what would codex/gemini think"
-
-Consultation types:
-- Code review
-- Security audit
-- Architecture review
-- Debugging analysis
-- Performance review
-
-Always operates in read-only/sandbox mode for safety.
-
-## Project Structure
+Each plugin follows the standard Claude Code plugin structure:
 
 ```
-somepulp-agents/
+plugin-name/
 ├── .claude-plugin/
-│   └── marketplace.json          # Marketplace manifest
-├── plugins/
-│   ├── code-auditor/
-│   │   ├── .claude-plugin/
-│   │   │   └── plugin.json
-│   │   ├── agents/               # deep-audit, quick-check, dead-code-cleanup
-│   │   ├── commands/             # /deep-audit, /quick-check, /dead-code
-│   │   ├── scripts/              # dead-code-detect.sh
-│   │   └── skills/               # code-auditing methodology
-│   ├── codex-consultant/
-│   │   ├── .claude-plugin/
-│   │   │   └── plugin.json
-│   │   ├── agents/               # codex-consultant
-│   │   ├── commands/             # /codex-opinion
-│   │   ├── scripts/              # codex-review.sh
-│   │   └── skills/               # ai-consultation
-│   ├── gemini-consultant/
-│   │   ├── .claude-plugin/
-│   │   │   └── plugin.json
-│   │   ├── agents/               # gemini-consultant
-│   │   ├── commands/             # /gemini-opinion
-│   │   ├── scripts/              # gemini-review.sh
-│   │   └── skills/               # ai-consultation
-│   └── research-assistant/
-│       ├── .claude-plugin/
-│       │   └── plugin.json
-│       ├── .mcp.json             # Bundled MCP servers (Context7, Fetch)
-│       ├── agents/               # research-assistant, official-docs
-│       └── commands/             # /research, /official-docs
-├── README.md
-├── LICENSE
-├── CHANGELOG.md
-└── CLAUDE.md                     # Development instructions
+│   └── plugin.json          # Plugin metadata
+├── commands/                # Slash commands (optional)
+├── agents/                  # Specialized agents (optional)
+├── skills/                  # Agent skills (optional)
+├── scripts/                 # Helper scripts (optional)
+├── .mcp.json                # MCP server configuration (optional)
+└── README.md                # Plugin documentation
 ```
 
 ## Contributing
@@ -172,10 +84,7 @@ Contributions are welcome! Please:
 
 MIT License - see [LICENSE](LICENSE) for details.
 
-## Links
+## Learn More
 
 - [Claude Code Documentation](https://docs.anthropic.com/claude-code)
-- [OpenAI Codex CLI](https://github.com/openai/codex)
-- [Google Gemini CLI](https://github.com/google-gemini/gemini-cli)
-- [Context7 MCP](https://github.com/upstash/context7) - Official documentation lookup
-- [Fetch MCP](https://github.com/modelcontextprotocol/servers/tree/main/src/fetch) - Web content retrieval
+- [Plugin System Documentation](https://docs.anthropic.com/en/docs/claude-code/plugins)
