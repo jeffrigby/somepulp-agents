@@ -5,6 +5,25 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.0] - 2025-12-09
+
+### Added
+- **code-auditor v2.1.0**: Dead code detection with knip/deadcode integration
+  - New `/dead-code` command for standalone dead code detection and cleanup
+  - New `dead-code-cleanup` agent for interactive guided removal
+  - New `scripts/dead-code-detect.sh` helper for auto-detection of project type
+  - New `references/dead-code-methodology.md` documentation
+  - Integration of knip for JavaScript/TypeScript projects
+  - Integration of deadcode for Python projects
+  - False positive verification before reporting findings
+  - Guided cleanup workflow with user approval before removal
+
+### Changed
+- **code-auditor**: Added Phase 2.5 (Dead Code Detection) to deep-audit workflow
+- **code-auditor**: Added knip/deadcode to quick-check automated checks
+- **code-auditor**: Added `AskUserQuestion` tool for cleanup approval workflow
+- **code-auditor**: Added Dead Code section to SKILL.md analysis categories
+
 ## [1.1.0] - 2025-12-09
 
 ### Added

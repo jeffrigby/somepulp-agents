@@ -6,7 +6,7 @@ AI-powered developer assistants for code auditing, research, and multi-model con
 
 | Plugin | Description | Commands |
 |--------|-------------|----------|
-| **code-auditor** | Comprehensive code quality audits with dead code detection, security analysis, and library recommendations | `/audit` |
+| **code-auditor** | Comprehensive code quality audits with dead code detection, security analysis, and library recommendations | `/deep-audit`, `/quick-check`, `/dead-code` |
 | **code-quality-auditor** | Fast post-implementation quality checks for recently modified files | - |
 | **codex-consultant** | Get second opinions from OpenAI Codex CLI on code reviews and architecture | `/codex-opinion` |
 | **gemini-consultant** | Get second opinions from Google Gemini CLI on code reviews and architecture | `/gemini-opinion` |
@@ -59,15 +59,28 @@ The gemini-consultant plugin requires [Google Gemini CLI](https://github.com/goo
 
 ### code-auditor
 
-**Trigger:** User explicitly requests a code audit
+**Trigger:** User explicitly requests a code audit or dead code cleanup
 
-Performs a 6-phase comprehensive analysis:
+**Commands:**
+- `/deep-audit` - Comprehensive 6-phase codebase audit
+- `/quick-check` - Fast quality check on recent changes
+- `/dead-code` - Detect and clean up unused code with guided removal
+
+**Dead Code Detection (v2.1.0):**
+- Integrates **knip** for JavaScript/TypeScript projects
+- Integrates **deadcode** for Python projects
+- Auto-detects project type
+- Verifies findings to filter false positives before reporting
+- Guided cleanup with user approval before removal
+
+**Deep Audit Phases:**
 1. Pre-Analysis Setup - Identify tech stack and run baseline linting
 2. Discovery - Find all code files and group by module
 3. File-by-File Analysis - Check each file for issues
-4. Best Practices Verification - Cross-reference with official documentation
-5. Library Recommendations - Find mature replacements for custom code
-6. Report Generation - Create prioritized action plan
+4. **Dead Code Detection** - Run knip/deadcode with verification
+5. Best Practices Verification - Cross-reference with official documentation
+6. Library Recommendations - Find mature replacements for custom code
+7. Report Generation - Create prioritized action plan
 
 ### code-quality-auditor
 
@@ -116,6 +129,7 @@ somepulp-agents/
 │   │   │   └── plugin.json
 │   │   ├── agents/
 │   │   ├── commands/
+│   │   ├── scripts/              # Helper scripts (dead-code-detect.sh)
 │   │   └── skills/
 │   ├── code-quality-auditor/
 │   │   ├── .claude-plugin/

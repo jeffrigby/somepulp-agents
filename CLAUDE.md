@@ -93,13 +93,28 @@ Standard tools: `Read`, `Write`, `Edit`, `Grep`, `Glob`, `Bash`, `WebSearch`, `W
 All external AI consultations (Codex, Gemini) operate in read-only/sandbox mode. Never allow file modifications from external tools.
 
 ### Code Auditor Workflow
-The `code-auditor` agent follows a 6-phase process:
+The `code-auditor` agent follows a 7-phase process:
 1. Pre-Analysis Setup (check configs, run existing linters)
 2. Discovery (find all code files)
 3. File-by-File Analysis
-4. Best Practices Verification (Context7 for official docs)
-5. Library Recommendations
-6. Report Generation (saves to `code-audit-[timestamp].md`)
+4. **Dead Code Detection** (knip/deadcode with verification)
+5. Best Practices Verification (Context7 for official docs)
+6. Library Recommendations
+7. Report Generation (saves to `code-audit-[timestamp].md`)
+
+### Dead Code Detection
+- Uses `scripts/dead-code-detect.sh` helper for auto-detection
+- **JavaScript/TypeScript**: Uses knip (`npx knip --reporter json`)
+- **Python**: Uses deadcode (`deadcode .`)
+- **Critical**: Always verify tool findings before reporting (filter false positives)
+- Invocation: `${CLAUDE_PLUGIN_ROOT}/scripts/dead-code-detect.sh --format json`
+
+**False Positive Verification:**
+Before reporting dead code findings, check for:
+- Dynamic imports (`import(variable)`, `require(variable)`)
+- Framework patterns (React components, decorators)
+- Re-exports for public API in index files
+- Entry points (CLI scripts, serverless handlers)
 
 ### Output Formatting
 - Use `file_path:line_number` format for code references
