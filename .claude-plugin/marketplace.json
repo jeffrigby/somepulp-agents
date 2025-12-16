@@ -6,13 +6,13 @@
   },
   "metadata": {
     "description": "AI-powered developer assistants for code auditing, research, and multi-model consultation",
-    "version": "1.3.0"
+    "version": "2.0.0"
   },
   "plugins": [
     {
-      "name": "code-auditor",
-      "source": "./plugins/code-auditor",
-      "description": "Code quality tools: /deep-audit, /quick-check, /dead-code with knip/deadcode integration"
+      "name": "codebase-health",
+      "source": "./plugins/codebase-health",
+      "description": "Codebase health tools: /deep-audit, /quick-check, /dead-code, /update-docs for code quality and documentation maintenance"
     },
     {
       "name": "codex-consultant",

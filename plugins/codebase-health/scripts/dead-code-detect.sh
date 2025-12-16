@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # dead-code-detect.sh - Helper script for dead code detection
-# Part of code-auditor plugin for Claude Code
+# Part of codebase-health plugin for Claude Code
 
 set -euo pipefail
 

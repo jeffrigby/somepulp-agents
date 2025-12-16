@@ -10,7 +10,7 @@ Claude Code plugins extend functionality through custom slash commands, speciali
 
 | Plugin | Description | Contents |
 |--------|-------------|----------|
-| [code-auditor](./plugins/code-auditor/) | Comprehensive code quality audits with dead code detection and library recommendations | **Commands:** `/deep-audit`, `/quick-check`, `/dead-code`<br>**Agents:** `deep-audit`, `quick-check`, `dead-code-cleanup`<br>**Skill:** `code-auditing` |
+| [codebase-health](./plugins/codebase-health/) | Comprehensive codebase health tools: code audits, dead code detection, and documentation maintenance | **Commands:** `/deep-audit`, `/quick-check`, `/dead-code`, `/update-docs`<br>**Agents:** `deep-audit`, `quick-check`, `dead-code-cleanup`, `update-docs`<br>**Skills:** `code-auditing`, `docs-maintenance` |
 | [codex-consultant](./plugins/codex-consultant/) | Get second opinions from OpenAI Codex CLI | **Command:** `/codex-opinion`<br>**Agent:** `codex-consultant`<br>**Skill:** `ai-consultation` |
 | [gemini-consultant](./plugins/gemini-consultant/) | Get second opinions from Google Gemini CLI | **Command:** `/gemini-opinion`<br>**Agent:** `gemini-consultant`<br>**Skill:** `ai-consultation` |
 | [research-assistant](./plugins/research-assistant/) | Research libraries and APIs using official documentation | **Commands:** `/research`, `/official-docs`<br>**Agents:** `research-assistant`, `official-docs`<br>**MCP:** Context7, Fetch |
@@ -26,7 +26,7 @@ Claude Code plugins extend functionality through custom slash commands, speciali
 
 2. Install the plugins you want:
    ```
-   /plugin install code-auditor@somepulp-agents
+   /plugin install codebase-health@somepulp-agents
    /plugin install codex-consultant@somepulp-agents
    /plugin install gemini-consultant@somepulp-agents
    /plugin install research-assistant@somepulp-agents
@@ -44,7 +44,7 @@ git clone https://github.com/jeffrigby/somepulp-agents.git
 /plugin marketplace add /path/to/somepulp-agents
 
 # Then install the plugins you want
-/plugin install code-auditor@somepulp-agents
+/plugin install codebase-health@somepulp-agents
 ```
 
 ## Requirements

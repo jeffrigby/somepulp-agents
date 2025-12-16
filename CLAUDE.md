@@ -103,8 +103,8 @@ Standard tools: `Read`, `Write`, `Edit`, `Grep`, `Glob`, `Bash`, `WebSearch`, `W
 ### Safety-First Consultation
 All external AI consultations (Codex, Gemini) operate in read-only/sandbox mode. Never allow file modifications from external tools.
 
-### Code Auditor Workflow
-The `code-auditor` agent follows a 7-phase process:
+### Codebase Health Workflow
+The `deep-audit` agent follows a 7-phase process:
 1. Pre-Analysis Setup (check configs, run existing linters)
 2. Discovery (find all code files)
 3. File-by-File Analysis

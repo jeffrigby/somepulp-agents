@@ -5,6 +5,25 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.0] - 2025-12-15
+
+### Changed
+- **BREAKING**: Renamed `code-auditor` plugin to `codebase-health`
+  - Better reflects expanded scope: code auditing + documentation maintenance
+  - Update install commands: `/plugin install codebase-health@somepulp-agents`
+  - Commands now prefixed with `codebase-health:` instead of `code-auditor:`
+
+### Added
+- **codebase-health**: New documentation maintenance feature
+  - New `/update-docs` command for syncing documentation with code changes
+  - New `update-docs` agent for interactive documentation updates
+  - New `docs-maintenance` skill with 7-phase methodology
+  - Reference docs: `claude-md-guide.md`, `changelog-patterns.md`, `doc-sync-methodology.md`
+  - Git history analysis to find undocumented changes
+  - CLAUDE.md optimization for AI agent effectiveness
+  - Cross-document consistency verification
+  - Support for CLAUDE.md, README, CHANGELOG, and /docs directories
+
 ## [1.3.0] - 2025-12-09
 
 ### Added

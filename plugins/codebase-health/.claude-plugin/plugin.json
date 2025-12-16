@@ -1,0 +1,27 @@
+{
+  "name": "codebase-health",
+  "version": "2.0.0",
+  "description": "Comprehensive codebase health tools: code audits, quality checks, dead code detection, and documentation maintenance",
+  "author": {
+    "name": "Some Pulp LLC",
+    "url": "https://github.com/jeffrigby"
+  },
+  "license": "MIT",
+  "keywords": ["code-review", "code-audit", "security", "dead-code", "quality-check", "documentation", "docs-maintenance", "codebase-health"],
+  "agents": [
+    "./agents/deep-audit.md",
+    "./agents/quick-check.md",
+    "./agents/dead-code-cleanup.md",
+    "./agents/update-docs.md"
+  ],
+  "commands": [
+    "./commands/deep-audit.md",
+    "./commands/quick-check.md",
+    "./commands/dead-code.md",
+    "./commands/update-docs.md"
+  ],
+  "skills": [
+    "./skills/code-auditing/SKILL.md",
+    "./skills/docs-maintenance/SKILL.md"
+  ]
+}
