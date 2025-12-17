@@ -10,7 +10,7 @@ This is a Claude Code plugin called `somepulp-agents` that provides specialized 
 
 This is a **plugin marketplace** containing multiple independent plugins:
 
-```
+```tree
 somepulp-agents/
 ├── .claude-plugin/marketplace.json    # Marketplace manifest
 ├── plugins/
@@ -99,6 +99,8 @@ Consolidated plugin providing second opinions from multiple AI tools:
 **Commands:** `/codex-opinion`, `/gemini-opinion`
 **Agents:** `codex-consultant`, `gemini-consultant`
 **Skill:** `ai-consultation` (shared methodology)
+
+**Safety:** All consultations operate in read-only/sandbox mode. Never allow file modifications from external tools.
 
 ### Research Assistant
 - **Bundles MCP servers** via `.mcp.json`: Context7 and Fetch
