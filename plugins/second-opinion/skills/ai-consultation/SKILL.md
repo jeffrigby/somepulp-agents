@@ -52,7 +52,7 @@ See the reference documents for detailed guidance:
 - `references/examples.md` - 12 concrete consultation examples with workflows
 - `references/decision-tree.md` - Comprehensive decision logic for choosing consultation types
 - `references/consultation-checklist.md` - Quality assurance checklist for consultations
-- `references/codex-options.md` - Codex CLI options reference (applicable patterns for Gemini too)
+- `references/cli-options.md` - AI CLI options reference for Gemini and other tools
 
 ## Quick Start
 

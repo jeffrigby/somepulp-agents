@@ -6,7 +6,7 @@
   },
   "metadata": {
     "description": "AI-powered developer assistants for code auditing, research, and multi-model consultation",
-    "version": "2.0.0"
+    "version": "2.1.0"
   },
   "plugins": [
     {
@@ -15,14 +15,9 @@
       "description": "Codebase health tools: /deep-audit, /quick-check, /dead-code, /update-docs for code quality and documentation maintenance"
     },
     {
-      "name": "codex-consultant",
-      "source": "./plugins/codex-consultant",
-      "description": "Get second opinions from OpenAI Codex CLI on code reviews and architecture"
-    },
-    {
-      "name": "gemini-consultant",
-      "source": "./plugins/gemini-consultant",
-      "description": "Get second opinions from Google Gemini CLI on code reviews and architecture"
+      "name": "second-opinion",
+      "source": "./plugins/second-opinion",
+      "description": "Get second opinions from Codex CLI and Gemini CLI: /codex-opinion and /gemini-opinion for code reviews and architecture"
     },
     {
       "name": "research-assistant",
