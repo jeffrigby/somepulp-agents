@@ -6,13 +6,23 @@ This document provides detailed information about CLI options for AI consultatio
 
 ## Plugin Wrapper vs Direct CLI
 
+**Common features (both wrappers):**
+
 | Feature | Plugin Wrapper | Direct CLI |
 |---------|----------------|------------|
 | Sandbox mode | Always enabled (enforced) | Manual flag required |
 | Auto-approve | Always enabled | Manual flag required |
-| Output format | `-o format` | `--output-format format` (Gemini) |
-| Include directories | `-d path` (repeatable) | `--include-directories path` (Gemini) |
-| Project directory | `-d path` | `-C path` (Codex) |
+
+**Tool-specific options:**
+
+| Feature | Codex Wrapper | Codex Direct | Gemini Wrapper | Gemini Direct |
+|---------|---------------|--------------|----------------|---------------|
+| Working directory | `-d path` | `-C path` | (uses current dir) | (uses current dir) |
+| Include directories | N/A | N/A | `-d path` (repeatable) | `--include-directories path` |
+| Output format | `-o file` | `--output-last-message file` | `-o format` | `--output-format format` |
+| Disable auto-approve | `-n` | (omit `--full-auto`) | `-n` | (omit `--yolo`) |
+
+> **Note:** The `-d` flag has different meanings: for Codex it sets the working directory, for Gemini it adds directories to include in context.
 
 ## Core Options
 
