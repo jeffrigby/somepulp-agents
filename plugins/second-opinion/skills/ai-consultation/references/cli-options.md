@@ -1,6 +1,6 @@
 # AI CLI Options Reference
 
-This document provides detailed information about CLI options for AI consultations. While examples show Codex CLI syntax, the patterns apply to Gemini CLI and other AI CLI tools as well.
+This document provides detailed information about CLI options for the Codex and Gemini AI consultation tools. Both tools support similar patterns with tool-specific syntax variations noted throughout.
 
 > **Note:** This plugin provides helper scripts (`scripts/codex-review.sh` and `scripts/gemini-review.sh`) that wrap the CLI tools with safety defaults. The scripts **always enforce sandbox (read-only) mode** and provide a simplified interface. Some options documented below are only available when using the CLI directly, not through the plugin wrapper.
 
