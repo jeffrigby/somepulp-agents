@@ -274,7 +274,7 @@ Actionable next steps.
 For detailed prompt templates, examples, and CLI options, read:
 - `${CLAUDE_PLUGIN_ROOT}/skills/ai-consultation/references/prompt-templates.md`
 - `${CLAUDE_PLUGIN_ROOT}/skills/ai-consultation/references/examples.md`
-- `${CLAUDE_PLUGIN_ROOT}/skills/ai-consultation/references/codex-options.md`
+- `${CLAUDE_PLUGIN_ROOT}/skills/ai-consultation/references/cli-options.md`
 - `${CLAUDE_PLUGIN_ROOT}/skills/ai-consultation/references/consultation-checklist.md`
 
 ## Fallback Strategies
