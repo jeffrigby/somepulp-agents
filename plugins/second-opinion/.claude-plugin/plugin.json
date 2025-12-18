@@ -1,0 +1,20 @@
+{
+  "name": "second-opinion",
+  "version": "1.0.0",
+  "description": "Get second opinions from Codex CLI and Gemini CLI on code reviews and architecture",
+  "author": {
+    "name": "Some Pulp LLC",
+    "url": "https://github.com/jeffrigby"
+  },
+  "license": "MIT",
+  "keywords": ["codex", "gemini", "openai", "google", "second-opinion", "consultation"],
+  "agents": [
+    "./agents/codex-consultant.md",
+    "./agents/gemini-consultant.md"
+  ],
+  "commands": [
+    "./commands/codex-opinion.md",
+    "./commands/gemini-opinion.md"
+  ],
+  "skills": ["./skills/ai-consultation/SKILL.md"]
+}

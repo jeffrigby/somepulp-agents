@@ -5,6 +5,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.1.0] - 2025-12-17
+
+### Changed
+- **BREAKING**: Consolidated `codex-consultant` and `gemini-consultant` into single `second-opinion` plugin
+  - Old: `/plugin install codex-consultant@somepulp-agents` + `/plugin install gemini-consultant@somepulp-agents`
+  - New: `/plugin install second-opinion@somepulp-agents`
+  - Commands remain the same: `/codex-opinion` and `/gemini-opinion`
+  - Agents remain the same: `codex-consultant` and `gemini-consultant`
+  - Shared `ai-consultation` skill with unified reference documentation
+
+### Removed
+- `codex-consultant` plugin (merged into `second-opinion`)
+- `gemini-consultant` plugin (merged into `second-opinion`)
+
 ## [2.0.0] - 2025-12-15
 
 ### Changed

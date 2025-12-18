@@ -1,22 +1,32 @@
-# Codex CLI Options Reference
+# AI CLI Options Reference
 
-This document provides detailed information about Codex CLI options for consultations. These patterns also apply to other AI CLI tools like Gemini.
+This document provides detailed information about CLI options for the Codex and Gemini AI consultation tools. Both tools support similar patterns with tool-specific syntax variations noted throughout.
 
-> **Note:** This plugin provides a helper script (`scripts/codex-review.sh`) that wraps the Codex CLI with safety defaults. The script **always enforces read-only mode** and provides a simplified interface. Some options documented below (like `--sandbox workspace-write` or `--model`) are only available when using the Codex CLI directly, not through the plugin wrapper.
+> **Note:** This plugin provides helper scripts (`scripts/codex-review.sh` and `scripts/gemini-review.sh`) that wrap the CLI tools with safety defaults. The scripts **always enforce sandbox (read-only) mode** and provide a simplified interface. Some options documented below are only available when using the CLI directly, not through the plugin wrapper.
 
 ## Plugin Wrapper vs Direct CLI
 
-| Feature | Plugin Wrapper (`codex-review.sh`) | Direct CLI (`codex exec`) |
-|---------|-----------------------------------|---------------------------|
-| Sandbox mode | Always `read-only` (enforced) | Configurable |
-| Full-auto | Default on, disable with `-n` | Configurable |
-| Output capture | `-o filename` | `--output-last-message filename` |
-| Directory | `-d path` | `-C path` |
-| Model selection | Not supported | `--model` |
+**Common features (both wrappers):**
+
+| Feature | Plugin Wrapper | Direct CLI |
+|---------|----------------|------------|
+| Sandbox mode | Always enabled (enforced) | Manual flag required |
+| Auto-approve | Always enabled | Manual flag required |
+
+**Tool-specific options:**
+
+| Feature | Codex Wrapper | Codex Direct | Gemini Wrapper | Gemini Direct |
+|---------|---------------|--------------|----------------|---------------|
+| Working directory | `-d path` | `-C path` | (uses current dir) | (uses current dir) |
+| Include directories | N/A | N/A | `-d path` (repeatable) | `--include-directories path` |
+| Output format | `-o file` | `--output-last-message file` | `-o format` | `--output-format format` |
+| Disable auto-approve | `-n` | (omit `--full-auto`) | `-n` | (omit `--yolo`) |
+
+> **Note:** The `-d` flag has different meanings: for Codex it sets the working directory, for Gemini it adds directories to include in context.
 
 ## Core Options
 
-### --sandbox MODE
+### --sandbox MODE (Codex) / --sandbox (Gemini)
 
 Controls what modifications the AI can make to the workspace.
 
@@ -30,7 +40,7 @@ Controls what modifications the AI can make to the workspace.
   - Use for: Refactoring, implementation changes, fixes
   - AI can create, edit, and delete files
   - **Caution**: Only use with user confirmation
-  - **Not available through plugin wrapper** - use `codex exec` directly
+  - **Not available through plugin wrapper** - use CLI directly
 
 **Examples:**
 ```bash
@@ -42,7 +52,7 @@ codex exec --sandbox read-only --full-auto -C "$(pwd)" "Review security issues"
 codex exec --sandbox workspace-write --full-auto -C "$(pwd)" "Refactor error handling"
 ```
 
-### --full-auto
+### --full-auto (Codex) / --yolo (Gemini)
 
 Run without user approval for each tool use.
 
@@ -79,7 +89,7 @@ codex-review.sh "Analyze performance bottlenecks"
 codex-review.sh -n "Analyze performance bottlenecks"
 ```
 
-### -C, --directory DIRECTORY
+### -C, --directory DIRECTORY (Codex)
 
 Set the working directory for the session.
 
@@ -110,7 +120,7 @@ Specify which model to use.
 - Cost optimization
 - Testing with specific model version
 
-### --output-last-message FILE
+### --output-last-message FILE (Codex)
 
 Capture the AI's final response to a file.
 
@@ -138,12 +148,15 @@ cat /tmp/codex-review.txt
 **Plugin wrapper (recommended):**
 ```bash
 codex-review.sh "Review [FILE] for [CONCERNS]"
+gemini-review.sh "Review [FILE] for [CONCERNS]"
 ```
 
 **Direct CLI:**
 ```bash
 codex exec --sandbox read-only --full-auto -C "$(pwd)" \
   "Review [FILE] for [CONCERNS]"
+
+gemini --yolo --sandbox "Review [FILE] for [CONCERNS]"
 ```
 
 ### Architecture Discussion
@@ -151,12 +164,15 @@ codex exec --sandbox read-only --full-auto -C "$(pwd)" \
 **Plugin wrapper:**
 ```bash
 codex-review.sh "Analyze architecture and suggest improvements"
+gemini-review.sh "Analyze architecture and suggest improvements"
 ```
 
 **Direct CLI:**
 ```bash
 codex exec --sandbox read-only --full-auto -C "$(pwd)" \
   "Analyze architecture and suggest improvements"
+
+gemini --yolo --sandbox "Analyze architecture and suggest improvements"
 ```
 
 ### Debugging Consultation
@@ -164,12 +180,15 @@ codex exec --sandbox read-only --full-auto -C "$(pwd)" \
 **Plugin wrapper:**
 ```bash
 codex-review.sh "Investigate [PROBLEM] in [FILE]. What are likely causes?"
+gemini-review.sh "Investigate [PROBLEM] in [FILE]. What are likely causes?"
 ```
 
 **Direct CLI:**
 ```bash
 codex exec --sandbox read-only --full-auto -C "$(pwd)" \
   "Investigate [PROBLEM] in [FILE]. What are likely causes?"
+
+gemini --yolo --sandbox "Investigate [PROBLEM] in [FILE]. What are likely causes?"
 ```
 
 ### With Output Capture
@@ -177,6 +196,7 @@ codex exec --sandbox read-only --full-auto -C "$(pwd)" \
 **Plugin wrapper:**
 ```bash
 codex-review.sh -o ./codex-output.txt "Comprehensive code review"
+gemini-review.sh -o json "Comprehensive code review"
 ```
 
 **Direct CLI:**
@@ -185,6 +205,8 @@ codex exec --sandbox read-only --full-auto \
   -C "$(pwd)" \
   --output-last-message ./codex-output.txt \
   "Comprehensive code review"
+
+gemini --yolo --sandbox --output-format json "Comprehensive code review"
 ```
 
 ### Allowing Modifications (Direct CLI Only!)
@@ -285,23 +307,27 @@ ls -l $(which codex)
 | Refactoring | workspace-write | Caution | Confirm with user |
 | Bug Fixes | workspace-write | Caution | Confirm with user |
 
-## Gemini CLI Equivalent Options
-
-For Gemini CLI, similar patterns apply:
+## Codex CLI Options
 
 ```bash
-# Basic consultation (read-only with sandbox)
-gemini --yolo --sandbox "Review index.js for security issues"
-
-# With additional directory
-gemini --yolo --sandbox --include-directories /path/to/lib "Review code"
-
-# Output format options
-gemini --yolo --sandbox --output-format json "Analyze code"
-```
+codex exec [options] "<prompt>"
 
 Key options:
-- `-s, --sandbox` - Run in sandbox mode (read-only)
-- `-y, --yolo` - Auto-approve all actions
-- `--include-directories` - Additional directories to include
-- `-o, --output-format` - Output format: text, json, stream-json
+  --sandbox MODE       Sandbox mode: read-only or workspace-write
+  --full-auto          Run without approval interruptions
+  -C, --directory DIR  Working directory
+  -m, --model MODEL    Model selection
+  --output-last-message FILE  Capture output to file
+```
+
+## Gemini CLI Options
+
+```bash
+gemini [options] "<prompt>"
+
+Key options:
+  -s, --sandbox       Run in sandbox mode (read-only)
+  -y, --yolo          Auto-approve all actions
+  --include-directories  Additional directories to include
+  -o, --output-format Output format: text, json, stream-json
+```

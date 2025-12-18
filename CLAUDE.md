@@ -8,11 +8,26 @@ This is a Claude Code plugin called `somepulp-agents` that provides specialized 
 
 ## Repository Structure
 
-- **`.claude-plugin/plugin.json`** - Plugin manifest defining name, version, and metadata
-- **`agents/`** - Markdown-based agent definitions with YAML frontmatter for configuration
-- **`commands/`** - Slash command definitions (`/audit`, `/research`, `/official-docs`, `/second-opinion`)
-- **`skills/`** - Skill definitions with reference documentation in subdirectories
-- **`scripts/`** - Helper shell scripts for external AI tool invocations
+This is a **plugin marketplace** containing multiple independent plugins:
+
+```tree
+somepulp-agents/
+├── .claude-plugin/marketplace.json    # Marketplace manifest
+├── plugins/
+│   ├── codebase-health/               # Code auditing & documentation
+│   ├── second-opinion/                # Codex & Gemini consultations
+│   └── research-assistant/            # Library/API research with MCP
+├── CLAUDE.md                          # This file
+├── README.md                          # User-facing documentation
+└── CHANGELOG.md                       # Version history
+```
+
+Each plugin follows the standard structure:
+- **`.claude-plugin/plugin.json`** - Plugin manifest
+- **`agents/`** - Markdown agents with YAML frontmatter
+- **`commands/`** - Slash command definitions
+- **`skills/`** - Skills with reference documentation
+- **`scripts/`** - Helper shell scripts (optional)
 
 ## Agent and Skill Format
 
@@ -68,17 +83,24 @@ Standard tools: `Read`, `Write`, `Edit`, `Grep`, `Glob`, `Bash`, `WebSearch`, `W
 
 ## External Tool Integration
 
-### Codex Consultant
+### Second Opinion Plugin (Codex + Gemini)
+Consolidated plugin providing second opinions from multiple AI tools:
+
+**Codex Consultant:**
 - Uses `scripts/codex-review.sh` helper
 - Requires: `npm install -g @openai/codex` and `OPENAI_API_KEY`
-- Always runs in read-only/sandbox mode
 - Invocation: `${CLAUDE_PLUGIN_ROOT}/scripts/codex-review.sh "<prompt>"`
 
-### Gemini Consultant
+**Gemini Consultant:**
 - Uses `scripts/gemini-review.sh` helper
 - Requires: `gemini auth login`
-- Always runs with `--yolo --sandbox` flags
 - Invocation: `${CLAUDE_PLUGIN_ROOT}/scripts/gemini-review.sh "<prompt>"`
+
+**Commands:** `/codex-opinion`, `/gemini-opinion`
+**Agents:** `codex-consultant`, `gemini-consultant`
+**Skill:** `ai-consultation` (shared methodology)
+
+**Safety:** All consultations operate in read-only/sandbox mode. Never allow file modifications from external tools.
 
 ### Research Assistant
 - **Bundles MCP servers** via `.mcp.json`: Context7 and Fetch
