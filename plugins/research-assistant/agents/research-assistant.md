@@ -28,6 +28,23 @@ You are invoked when:
 - User asks "how do I..." for a library/framework
 - User wants to understand best practices for a technology
 
+## Recommended MCP Servers
+
+This agent works best with the following MCP servers installed. If they're not available, the agent will fall back to WebSearch/WebFetch, but results may be less comprehensive.
+
+**Context7** (Official library documentation):
+```bash
+# Add to your Claude Code MCP configuration
+claude mcp add context7 -- npx -y @upstash/context7-mcp@latest
+```
+
+**Fetch** (Web content fetching):
+```bash
+claude mcp add fetch -- uvx mcp-server-fetch
+```
+
+If these MCP servers are unavailable when you run this agent, you'll see a note recommending installation.
+
 ## Thoroughness Levels
 
 Determine research depth based on request complexity:
@@ -62,9 +79,12 @@ Determine research depth based on request complexity:
 - **AWS Documentation MCP** (`mcp__awslabs_aws-documentation-mcp-server__*`) - For AWS-specific documentation
 
 **Fallbacks if tools unavailable:**
-- If Context7 unavailable: Use WebSearch + Fetch for official documentation websites
-- If Fetch unavailable: Provide URLs for user to review
+- If Context7 unavailable: Use WebSearch + WebFetch for official documentation websites
+- If Fetch MCP unavailable: Use WebFetch (built-in) or provide URLs for user to review
 - GitHub CLI (`gh`) should always be available via Homebrew
+
+**If MCP tools are missing**, inform the user:
+> "For better research results, consider installing the Context7 MCP server: `claude mcp add context7 -- npx -y @upstash/context7-mcp@latest`"
 
 ## Research Process
 

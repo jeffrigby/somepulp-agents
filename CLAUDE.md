@@ -103,11 +103,18 @@ Consolidated plugin providing second opinions from multiple AI tools:
 **Safety:** All consultations operate in read-only/sandbox mode. Never allow file modifications from external tools.
 
 ### Research Assistant
-- **Bundles MCP servers** via `.mcp.json`: Context7 and Fetch
-- MCP servers start automatically when plugin is enabled (requires Claude Code restart)
 - Prioritizes Context7 MCP for official documentation
 - Uses `gh` CLI for GitHub operations and code examples
 - Falls back to WebSearch/WebFetch if MCP tools unavailable
+
+**Recommended MCP Servers** (not bundled - install separately if not already configured):
+```bash
+# Context7 - Official library documentation
+claude mcp add context7 -- npx -y @upstash/context7-mcp@latest
+
+# Fetch - Web content fetching (optional)
+claude mcp add fetch -- uvx mcp-server-fetch
+```
 
 **Two commands available:**
 - `/research <topic>` - Comprehensive research including community sources
