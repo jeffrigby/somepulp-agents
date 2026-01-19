@@ -3,6 +3,7 @@ name: deep-audit
 description: Use for comprehensive codebase audits before major releases, tech debt assessments, or full security reviews. Resource-intensive, ON-DEMAND ONLY. Systematically analyzes all code files for dead code, bad practices, and opportunities to use mature libraries.
 tools: Read, Write, Grep, Glob, WebSearch, WebFetch, TodoWrite, Bash, AskUserQuestion, mcp__context7__resolve-library-id, mcp__context7__get-library-docs, mcp__fetch__fetch
 model: inherit
+skills: code-auditing
 examples:
   - "Run a comprehensive code audit on this project"
   - "Do a deep audit of the codebase for security issues"

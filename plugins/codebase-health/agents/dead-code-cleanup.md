@@ -3,6 +3,7 @@ name: dead-code-cleanup
 description: Dead code detection and cleanup with false positive verification. Use when user asks to "find dead code", "clean up unused code", "remove dead code", or wants to detect/remove unused imports, exports, files, or dependencies.
 tools: Read, Write, Edit, Grep, Glob, Bash, TodoWrite, AskUserQuestion
 model: inherit
+skills: code-auditing
 examples:
   - "Find and remove dead code"
   - "Clean up unused imports and exports"

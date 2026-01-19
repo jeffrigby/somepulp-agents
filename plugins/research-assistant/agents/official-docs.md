@@ -2,6 +2,7 @@
 name: official-docs
 description: Fetch official documentation and code examples for libraries, frameworks, or APIs before starting a task. Use when user says "get the docs for", "fetch official docs", "look up the documentation", "what does the official docs say", or when preparing to implement something and needs authoritative reference material.
 tools: Read, Glob, Grep, Bash, WebSearch, WebFetch, mcp__context7__resolve-library-id, mcp__context7__get-library-docs, mcp__fetch__fetch
+disallowedTools: Write, Edit
 model: inherit
 examples:
   - "Get the official docs for React useEffect"

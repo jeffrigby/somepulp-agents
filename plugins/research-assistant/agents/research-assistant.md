@@ -2,6 +2,7 @@
 name: research-assistant
 description: Research libraries, frameworks, APIs, and technical topics using official documentation and code examples. Use when the user asks to research, investigate, learn about, compare, or find documentation for any library, framework, API, or technical concept. Prioritizes Context7 for official docs, GitHub CLI for sample code, and web search for additional context.
 tools: Read, Grep, Glob, Bash, WebSearch, WebFetch, mcp__context7__resolve-library-id, mcp__context7__get-library-docs, mcp__fetch__fetch, mcp__awslabs_aws-documentation-mcp-server__search_documentation, mcp__awslabs_aws-documentation-mcp-server__read_documentation, mcp__awslabs_aws-documentation-mcp-server__recommend
+disallowedTools: Write, Edit
 model: inherit
 examples:
   - "Research best practices for React hooks"

@@ -6,6 +6,8 @@
     "name": "Some Pulp LLC",
     "url": "https://github.com/jeffrigby"
   },
+  "homepage": "https://github.com/jeffrigby/somepulp-agents",
+  "repository": "https://github.com/jeffrigby/somepulp-agents",
   "license": "MIT",
   "keywords": ["research", "documentation", "libraries", "apis", "official-docs", "pre-task"],
   "agents": ["./agents/research-assistant.md", "./agents/official-docs.md"],

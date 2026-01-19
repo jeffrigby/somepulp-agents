@@ -6,6 +6,8 @@
     "name": "Some Pulp LLC",
     "url": "https://github.com/jeffrigby"
   },
+  "homepage": "https://github.com/jeffrigby/somepulp-agents",
+  "repository": "https://github.com/jeffrigby/somepulp-agents",
   "license": "MIT",
   "keywords": ["codex", "gemini", "openai", "google", "second-opinion", "consultation"],
   "agents": [
@@ -16,5 +18,6 @@
     "./commands/codex-opinion.md",
     "./commands/gemini-opinion.md"
   ],
-  "skills": ["./skills/ai-consultation/SKILL.md"]
+  "skills": ["./skills/ai-consultation/SKILL.md"],
+  "hooks": "./hooks/hooks.json"
 }
