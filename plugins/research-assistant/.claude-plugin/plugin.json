@@ -1,11 +1,13 @@
 {
   "name": "research-assistant",
   "version": "1.3.0",
-  "description": "Research libraries, frameworks, and APIs using official documentation. Includes /research for comprehensive investigation and /official-docs for pre-task doc lookups.",
+  "description": "Research libraries, frameworks, and APIs using official documentation. Includes /research for comprehensive investigation and /official-docs for pre-task doc lookups. Works best with Context7 and Fetch MCP servers installed (falls back to WebSearch/WebFetch if unavailable).",
   "author": {
     "name": "Some Pulp LLC",
     "url": "https://github.com/jeffrigby"
   },
+  "homepage": "https://github.com/jeffrigby/somepulp-agents",
+  "repository": "https://github.com/jeffrigby/somepulp-agents",
   "license": "MIT",
   "keywords": ["research", "documentation", "libraries", "apis", "official-docs", "pre-task"],
   "agents": ["./agents/research-assistant.md", "./agents/official-docs.md"],

@@ -1,0 +1,12 @@
+{
+  "Stop": [
+    {
+      "hooks": [
+        {
+          "type": "prompt",
+          "prompt": "Verify the audit report file (code-audit-*.md) was created. If not, remind to save findings."
+        }
+      ]
+    }
+  ]
+}

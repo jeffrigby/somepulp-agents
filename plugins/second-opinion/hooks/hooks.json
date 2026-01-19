@@ -1,0 +1,13 @@
+{
+  "PreToolUse": [
+    {
+      "matcher": "Bash",
+      "hooks": [
+        {
+          "type": "prompt",
+          "prompt": "Verify this Bash command uses --sandbox or read-only mode. Block if it could modify files."
+        }
+      ]
+    }
+  ]
+}

@@ -6,6 +6,8 @@
     "name": "Some Pulp LLC",
     "url": "https://github.com/jeffrigby"
   },
+  "homepage": "https://github.com/jeffrigby/somepulp-agents",
+  "repository": "https://github.com/jeffrigby/somepulp-agents",
   "license": "MIT",
   "keywords": ["code-review", "code-audit", "security", "dead-code", "quality-check", "documentation", "docs-maintenance", "codebase-health"],
   "agents": [
@@ -23,5 +25,6 @@
   "skills": [
     "./skills/code-auditing/SKILL.md",
     "./skills/docs-maintenance/SKILL.md"
-  ]
+  ],
+  "hooks": "./hooks/hooks.json"
 }

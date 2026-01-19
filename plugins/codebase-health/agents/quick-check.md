@@ -3,6 +3,7 @@ name: quick-check
 description: Use for fast quality checks after feature implementations, before PRs, during refactoring, or when code smells are noticed. Lightweight and routine-use friendly. Analyzes recently modified files or specific code sections.
 tools: Read, Grep, Glob, Bash, TodoWrite
 model: inherit
+skills: code-auditing
 examples:
   - "Quick check my recent changes before I commit"
   - "Check src/auth.ts for dead code and DRY violations"

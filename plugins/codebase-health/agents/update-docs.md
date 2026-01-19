@@ -3,6 +3,7 @@ name: update-docs
 description: Update and optimize project documentation to reflect recent changes and improve AI agent usability. Use when user asks to "update documentation", "sync docs with code", "optimize CLAUDE.md", "update README", "document recent changes", or "check documentation freshness".
 tools: Read, Write, Edit, Grep, Glob, Bash, TodoWrite, AskUserQuestion
 model: inherit
+skills: docs-maintenance
 examples:
   - "Update the documentation to reflect recent changes"
   - "Sync CLAUDE.md with the current codebase"
