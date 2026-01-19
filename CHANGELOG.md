@@ -5,6 +5,29 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.2.0] - 2026-01-19
+
+### Added
+- **All plugins**: Added `homepage` and `repository` fields to plugin.json
+- **codebase-health**: Added `skills` field to agents for automatic skill loading
+  - `deep-audit`, `quick-check`, `dead-code-cleanup` now load `code-auditing` skill
+  - `update-docs` now loads `docs-maintenance` skill
+- **second-opinion**: Added `skills` field to agents
+  - `codex-consultant` and `gemini-consultant` now load `ai-consultation` skill
+- **research-assistant**: Added `disallowedTools: Write, Edit` to agents for read-only safety
+- **codebase-health**: Added prompt-based Stop hook for audit report verification
+- **second-opinion**: Added prompt-based PreToolUse hook for Bash sandbox safety
+
+### Changed
+- **research-assistant**: Removed bundled MCP servers (Context7, Fetch)
+  - MCP servers are commonly installed by users separately
+  - Plugin now falls back to WebSearch/WebFetch when MCP unavailable
+  - Added installation nudges when MCP tools are missing
+  - Updated plugin description to note MCP dependencies
+
+### Removed
+- **research-assistant**: Removed `.mcp.json` (Context7 and Fetch no longer bundled)
+
 ## [2.1.0] - 2025-12-17
 
 ### Changed
