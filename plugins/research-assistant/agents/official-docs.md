@@ -1,14 +1,34 @@
 ---
 name: official-docs
 description: Fetch official documentation and code examples for libraries, frameworks, or APIs before starting a task. Use when user says "get the docs for", "fetch official docs", "look up the documentation", "what does the official docs say", or when preparing to implement something and needs authoritative reference material.
-tools: Read, Glob, Grep, Bash, WebSearch, WebFetch, mcp__context7__resolve-library-id, mcp__context7__get-library-docs, mcp__fetch__fetch
-disallowedTools: Write, Edit
+
+  <example>
+  Context: User about to implement a feature and needs reference docs.
+  user: "Get the official docs for React useEffect"
+  assistant: "I'll use the official-docs agent to fetch React useEffect documentation."
+  <commentary>
+  Pre-task documentation lookup for a specific API.
+  </commentary>
+  </example>
+  <example>
+  Context: User wants authoritative documentation for a library.
+  user: "Fetch official documentation for Zod"
+  assistant: "I'll launch the official-docs agent to get Zod's official documentation."
+  <commentary>
+  Library documentation fetch request.
+  </commentary>
+  </example>
+  <example>
+  Context: User needs to check official guidance on a specific topic.
+  user: "What does the official Next.js docs say about app router?"
+  assistant: "I'll use the official-docs agent to look up official Next.js app router docs."
+  <commentary>
+  Specific topic lookup from official sources only.
+  </commentary>
+  </example>
+tools: ["Read", "Glob", "Grep", "Bash", "WebSearch", "WebFetch", "mcp__context7__resolve-library-id", "mcp__context7__query-docs", "mcp__fetch__fetch"]
 model: inherit
-examples:
-  - "Get the official docs for React useEffect"
-  - "Fetch official documentation for Zod"
-  - "Look up the Prisma documentation on relations"
-  - "What does the official Next.js docs say about app router?"
+color: green
 ---
 
 # Official Documentation Agent
@@ -58,7 +78,7 @@ You ONLY use official sources. This is non-negotiable.
 ### Step 1: Context7 Lookup (Always Start Here)
 ```
 1. Use mcp__context7__resolve-library-id with the library/topic name
-2. If found: Use mcp__context7__get-library-docs with topic parameter
+2. If found: Use mcp__context7__query-docs with topic parameter
 3. If not found: Proceed to Step 2
 ```
 

@@ -70,7 +70,7 @@ $ARGUMENTS
 ### MCP Tools
 MCP tool names must be **lowercase**. Examples:
 - `mcp__context7__resolve-library-id` (correct)
-- `mcp__context7__get-library-docs` (correct)
+- `mcp__context7__query-docs` (correct)
 - `mcp__fetch__fetch` (correct)
 - ~~`mcp__Context7__resolve-library-id`~~ (incorrect - wrong casing)
 

@@ -1,10 +1,6 @@
 ---
 description: Run a comprehensive deep audit on the codebase
-arguments:
-  - name: scope
-    description: Optional scope for the audit (e.g., specific directory or file pattern)
-    type: string
-    required: false
+argument-hint: "<scope>"
 ---
 
 Use the deep-audit agent to perform a comprehensive, resource-intensive code quality audit on the codebase.

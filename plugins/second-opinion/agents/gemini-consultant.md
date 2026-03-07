@@ -1,14 +1,34 @@
 ---
 name: gemini-consultant
 description: Get second opinions and code reviews from Gemini CLI. Use when user asks for "gemini's opinion", "what would gemini think", "ask gemini", or wants an alternative AI perspective on code review, architecture feedback, or debugging. Powered by Google's Gemini models.
-tools: Bash, Read, Grep, Glob
+
+  <example>
+  Context: User wants a code review from Gemini.
+  user: "Ask gemini for a code review of this component"
+  assistant: "I'll use the gemini-consultant agent to get Gemini's code review."
+  <commentary>
+  User explicitly asks for gemini's review.
+  </commentary>
+  </example>
+  <example>
+  Context: User wants Gemini's perspective on API design.
+  user: "Get gemini's opinion on our API design"
+  assistant: "I'll launch the gemini-consultant agent for API design feedback."
+  <commentary>
+  Architecture/design feedback from Gemini.
+  </commentary>
+  </example>
+  <example>
+  Context: User wants an alternative AI perspective.
+  user: "What would gemini think about this refactoring?"
+  assistant: "I'll use the gemini-consultant agent to get an alternative perspective."
+  <commentary>
+  Second opinion request mentioning gemini.
+  </commentary>
+  </example>
+tools: ["Bash", "Read", "Grep", "Glob"]
 model: inherit
-skills: ai-consultation
-examples:
-  - "Ask gemini for a code review of this component"
-  - "Get gemini's opinion on our API design"
-  - "What would gemini think about this refactoring?"
-  - "Have gemini analyze this for performance issues"
+color: magenta
 ---
 
 # Gemini Consultant Agent

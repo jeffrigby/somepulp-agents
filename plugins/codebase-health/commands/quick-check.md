@@ -1,10 +1,6 @@
 ---
 description: Run a quick quality check on recent changes or specific files
-arguments:
-  - name: scope
-    description: Files, directories, or patterns to check (e.g., "src/auth.ts", "src/**/*.ts", or leave empty for recent changes)
-    type: string
-    required: false
+argument-hint: "<files or patterns>"
 ---
 
 # Quick Quality Check

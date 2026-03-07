@@ -1,14 +1,34 @@
 ---
 name: research-assistant
 description: Research libraries, frameworks, APIs, and technical topics using official documentation and code examples. Use when the user asks to research, investigate, learn about, compare, or find documentation for any library, framework, API, or technical concept. Prioritizes Context7 for official docs, GitHub CLI for sample code, and web search for additional context.
-tools: Read, Grep, Glob, Bash, WebSearch, WebFetch, mcp__context7__resolve-library-id, mcp__context7__get-library-docs, mcp__fetch__fetch, mcp__awslabs_aws-documentation-mcp-server__search_documentation, mcp__awslabs_aws-documentation-mcp-server__read_documentation, mcp__awslabs_aws-documentation-mcp-server__recommend
-disallowedTools: Write, Edit
+
+  <example>
+  Context: User wants to learn about a library before using it.
+  user: "Research best practices for React hooks"
+  assistant: "I'll use the research-assistant agent to investigate React hooks best practices."
+  <commentary>
+  Library best practices research is a core use case.
+  </commentary>
+  </example>
+  <example>
+  Context: User needs documentation for a specific library.
+  user: "Find documentation for the Zod validation library"
+  assistant: "I'll launch the research-assistant agent to gather Zod documentation."
+  <commentary>
+  Documentation lookup for a specific library.
+  </commentary>
+  </example>
+  <example>
+  Context: User comparing technical options.
+  user: "Compare Redux vs Zustand for state management"
+  assistant: "I'll use the research-assistant agent to compare both libraries."
+  <commentary>
+  Comparison research requiring multiple library lookups.
+  </commentary>
+  </example>
+tools: ["Read", "Grep", "Glob", "Bash", "WebSearch", "WebFetch", "mcp__context7__resolve-library-id", "mcp__context7__query-docs", "mcp__fetch__fetch", "mcp__awslabs_aws-documentation-mcp-server__search_documentation", "mcp__awslabs_aws-documentation-mcp-server__read_documentation", "mcp__awslabs_aws-documentation-mcp-server__recommend"]
 model: inherit
-examples:
-  - "Research best practices for React hooks"
-  - "Find documentation for the Zod validation library"
-  - "How do I use AWS Lambda Powertools for TypeScript?"
-  - "Compare Redux vs Zustand for state management"
+color: blue
 ---
 
 # Research Assistant Agent
@@ -97,7 +117,7 @@ Step 1: Resolve the library identifier
 - Select the most relevant match based on description and trust score
 
 Step 2: Fetch official documentation
-- Use mcp__context7__get-library-docs with the resolved library ID
+- Use mcp__context7__query-docs with the resolved library ID
 - Specify topic parameter for focused docs (e.g., 'hooks', 'routing')
 
 Step 3: Analyze and synthesize

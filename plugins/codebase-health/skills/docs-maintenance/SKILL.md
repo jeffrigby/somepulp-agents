@@ -1,7 +1,7 @@
 ---
 name: docs-maintenance
-description: Keep project documentation current and optimized for AI agents. Use when user asks to "update docs", "sync documentation", "update CLAUDE.md", "update README", "check documentation freshness", "document recent changes", or "optimize docs for AI".
-allowed-tools: Read, Write, Edit, Grep, Glob, Bash, TodoWrite
+description: This skill should be used when the user asks to "update docs", "sync documentation", "update CLAUDE.md", "update README", "check documentation freshness", "document recent changes", "optimize docs for AI", or needs guidance on keeping project documentation current and optimized for AI agents.
+version: 1.0.0
 ---
 
 # Documentation Maintenance Skill
@@ -22,13 +22,14 @@ Comprehensive methodology for keeping project documentation current, consistent,
 ### Phase 1: Documentation Inventory
 
 1. Find all documentation files in the project:
-   - `CLAUDE.md` - AI agent instructions
+   - `CLAUDE.md` or `.claude/CLAUDE.md` - AI agent instructions (highest priority)
+   - `CLAUDE.local.md` - Personal project-specific preferences (not in git)
+   - `.claude/rules/*.md` - Modular rules (may have `paths` frontmatter for scoping)
    - `README.md` - Project overview
    - `CHANGELOG.md` - Version history
    - `/docs/` directory - Extended documentation
-   - Inline documentation (JSDoc, docstrings, comments)
-2. Record last modified dates for each doc
-3. Identify documentation types and their purposes
+2. Check for `@path` imports in CLAUDE.md that reference additional files
+3. Record last modified dates for each doc
 4. Note any missing essential documentation
 
 ### Phase 2: Git History Analysis
@@ -49,9 +50,24 @@ Comprehensive methodology for keeping project documentation current, consistent,
 
 ### Phase 3: CLAUDE.md Optimization
 
-Verify CLAUDE.md includes essential sections:
+#### Size Check (Critical)
 
-**Required Sections:**
+**Target under 200 lines per CLAUDE.md file.** Longer files consume more context and reduce adherence. If over 200 lines:
+- Split using `@path/to/file` imports to reference additional files
+- Move path-specific instructions to `.claude/rules/` directory
+- Prune: if Claude already does something correctly without the instruction, delete it
+
+#### File Ecosystem Check
+
+Check for proper use of the CLAUDE.md ecosystem:
+- `CLAUDE.md` or `.claude/CLAUDE.md` - project instructions (checked into git)
+- `CLAUDE.local.md` - personal project-specific preferences (not in git)
+- `.claude/rules/*.md` - modular, topic-specific rules (can use `paths` frontmatter for scoping)
+- `@path` imports - for referencing additional files without duplicating content
+- `~/.claude/CLAUDE.md` - user-level personal preferences
+
+#### Required Sections
+
 - [ ] Project Overview - What the project does
 - [ ] Build/Test Commands - Exact commands to run
 - [ ] Key File Locations - Important directories and files
@@ -60,20 +76,28 @@ Verify CLAUDE.md includes essential sections:
 - [ ] Common Pitfalls - Things AI agents often get wrong
 - [ ] Tool/Dependency Notes - Special requirements
 
-**AI-Friendly Patterns:**
+#### Content Quality: Include vs Exclude
+
+**Include:** Bash commands Claude can't guess, code style rules differing from defaults, testing instructions, repo etiquette, architectural decisions, dev environment quirks, common gotchas.
+
+**Exclude:** Anything Claude can figure out by reading code, standard language conventions, detailed API docs (link instead), frequently changing info, long tutorials, file-by-file codebase descriptions, self-evident practices.
+
+#### Writing Patterns
+
 - Use imperative language ("Run `npm test`" not "You can run tests")
 - Provide exact file paths, not vague references
 - Include concrete code examples
-- Be explicit about constraints and requirements
 - List things NOT to do (anti-patterns)
-- Keep instructions actionable and specific
+- Add `IMPORTANT` or `YOU MUST` for critical instructions (use sparingly)
+- Keep instructions specific enough to verify
 
-**Anti-Patterns to Fix:**
+#### Anti-Patterns to Fix
+
 - Vague descriptions ("the main file")
 - Outdated commands or paths
-- Missing error handling guidance
+- Conflicting instructions across files (Claude picks arbitrarily)
+- Instructions Claude follows without being told (prune these)
 - Assumed context or tribal knowledge
-- Inconsistent naming in instructions
 
 ### Phase 4: README Synchronization
 

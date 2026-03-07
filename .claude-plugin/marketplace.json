@@ -1,28 +1,30 @@
 {
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
   "name": "somepulp-agents",
+  "version": "2.2.0",
+  "description": "AI-powered developer assistants for code auditing, research, and multi-model consultation",
   "owner": {
     "name": "Some Pulp LLC",
     "email": "claude-plugin@somepulp.net"
-  },
-  "metadata": {
-    "description": "AI-powered developer assistants for code auditing, research, and multi-model consultation",
-    "version": "2.1.0"
   },
   "plugins": [
     {
       "name": "codebase-health",
       "source": "./plugins/codebase-health",
-      "description": "Codebase health tools: /deep-audit, /quick-check, /dead-code, /update-docs for code quality and documentation maintenance"
+      "description": "Codebase health tools: /deep-audit, /quick-check, /dead-code, /update-docs for code quality and documentation maintenance",
+      "category": "development"
     },
     {
       "name": "second-opinion",
       "source": "./plugins/second-opinion",
-      "description": "Get second opinions from Codex CLI and Gemini CLI: /codex-opinion and /gemini-opinion for code reviews and architecture"
+      "description": "Get second opinions from Codex CLI and Gemini CLI: /codex-opinion and /gemini-opinion for code reviews and architecture",
+      "category": "development"
     },
     {
       "name": "research-assistant",
       "source": "./plugins/research-assistant",
-      "description": "Research libraries and APIs: /research for comprehensive research, /official-docs for pre-task doc lookups"
+      "description": "Research libraries and APIs: /research for comprehensive research, /official-docs for pre-task doc lookups",
+      "category": "productivity"
     }
   ]
 }

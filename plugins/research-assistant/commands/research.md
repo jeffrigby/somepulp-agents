@@ -1,10 +1,6 @@
 ---
 description: Research a library, framework, or technical topic
-arguments:
-  - name: topic
-    description: The library, framework, API, or technical topic to research
-    type: string
-    required: true
+argument-hint: "<topic>"
 ---
 
 Use the research-assistant agent to research the specified topic.

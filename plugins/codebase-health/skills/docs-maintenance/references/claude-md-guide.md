@@ -1,20 +1,167 @@
 # CLAUDE.md Optimization Guide
 
-This guide covers how to create and maintain CLAUDE.md files that maximize AI coding agent effectiveness.
+This guide covers how to create and maintain CLAUDE.md files based on the official Claude Code documentation.
 
-## Purpose of CLAUDE.md
+## What CLAUDE.md Is
 
-CLAUDE.md is a special file that AI coding agents (like Claude Code) read to understand how to work with a codebase. Unlike README (for humans) or code comments (for developers), CLAUDE.md is specifically designed to give AI agents the context they need to be effective.
+CLAUDE.md is a markdown file that Claude Code reads at the start of every conversation. It provides persistent context — coding standards, architecture decisions, preferred libraries, workflow rules, and build commands.
+
+CLAUDE.md is **context, not enforcement**. Claude reads it and tries to follow it, but there's no guarantee of strict compliance. The more specific and concise the instructions, the more consistently Claude follows them.
+
+## Critical Constraints
+
+### Size Limit: Target Under 200 Lines
+
+Files over 200 lines consume more context and reduce adherence. If instructions are growing large, split them using:
+- `@path` imports to reference other files
+- `.claude/rules/` for modular, path-specific rules
+
+**For each line, ask: "Would removing this cause Claude to make mistakes?" If not, cut it.**
+
+### Pruning Is Essential
+
+If Claude already does something correctly without the instruction, delete it or convert it to a hook. Bloated CLAUDE.md files cause Claude to **ignore actual instructions**.
+
+Treat CLAUDE.md like code: review it when things go wrong, prune it regularly, and test changes by observing whether Claude's behavior actually shifts.
+
+## File Locations
+
+CLAUDE.md files can live in several locations, each with different scope. More specific locations take precedence:
+
+| Scope | Location | Purpose | Shared With |
+|-------|----------|---------|-------------|
+| **Managed policy** | `/Library/Application Support/ClaudeCode/CLAUDE.md` (macOS) | Org-wide instructions managed by IT/DevOps | All users in org |
+| **Project** | `./CLAUDE.md` or `./.claude/CLAUDE.md` | Team-shared project instructions | Team via source control |
+| **User** | `~/.claude/CLAUDE.md` | Personal preferences for all projects | Just you (all projects) |
+| **Local** | `./CLAUDE.local.md` | Personal project-specific, not in git | Just you (current project) |
+
+### Loading Behavior
+
+- CLAUDE.md files **above** the working directory load in full at launch
+- CLAUDE.md files in **subdirectories** load on-demand when Claude reads files in those directories
+- CLAUDE.md **fully survives** `/compact` — after compaction, Claude re-reads it from disk
+- In monorepos, use `claudeMdExcludes` setting to skip irrelevant CLAUDE.md files from other teams
+
+### CLAUDE.local.md
+
+For personal project-specific preferences that shouldn't be checked into git:
+- Automatically loaded at session start
+- Automatically added to `.gitignore`
+- Good for: sandbox URLs, preferred test data, personal tooling shortcuts
+
+## @path Imports
+
+CLAUDE.md files can import additional files using `@path/to/import` syntax:
+
+```markdown
+See @README.md for project overview and @package.json for available npm commands.
+
+# Additional Instructions
+- Git workflow: @docs/git-instructions.md
+- Personal overrides: @~/.claude/my-project-instructions.md
+```
+
+**Rules:**
+- Both relative and absolute paths allowed
+- Relative paths resolve relative to the file containing the import
+- Imported files can recursively import other files (max depth: 5)
+- First time external imports are encountered, Claude shows an approval dialog
+
+## .claude/rules/ Directory
+
+For larger projects, organize instructions into modular, topic-specific files:
+
+```
+your-project/
+├── .claude/
+│   ├── CLAUDE.md           # Main project instructions
+│   └── rules/
+│       ├── code-style.md   # Code style guidelines
+│       ├── testing.md      # Testing conventions
+│       └── security.md     # Security requirements
+```
+
+### Path-Specific Rules
+
+Rules can be scoped to specific files using YAML frontmatter:
+
+```markdown
+---
+paths:
+  - "src/api/**/*.ts"
+---
+
+# API Development Rules
+
+- All API endpoints must include input validation
+- Use the standard error response format
+- Include OpenAPI documentation comments
+```
+
+Rules without a `paths` field are loaded unconditionally. Path-scoped rules trigger when Claude reads matching files.
+
+### Glob Patterns
+
+| Pattern | Matches |
+|---------|---------|
+| `**/*.ts` | All TypeScript files in any directory |
+| `src/**/*` | All files under `src/` |
+| `*.md` | Markdown files in project root |
+| `src/components/*.tsx` | React components in a specific directory |
+| `src/**/*.{ts,tsx}` | Multiple extensions via brace expansion |
+
+### Symlinks
+
+`.claude/rules/` supports symlinks for sharing rules across projects:
+
+```bash
+ln -s ~/shared-claude-rules .claude/rules/shared
+ln -s ~/company-standards/security.md .claude/rules/security.md
+```
+
+## What to Include vs Exclude
+
+| Include | Exclude |
+|---------|---------|
+| Bash commands Claude can't guess | Anything Claude can figure out by reading code |
+| Code style rules that differ from defaults | Standard language conventions Claude already knows |
+| Testing instructions and preferred test runners | Detailed API documentation (link to docs instead) |
+| Repository etiquette (branch naming, PR conventions) | Information that changes frequently |
+| Architectural decisions specific to the project | Long explanations or tutorials |
+| Developer environment quirks (required env vars) | File-by-file descriptions of the codebase |
+| Common gotchas or non-obvious behaviors | Self-evident practices like "write clean code" |
+
+## Writing Effective Instructions
+
+### Structure
+Use markdown headers and bullets to group related instructions. Organized sections are easier to follow than dense paragraphs.
+
+### Specificity
+Write instructions that are concrete enough to verify:
+
+- "Use 2-space indentation" instead of "Format code properly"
+- "Run `npm test` before committing" instead of "Test your changes"
+- "API handlers live in `src/api/handlers/`" instead of "Keep files organized"
+
+### Emphasis
+Add `IMPORTANT` or `YOU MUST` to critical instructions to improve adherence. Use sparingly.
+
+### Consistency
+If two rules contradict each other, Claude may pick one arbitrarily. Review periodically to remove outdated or conflicting instructions.
+
+### Check Into Git
+CLAUDE.md should be checked into git so the team can contribute. The file compounds in value over time.
+
+## Generating CLAUDE.md
+
+Run `/init` to generate a starter CLAUDE.md automatically. Claude analyzes the codebase and creates a file with build commands, test instructions, and project conventions it discovers. If a CLAUDE.md already exists, `/init` suggests improvements rather than overwriting it.
 
 ## Required Sections
 
-Every CLAUDE.md should include these sections:
+Every project CLAUDE.md should include these sections:
 
 ### 1. Project Overview
 
-**Purpose:** Help the agent understand what the project does and its scope.
-
-**Template:**
 ```markdown
 ## Project Overview
 
@@ -26,71 +173,29 @@ Key technologies:
 - [Infrastructure/deployment]
 ```
 
-**Good Example:**
-```markdown
-## Project Overview
-
-This is a Next.js e-commerce platform that handles product catalog, shopping cart, and checkout flows.
-
-Key technologies:
-- Next.js 14 with App Router
-- PostgreSQL with Prisma ORM
-- Stripe for payments
-- Redis for session management
-```
-
-**Bad Example:**
-```markdown
-## Overview
-
-This is our main project. It does a lot of things.
-```
-
 ### 2. Build and Test Commands
 
-**Purpose:** Give agents exact commands to build, test, and run the project.
-
-**Template:**
 ```markdown
 ## Commands
 
 ### Development
 - `npm run dev` - Start development server on port 3000
 - `npm run build` - Create production build
-- `npm run lint` - Run ESLint
 
 ### Testing
 - `npm test` - Run all tests
 - `npm run test:unit` - Run unit tests only
-- `npm run test:e2e` - Run end-to-end tests (requires running server)
-
-### Database
-- `npm run db:migrate` - Run pending migrations
-- `npm run db:seed` - Seed development data
 ```
 
-**Key Points:**
+Key points:
 - Use exact command syntax
 - Include what each command does
-- Note any prerequisites (e.g., "requires running server")
-- Include less obvious commands agents might need
+- Note prerequisites ("requires running server")
 
 ### 3. Key File Locations
 
-**Purpose:** Help agents navigate the codebase efficiently.
-
-**Template:**
 ```markdown
 ## Project Structure
-
-```
-src/
-├── app/           # Next.js App Router pages
-├── components/    # Reusable React components
-├── lib/           # Shared utilities and helpers
-├── services/      # Business logic and API clients
-└── types/         # TypeScript type definitions
-```
 
 Key files:
 - `src/app/layout.tsx` - Root layout with providers
@@ -100,9 +205,6 @@ Key files:
 
 ### 4. Architecture Overview
 
-**Purpose:** Explain how components connect and data flows.
-
-**Template:**
 ```markdown
 ## Architecture
 
@@ -110,19 +212,14 @@ Key files:
 1. API routes in `src/app/api/` handle requests
 2. Routes call services in `src/services/`
 3. Services use Prisma client from `src/lib/db.ts`
-4. Responses are typed with schemas from `src/types/`
 
 ### Key Patterns
 - All database access goes through service layer
 - Components fetch data using React Query
-- Form validation uses Zod schemas
 ```
 
 ### 5. Coding Conventions
 
-**Purpose:** Ensure agents write code that matches project style.
-
-**Template:**
 ```markdown
 ## Conventions
 
@@ -130,61 +227,39 @@ Key files:
 - Components: PascalCase (`UserProfile.tsx`)
 - Utilities: camelCase (`formatDate.ts`)
 - Constants: SCREAMING_SNAKE_CASE
-- Database tables: snake_case
-
-### File Organization
-- One component per file
-- Co-locate tests with source (`Button.tsx`, `Button.test.tsx`)
-- Index files only for public API exports
 
 ### Patterns
 - Use `async/await` over `.then()` chains
 - Prefer named exports over default exports
-- Use TypeScript strict mode types (no `any`)
 ```
 
 ### 6. Common Pitfalls
 
-**Purpose:** Prevent agents from making common mistakes.
-
-**Template:**
 ```markdown
 ## Common Pitfalls
 
 ### Do NOT
 - Import from `@/lib/db` in client components (server-only)
 - Use `any` type - always define proper types
-- Modify state directly in reducers
 - Skip error boundaries in page components
 
 ### Watch Out For
 - The `user` table uses soft deletes (`deleted_at` column)
-- API routes require auth middleware - check `src/middleware.ts`
 - Environment variables need `NEXT_PUBLIC_` prefix for client access
 ```
 
 ### 7. Tool and Dependency Notes
 
-**Purpose:** Document special requirements and gotchas.
-
-**Template:**
 ```markdown
 ## Dependencies
 
 ### Required Environment
 - Node.js 20+
 - PostgreSQL 15+
-- Redis 7+
 
 ### Environment Variables
-Copy `.env.example` to `.env.local` and configure:
 - `DATABASE_URL` - PostgreSQL connection string
-- `REDIS_URL` - Redis connection string
 - `STRIPE_SECRET_KEY` - Stripe API key (test mode ok for dev)
-
-### Known Issues
-- `sharp` package requires manual install on M1 Macs
-- Run `npm run postinstall` after adding new Prisma models
 ```
 
 ## AI-Friendly Writing Patterns
@@ -205,7 +280,6 @@ Copy `.env.example` to `.env.local` and configure:
 ```markdown
 Create API routes following this pattern:
 ```typescript
-// src/app/api/users/route.ts
 export async function GET() {
   const users = await userService.getAll();
   return Response.json(users);
@@ -222,28 +296,33 @@ export async function GET() {
 
 ### List Anti-Patterns
 
-**Good:**
-```markdown
-### Never Do This
-- Don't use dynamic code execution functions
-- Don't store passwords in plain text
-- Don't commit `.env` files
-```
+Always include what NOT to do. Agents learn from boundaries.
 
-## Section Order Recommendation
+## Troubleshooting
 
-1. Project Overview (what is this?)
-2. Commands (how do I run it?)
-3. Project Structure (where is everything?)
-4. Architecture (how does it work?)
-5. Conventions (how should I write code?)
-6. Common Pitfalls (what should I avoid?)
-7. Dependencies (what do I need?)
+### Claude Isn't Following CLAUDE.md
+
+1. Run `/memory` to verify files are loaded
+2. Check the file is in a location that gets loaded
+3. Make instructions more specific
+4. Look for conflicting instructions across files
+5. Use the `InstructionsLoaded` hook to debug which files load
+
+### CLAUDE.md Is Too Large
+
+- Move detailed content into `@path` imported files
+- Split instructions into `.claude/rules/` files
+- Ruthlessly prune instructions Claude follows without being told
+
+### Instructions Lost After /compact
+
+CLAUDE.md fully survives compaction. If an instruction disappeared, it was given only in conversation, not written to CLAUDE.md.
 
 ## Maintenance Checklist
 
 When updating CLAUDE.md, verify:
 
+- [ ] Under 200 lines (or split with @imports / rules)
 - [ ] All commands still work
 - [ ] File paths are accurate
 - [ ] Examples compile/run
@@ -252,39 +331,25 @@ When updating CLAUDE.md, verify:
 - [ ] New features are documented
 - [ ] Conventions match current code
 - [ ] Pitfalls are still relevant
+- [ ] No conflicting instructions
+- [ ] No instructions Claude follows without being told (prune these)
 
-## Anti-Patterns to Avoid
+## Advanced: Monorepo Configuration
 
-### Vague References
-```markdown
-# Bad
-See the main config file for settings.
+### claudeMdExcludes Setting
 
-# Good
-See `config/app.config.ts` for application settings.
+Skip irrelevant CLAUDE.md files in monorepos by adding to `.claude/settings.local.json`:
+
+```json
+{
+  "claudeMdExcludes": [
+    "**/monorepo/CLAUDE.md",
+    "/home/user/monorepo/other-team/.claude/rules/**"
+  ]
+}
 ```
 
-### Outdated Information
-Regularly check:
-- Command syntax hasn't changed
-- Dependencies are current versions
-- Deprecated features are removed
-- New patterns are documented
-
-### Assumed Context
-```markdown
-# Bad
-Use the standard auth pattern.
-
-# Good
-Use the auth pattern from `src/lib/auth.ts`:
-1. Import `withAuth` wrapper
-2. Wrap API route handler
-3. Access `req.user` for authenticated user
-```
-
-### Missing Negative Guidance
-Always include what NOT to do, not just what to do. Agents learn from boundaries.
+Patterns match against absolute file paths using glob syntax. Managed policy CLAUDE.md files cannot be excluded.
 
 ## Template for New Projects
 
@@ -307,10 +372,6 @@ Key technologies:
 - `[command]` - [description]
 
 ## Project Structure
-
-```
-[directory tree]
-```
 
 Key files:
 - `[path]` - [purpose]

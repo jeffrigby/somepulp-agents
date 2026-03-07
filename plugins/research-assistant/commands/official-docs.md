@@ -1,10 +1,6 @@
 ---
 description: Fetch official documentation and code examples before starting a task
-arguments:
-  - name: topic
-    description: Library, framework, API, or feature to look up (e.g., "React useEffect", "Zod validation", "Prisma relations")
-    type: string
-    required: true
+argument-hint: "<topic>"
 ---
 
 Use the official-docs agent to fetch official documentation for the specified topic.
