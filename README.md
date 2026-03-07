@@ -50,7 +50,7 @@ git clone https://github.com/jeffrigby/somepulp-agents.git
 | Plugin | Requirements |
 |--------|--------------|
 | **research-assistant** | Bundled MCP servers start automatically. **Requires Claude Code restart** after enabling. |
-| **second-opinion** | [OpenAI Codex CLI](https://github.com/openai/codex) + `OPENAI_API_KEY` for Codex; [Google Gemini CLI](https://github.com/google-gemini/gemini-cli) for Gemini |
+| **second-opinion** | [OpenAI Codex CLI](https://github.com/openai/codex) + `OPENAI_API_KEY` or `CODEX_API_KEY` for Codex; [Google Gemini CLI](https://github.com/google-gemini/gemini-cli) + Google OAuth or `GEMINI_API_KEY` for Gemini |
 
 ## Plugin Structure
 

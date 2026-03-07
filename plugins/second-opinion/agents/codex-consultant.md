@@ -245,6 +245,8 @@ Please evaluate:
 ### Safety
 - This agent is READ-ONLY - codex cannot modify files (read-only sandbox always enabled)
 - All consultations run with `--sandbox "read-only"` flag
+- Auto-approval is set via `-c 'ask_for_approval="on-request"'` without changing sandbox mode
+- **Important**: Never use `--full-auto` — it overrides `--sandbox` to `workspace-write`
 - Safe for code review, analysis, and consultation tasks
 
 ### Prompt Quality

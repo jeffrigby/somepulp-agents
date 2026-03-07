@@ -99,7 +99,7 @@ ${CLAUDE_PLUGIN_ROOT}/scripts/gemini-review.sh --help
 **Or invoke gemini directly:**
 ```bash
 # Basic consultation (read-only with sandbox)
-gemini --yolo --sandbox "Review index.js for security issues"
+gemini --approval-mode=yolo --sandbox -p "Review index.js for security issues"
 ```
 
 ### Phase 4: Synthesis and Presentation
@@ -245,7 +245,8 @@ Please evaluate:
 
 ### Safety
 - This agent is READ-ONLY - gemini cannot modify files (sandbox mode always enabled)
-- All consultations run with --yolo --sandbox flags
+- All consultations run with `--approval-mode=yolo --sandbox` flags
+- Uses `-p` flag for reliable non-interactive (headless) prompt delivery
 - Safe for code review, analysis, and consultation tasks
 
 ### Prompt Quality
@@ -301,13 +302,14 @@ The prompt templates and examples from the ai-consultation skill can be used:
 ## Gemini CLI Options Reference
 
 ```
-gemini [options] "<prompt>"
+gemini [options] -p "<prompt>"
 
 Key options (used by helper script):
-  -s, --sandbox       Run in sandbox mode (ALWAYS enabled - read-only)
-  -y, --yolo          Auto-approve all actions (ALWAYS enabled)
-  -d (script)         Include additional directory
-  -o, --output-format Output format: text, json, stream-json
+  -s, --sandbox          Run in sandbox mode (ALWAYS enabled - read-only)
+  --approval-mode=yolo   Auto-approve all actions (ALWAYS enabled)
+  -p, --prompt           Non-interactive (headless) mode with given prompt
+  -d (script)            Include additional directory
+  -o, --output-format    Output format: text, json, stream-json
   --include-directories  Additional directories to include
 ```
 

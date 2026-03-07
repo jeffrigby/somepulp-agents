@@ -5,7 +5,7 @@
       "hooks": [
         {
           "type": "prompt",
-          "prompt": "Verify this Bash command uses --sandbox or read-only mode. Block if it could modify files."
+          "prompt": "Verify this Bash command uses --sandbox or read-only mode when invoking codex or gemini. Block if it invokes codex with --full-auto (which overrides sandbox to workspace-write) or if it could modify files. Approve commands that don't invoke codex/gemini."
         }
       ]
     }

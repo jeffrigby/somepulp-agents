@@ -88,13 +88,15 @@ Consolidated plugin providing second opinions from multiple AI tools:
 
 **Codex Consultant:**
 - Uses `scripts/codex-review.sh` helper
-- Requires: `npm install -g @openai/codex` and `OPENAI_API_KEY`
+- Requires: `npm install -g @openai/codex` and `OPENAI_API_KEY` (or `CODEX_API_KEY`)
 - Invocation: `${CLAUDE_PLUGIN_ROOT}/scripts/codex-review.sh "<prompt>"`
+- **Important**: Script uses `-c 'ask_for_approval="on-request"'` instead of `--full-auto` to preserve read-only sandbox
 
 **Gemini Consultant:**
 - Uses `scripts/gemini-review.sh` helper
-- Requires: `gemini auth login`
+- Requires: `npm install -g @google/gemini-cli` and Google OAuth (browser prompt on first run) or `GEMINI_API_KEY`
 - Invocation: `${CLAUDE_PLUGIN_ROOT}/scripts/gemini-review.sh "<prompt>"`
+- Uses `--approval-mode=yolo` (replaces deprecated `--yolo`) and `-p` for headless mode
 
 **Commands:** `/codex-opinion`, `/gemini-opinion`
 **Agents:** `codex-consultant`, `gemini-consultant`

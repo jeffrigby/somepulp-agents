@@ -40,7 +40,7 @@ ${YELLOW}USAGE:${NC}
 ${YELLOW}OPTIONS:${NC}
     -d, --dir DIR       Project directory (default: current directory)
     -o, --output FILE   Save codex's final response to file
-    -n, --no-auto       Disable full-auto mode (ask for approval)
+    -n, --no-auto       Disable auto-approval (codex may prompt for actions)
     -h, --help          Show this help message
 
 ${YELLOW}EXAMPLES:${NC}
@@ -143,7 +143,7 @@ echo -e "${GREEN}║  Codex Consultation (READ-ONLY)                            
 echo -e "${GREEN}╚══════════════════════════════════════════════════════════════╝${NC}" >&2
 printf '  Directory:  %s\n' "$DIR" >&2
 printf '  Sandbox:    %s\n' "$SANDBOX" >&2
-printf '  Full-auto:  %s\n' "$FULL_AUTO" >&2
+printf '  Auto-approve: %s\n' "$FULL_AUTO" >&2
 if [[ -n "$OUTPUT_FILE" ]]; then
     printf '  Output:     %s\n' "$OUTPUT_FILE" >&2
 fi
@@ -153,8 +153,11 @@ echo "" >&2
 # Build command array - ALWAYS read-only (no eval, no injection possible)
 cmd=(codex exec --sandbox "$SANDBOX" -C "$DIR")
 
+# NOTE: We intentionally avoid --full-auto here because it overrides
+# --sandbox to workspace-write. Instead, we set only the approval policy
+# via config override to auto-approve without changing sandbox mode.
 if [[ "$FULL_AUTO" == "yes" ]]; then
-    cmd+=(--full-auto)
+    cmd+=(-c 'ask_for_approval="on-request"')
 fi
 
 if [[ -n "$OUTPUT_FILE" ]]; then
@@ -168,10 +171,9 @@ echo -e "${GREEN}Executing codex...${NC}" >&2
 echo "" >&2
 
 # Execute the command safely using array expansion
-"${cmd[@]}"
-
-# Capture exit code
-EXIT_CODE=$?
+# Use || to capture non-zero exit codes (set -e would otherwise abort)
+EXIT_CODE=0
+"${cmd[@]}" || EXIT_CODE=$?
 
 echo "" >&2
 if [[ $EXIT_CODE -eq 0 ]]; then
