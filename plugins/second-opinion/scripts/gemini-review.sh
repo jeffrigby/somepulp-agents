@@ -146,7 +146,7 @@ printf '  Prompt:     "%s"\n' "$PROMPT" >&2
 echo "" >&2
 
 # Build command array - ALWAYS sandbox (read-only, no eval, no injection possible)
-cmd=(gemini --yolo --sandbox)
+cmd=(gemini --approval-mode=yolo --sandbox)
 
 if [[ -n "$OUTPUT_FORMAT" ]]; then
     cmd+=(-o "$OUTPUT_FORMAT")
@@ -159,17 +159,16 @@ if [[ ${#INCLUDE_DIRS_ARRAY[@]} -gt 0 ]]; then
     done
 fi
 
-# Use -- to prevent prompt from being interpreted as options
-cmd+=(-- "$PROMPT")
+# Use -p for non-interactive (headless) mode — more reliable than positional args
+cmd+=(-p "$PROMPT")
 
 echo -e "${GREEN}Executing gemini...${NC}" >&2
 echo "" >&2
 
 # Execute the command safely using array expansion
-"${cmd[@]}"
-
-# Capture exit code
-EXIT_CODE=$?
+# Use || to capture non-zero exit codes (set -e would otherwise abort)
+EXIT_CODE=0
+"${cmd[@]}" || EXIT_CODE=$?
 
 echo "" >&2
 if [[ $EXIT_CODE -eq 0 ]]; then

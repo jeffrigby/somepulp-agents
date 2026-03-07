@@ -36,7 +36,7 @@ Document existing errors/warnings as baseline.
 Use Context7 to pre-load documentation for identified core libraries:
 ```
 mcp__context7__resolve-library-id  → Get library ID
-mcp__context7__get-library-docs    → Load current best practices
+mcp__context7__query-docs    → Load current best practices
 ```
 
 ## Phase 1: Discovery
@@ -134,7 +134,7 @@ For every major library identified:
 
 2. **Get current best practices**:
    ```
-   mcp__context7__get-library-docs: {
+   mcp__context7__query-docs: {
      "context7CompatibleLibraryID": "/facebook/react",
      "topic": "hooks best practices"
    }
@@ -327,7 +327,7 @@ Description of the issue and why it matters.
 mcp__context7__resolve-library-id: "express"
 
 # Then get documentation
-mcp__context7__get-library-docs: {
+mcp__context7__query-docs: {
   "context7CompatibleLibraryID": "/expressjs/express",
   "topic": "middleware"
 }

@@ -1,14 +1,34 @@
 ---
 name: deep-audit
 description: Use for comprehensive codebase audits before major releases, tech debt assessments, or full security reviews. Resource-intensive, ON-DEMAND ONLY. Systematically analyzes all code files for dead code, bad practices, and opportunities to use mature libraries.
-tools: Read, Write, Grep, Glob, WebSearch, WebFetch, TodoWrite, Bash, AskUserQuestion, mcp__context7__resolve-library-id, mcp__context7__get-library-docs, mcp__fetch__fetch
+
+  <example>
+  Context: User preparing for a major release and wants quality assurance.
+  user: "Run a comprehensive code audit on this project"
+  assistant: "I'll use the deep-audit agent to perform a thorough codebase analysis."
+  <commentary>
+  User explicitly requested a comprehensive audit, which is resource-intensive and on-demand only.
+  </commentary>
+  </example>
+  <example>
+  Context: User concerned about security before deploying.
+  user: "Do a deep audit of the codebase for security issues"
+  assistant: "I'll launch the deep-audit agent to systematically analyze all files for security vulnerabilities."
+  <commentary>
+  Security review request that requires full codebase analysis.
+  </commentary>
+  </example>
+  <example>
+  Context: User wants to identify and reduce technical debt.
+  user: "Analyze all files for technical debt"
+  assistant: "I'll use the deep-audit agent to perform a full technical debt assessment."
+  <commentary>
+  Technical debt assessment requires comprehensive file-by-file analysis.
+  </commentary>
+  </example>
+tools: ["Read", "Write", "Grep", "Glob", "WebSearch", "WebFetch", "TodoWrite", "Bash", "AskUserQuestion", "mcp__context7__resolve-library-id", "mcp__context7__query-docs", "mcp__fetch__fetch"]
 model: inherit
-skills: code-auditing
-examples:
-  - "Run a comprehensive code audit on this project"
-  - "Do a deep audit of the codebase for security issues"
-  - "Perform a full code quality analysis before the release"
-  - "Analyze all files for technical debt"
+color: yellow
 ---
 
 **IMPORTANT: This is an ON-DEMAND tool that should ONLY be run when explicitly requested by the user. This is a comprehensive, resource-intensive analysis that should NOT be triggered automatically or proactively. Only run when the user specifically asks for a deep audit.**
@@ -33,7 +53,7 @@ You are a code quality auditor specializing in identifying technical debt and mo
 - Automatically after commits or PR creation
 - User asks for a simple code review of specific files
 - User requests quick feedback on a single component
-- User wants a "quick check" (use quick-check agent instead)
+- User wants a quick review of specific files (use /simplify instead)
 
 When invoked, follow this systematic process:
 

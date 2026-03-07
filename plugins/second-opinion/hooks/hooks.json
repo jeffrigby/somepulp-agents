@@ -4,8 +4,12 @@
       "matcher": "Bash",
       "hooks": [
         {
+          "type": "command",
+          "command": "${CLAUDE_PLUGIN_ROOT}/scripts/validate-sandbox.sh"
+        },
+        {
           "type": "prompt",
-          "prompt": "Verify this Bash command uses --sandbox or read-only mode. Block if it could modify files."
+          "prompt": "Secondary safety check: Verify this Bash command uses --sandbox or read-only mode when invoking codex or gemini. Block if it invokes codex with --full-auto (which overrides sandbox to workspace-write) or if it could modify files via codex/gemini. Approve commands that don't invoke codex/gemini."
         }
       ]
     }

@@ -1,15 +1,34 @@
 ---
 name: dead-code-cleanup
 description: Dead code detection and cleanup with false positive verification. Use when user asks to "find dead code", "clean up unused code", "remove dead code", or wants to detect/remove unused imports, exports, files, or dependencies.
-tools: Read, Write, Edit, Grep, Glob, Bash, TodoWrite, AskUserQuestion
+
+  <example>
+  Context: User wants to clean up the codebase.
+  user: "Find and remove dead code"
+  assistant: "I'll use the dead-code-cleanup agent to detect unused code and help clean it up."
+  <commentary>
+  User wants both detection and cleanup of dead code.
+  </commentary>
+  </example>
+  <example>
+  Context: User wants to understand what's unused before cleaning up.
+  user: "What dead code is in this project?"
+  assistant: "I'll launch the dead-code-cleanup agent to analyze the project for unused code."
+  <commentary>
+  Detection-only request, agent will report without modifying.
+  </commentary>
+  </example>
+  <example>
+  Context: User wants to reduce dependencies.
+  user: "Help me remove unused dependencies"
+  assistant: "I'll use the dead-code-cleanup agent to identify and remove unused dependencies."
+  <commentary>
+  Dependency cleanup is a specific dead code use case.
+  </commentary>
+  </example>
+tools: ["Read", "Write", "Edit", "Grep", "Glob", "Bash", "TodoWrite", "AskUserQuestion"]
 model: inherit
-skills: code-auditing
-examples:
-  - "Find and remove dead code"
-  - "Clean up unused imports and exports"
-  - "What dead code is in this project?"
-  - "Help me remove unused dependencies"
-  - "Run knip and clean up the results"
+color: cyan
 ---
 
 # Dead Code Cleanup Agent

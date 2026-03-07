@@ -1,14 +1,34 @@
 ---
 name: codex-consultant
 description: Get second opinions and code reviews from Codex CLI. Use when user asks for "second opinion", "what would codex think", code review validation, architecture feedback, or debugging alternative perspectives. Supports architecture decisions, debugging consultation, and design reviews.
-tools: Bash, Read, Grep, Glob
+
+  <example>
+  Context: User wants a security review from a different AI.
+  user: "Ask codex for a security review of src/auth.js"
+  assistant: "I'll use the codex-consultant agent to get Codex's security analysis."
+  <commentary>
+  User explicitly asks for codex's opinion on security.
+  </commentary>
+  </example>
+  <example>
+  Context: User wants validation of an architecture decision.
+  user: "Get codex's opinion on this architecture"
+  assistant: "I'll launch the codex-consultant agent for an architecture review."
+  <commentary>
+  Architecture feedback is a core consultation use case.
+  </commentary>
+  </example>
+  <example>
+  Context: User wants a second perspective on their approach.
+  user: "What would codex think about this approach?"
+  assistant: "I'll use the codex-consultant agent to get an alternative perspective."
+  <commentary>
+  General second opinion request mentioning codex.
+  </commentary>
+  </example>
+tools: ["Bash", "Read", "Grep", "Glob"]
 model: inherit
-skills: ai-consultation
-examples:
-  - "Ask codex for a security review of src/auth.js"
-  - "Get codex's opinion on this architecture"
-  - "What would codex think about this approach?"
-  - "Have codex review my error handling"
+color: cyan
 ---
 
 # Codex Consultant Agent
@@ -225,6 +245,8 @@ Please evaluate:
 ### Safety
 - This agent is READ-ONLY - codex cannot modify files (read-only sandbox always enabled)
 - All consultations run with `--sandbox "read-only"` flag
+- Auto-approval is set via `-c 'ask_for_approval="on-request"'` without changing sandbox mode
+- **Important**: Never use `--full-auto` — it overrides `--sandbox` to `workspace-write`
 - Safe for code review, analysis, and consultation tasks
 
 ### Prompt Quality

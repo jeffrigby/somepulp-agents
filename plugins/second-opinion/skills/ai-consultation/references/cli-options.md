@@ -18,9 +18,9 @@ This document provides detailed information about CLI options for the Codex and 
 | Feature | Codex Wrapper | Codex Direct | Gemini Wrapper | Gemini Direct |
 |---------|---------------|--------------|----------------|---------------|
 | Working directory | `-d path` | `-C path` | (uses current dir) | (uses current dir) |
-| Include directories | N/A | N/A | `-d path` (repeatable) | `--include-directories path` |
+| Include directories | N/A | `--add-dir path` | `-d path` (repeatable) | `--include-directories path` |
 | Output format | `-o file` | `--output-last-message file` | `-o format` | `--output-format format` |
-| Disable auto-approve | `-n` | (omit `--full-auto`) | `-n` | (omit `--yolo`) |
+| Disable auto-approve | `-n` | (omit `-c` override) | N/A | (omit `--approval-mode`) |
 
 > **Note:** The `-d` flag has different meanings: for Codex it sets the working directory, for Gemini it adds directories to include in context.
 
@@ -44,15 +44,15 @@ Controls what modifications the AI can make to the workspace.
 
 **Examples:**
 ```bash
-# Safe review (plugin wrapper or direct CLI)
-codex exec --sandbox read-only --full-auto -C "$(pwd)" "Review security issues"
+# Safe review (direct CLI — plugin wrapper handles this automatically)
+codex exec --sandbox read-only -c 'ask_for_approval="on-request"' -C "$(pwd)" "Review security issues"
 
 # Allow changes - DIRECT CLI ONLY (use carefully!)
 # Note: The plugin wrapper always enforces read-only mode
 codex exec --sandbox workspace-write --full-auto -C "$(pwd)" "Refactor error handling"
 ```
 
-### --full-auto (Codex) / --yolo (Gemini)
+### Auto-Approval: Codex config override / Gemini --approval-mode
 
 Run without user approval for each tool use.
 
@@ -71,38 +71,43 @@ Run without user approval for each tool use.
 - When making actual code changes
 - In sensitive codebases where you want to approve each read
 
+**Codex:**
+
+> **Important:** Do NOT use `--full-auto` when you want read-only mode. `--full-auto` is a convenience alias that sets BOTH `--sandbox workspace-write` AND auto-approval, overriding any explicit `--sandbox read-only`. Instead, use `-c 'ask_for_approval="on-request"'` to enable auto-approval without changing the sandbox mode.
+
 **Examples:**
 ```bash
-# Direct CLI with full-auto enabled
-codex exec --sandbox read-only --full-auto -C "$(pwd)" "Analyze performance bottlenecks"
+# Direct CLI with auto-approval (read-only preserved)
+codex exec --sandbox read-only -c 'ask_for_approval="on-request"' -C "$(pwd)" "Analyze performance bottlenecks"
 
-# Direct CLI without full-auto (manual approval required)
+# Direct CLI without auto-approval (manual approval required)
 codex exec --sandbox read-only -C "$(pwd)" "Analyze performance bottlenecks"
 ```
 
+**Gemini:**
+
+> **Note:** `--yolo` / `-y` is deprecated. Use `--approval-mode=yolo` instead.
+
 **Plugin wrapper:**
 ```bash
-# Full-auto enabled (default)
-codex-review.sh "Analyze performance bottlenecks"
-
-# Full-auto disabled (manual approval)
-codex-review.sh -n "Analyze performance bottlenecks"
+# Auto-approval enabled (default — gemini wrapper always uses --approval-mode=yolo)
+gemini-review.sh "Analyze performance bottlenecks"
 ```
 
-### -C, --directory DIRECTORY (Codex)
+### -C, --cd DIRECTORY (Codex)
 
 Set the working directory for the session.
 
 **Usage:**
 ```bash
 # Use current directory
-codex exec --sandbox read-only --full-auto -C "$(pwd)" "Review code"
+codex exec --sandbox read-only -C "$(pwd)" "Review code"
 
 # Use specific directory
-codex exec --sandbox read-only --full-auto -C "/path/to/project" "Review code"
+codex exec --sandbox read-only -C "/path/to/project" "Review code"
 
 # Use environment variable
-codex exec --sandbox read-only --full-auto -C "$PROJECT_DIR" "Review code"
+codex exec --sandbox read-only -C "$PROJECT_DIR" "Review code"
 ```
 
 **Best practice:** Use `$(pwd)` for portability rather than hardcoded paths.
@@ -132,7 +137,7 @@ Capture the AI's final response to a file.
 
 **Example:**
 ```bash
-codex exec --sandbox read-only --full-auto \
+codex exec --sandbox read-only \
   -C "$(pwd)" \
   --output-last-message /tmp/codex-review.txt \
   "Review index.js for security issues"
@@ -153,10 +158,10 @@ gemini-review.sh "Review [FILE] for [CONCERNS]"
 
 **Direct CLI:**
 ```bash
-codex exec --sandbox read-only --full-auto -C "$(pwd)" \
+codex exec --sandbox read-only -c 'ask_for_approval="on-request"' -C "$(pwd)" \
   "Review [FILE] for [CONCERNS]"
 
-gemini --yolo --sandbox "Review [FILE] for [CONCERNS]"
+gemini --approval-mode=yolo --sandbox -p "Review [FILE] for [CONCERNS]"
 ```
 
 ### Architecture Discussion
@@ -169,10 +174,10 @@ gemini-review.sh "Analyze architecture and suggest improvements"
 
 **Direct CLI:**
 ```bash
-codex exec --sandbox read-only --full-auto -C "$(pwd)" \
+codex exec --sandbox read-only -c 'ask_for_approval="on-request"' -C "$(pwd)" \
   "Analyze architecture and suggest improvements"
 
-gemini --yolo --sandbox "Analyze architecture and suggest improvements"
+gemini --approval-mode=yolo --sandbox -p "Analyze architecture and suggest improvements"
 ```
 
 ### Debugging Consultation
@@ -185,10 +190,10 @@ gemini-review.sh "Investigate [PROBLEM] in [FILE]. What are likely causes?"
 
 **Direct CLI:**
 ```bash
-codex exec --sandbox read-only --full-auto -C "$(pwd)" \
+codex exec --sandbox read-only -c 'ask_for_approval="on-request"' -C "$(pwd)" \
   "Investigate [PROBLEM] in [FILE]. What are likely causes?"
 
-gemini --yolo --sandbox "Investigate [PROBLEM] in [FILE]. What are likely causes?"
+gemini --approval-mode=yolo --sandbox -p "Investigate [PROBLEM] in [FILE]. What are likely causes?"
 ```
 
 ### With Output Capture
@@ -201,12 +206,12 @@ gemini-review.sh -o json "Comprehensive code review"
 
 **Direct CLI:**
 ```bash
-codex exec --sandbox read-only --full-auto \
+codex exec --sandbox read-only -c 'ask_for_approval="on-request"' \
   -C "$(pwd)" \
   --output-last-message ./codex-output.txt \
   "Comprehensive code review"
 
-gemini --yolo --sandbox --output-format json "Comprehensive code review"
+gemini --approval-mode=yolo --sandbox --output-format json -p "Comprehensive code review"
 ```
 
 ### Allowing Modifications (Direct CLI Only!)
@@ -227,17 +232,17 @@ Set default behavior with environment variables:
 export CODEX_PROJECT_DIR="$(pwd)"
 
 # Then use in commands
-codex exec --sandbox read-only --full-auto -C "$CODEX_PROJECT_DIR" "Review code"
+codex exec --sandbox read-only -C "$CODEX_PROJECT_DIR" "Review code"
 ```
 
 ### Combining with Other Tools
 
 ```bash
 # Pipe output to less for paging
-codex exec --sandbox read-only --full-auto -C "$(pwd)" "Review code" | less
+codex exec --sandbox read-only -C "$(pwd)" "Review code" | less
 
 # Save and process
-codex exec --sandbox read-only --full-auto \
+codex exec --sandbox read-only \
   --output-last-message /tmp/review.txt \
   -C "$(pwd)" "Review code"
 grep "TODO" /tmp/review.txt
@@ -249,7 +254,7 @@ grep "TODO" /tmp/review.txt
 # Review multiple files
 for file in src/*.js; do
   echo "Reviewing $file..."
-  codex exec --sandbox read-only --full-auto -C "$(pwd)" \
+  codex exec --sandbox read-only -c 'ask_for_approval="on-request"' -C "$(pwd)" \
     "Review $file for security issues" > "reviews/$(basename $file).txt"
 done
 ```
@@ -260,13 +265,14 @@ done
 - Use for all reviews and consultations
 - Safe for production code
 - No risk of accidental changes
-- Can combine with --full-auto
+- Codex: use `-c 'ask_for_approval="on-request"'` (NOT `--full-auto`) to auto-approve
+- Gemini: use `--approval-mode=yolo` to auto-approve
 
 ### Workspace-Write Safety Checklist
 - Get user confirmation first
 - Review changes before committing
 - Use in development/feature branches only
-- Consider using without --full-auto for approval
+- Consider omitting auto-approval for manual approval of each action
 - Keep backups or ensure git is clean
 
 ## Troubleshooting
@@ -313,21 +319,26 @@ ls -l $(which codex)
 codex exec [options] "<prompt>"
 
 Key options:
-  --sandbox MODE       Sandbox mode: read-only or workspace-write
-  --full-auto          Run without approval interruptions
-  -C, --directory DIR  Working directory
+  --sandbox MODE       Sandbox mode: read-only, workspace-write, or danger-full-access
+  -c key=value         Config override (e.g. -c 'ask_for_approval="on-request"')
+  --full-auto          Auto-approve + workspace-write (DO NOT use with --sandbox read-only)
+  -C, --cd DIR         Working directory
   -m, --model MODEL    Model selection
-  --output-last-message FILE  Capture output to file
+  -o, --output-last-message FILE  Capture output to file
+  --ephemeral          Run without persisting session files
+  --skip-git-repo-check  Allow running outside a git repo
 ```
 
 ## Gemini CLI Options
 
 ```bash
-gemini [options] "<prompt>"
+gemini [options] -p "<prompt>"
 
 Key options:
-  -s, --sandbox       Run in sandbox mode (read-only)
-  -y, --yolo          Auto-approve all actions
+  -s, --sandbox          Run in sandbox mode (read-only)
+  --approval-mode=yolo   Auto-approve all actions (replaces deprecated --yolo)
+  -p, --prompt           Non-interactive (headless) mode with given prompt
   --include-directories  Additional directories to include
-  -o, --output-format Output format: text, json, stream-json
+  -o, --output-format    Output format: text, json, stream-json
+  -r, --resume           Resume a previous session
 ```

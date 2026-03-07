@@ -10,7 +10,7 @@ Claude Code plugins extend functionality through custom slash commands, speciali
 
 | Plugin | Description | Contents |
 |--------|-------------|----------|
-| [codebase-health](./plugins/codebase-health/) | Comprehensive codebase health tools: code audits, dead code detection, and documentation maintenance | **Commands:** `/deep-audit`, `/quick-check`, `/dead-code`, `/update-docs`<br>**Agents:** `deep-audit`, `quick-check`, `dead-code-cleanup`, `update-docs`<br>**Skills:** `code-auditing`, `docs-maintenance` |
+| [codebase-health](./plugins/codebase-health/) | Comprehensive codebase health tools: code audits, dead code detection, and documentation maintenance | **Commands:** `/deep-audit`, `/dead-code`, `/update-docs`<br>**Agents:** `deep-audit`, `dead-code-cleanup`, `update-docs`<br>**Skills:** `code-auditing`, `docs-maintenance` |
 | [second-opinion](./plugins/second-opinion/) | Get second opinions from Codex CLI and Gemini CLI | **Commands:** `/codex-opinion`, `/gemini-opinion`<br>**Agents:** `codex-consultant`, `gemini-consultant`<br>**Skill:** `ai-consultation` |
 | [research-assistant](./plugins/research-assistant/) | Research libraries and APIs using official documentation | **Commands:** `/research`, `/official-docs`<br>**Agents:** `research-assistant`, `official-docs`<br>**MCP:** Context7, Fetch |
 
@@ -49,8 +49,8 @@ git clone https://github.com/jeffrigby/somepulp-agents.git
 
 | Plugin | Requirements |
 |--------|--------------|
-| **research-assistant** | Bundled MCP servers start automatically. **Requires Claude Code restart** after enabling. |
-| **second-opinion** | [OpenAI Codex CLI](https://github.com/openai/codex) + `OPENAI_API_KEY` for Codex; [Google Gemini CLI](https://github.com/google-gemini/gemini-cli) for Gemini |
+| **research-assistant** | Recommended: [Context7](https://github.com/upstash/context7) and [Fetch](https://github.com/modelcontextprotocol/servers/tree/main/src/fetch) MCP servers (install separately). Falls back to WebSearch/WebFetch if unavailable. |
+| **second-opinion** | [OpenAI Codex CLI](https://github.com/openai/codex) + `OPENAI_API_KEY` or `CODEX_API_KEY` for Codex; [Google Gemini CLI](https://github.com/google-gemini/gemini-cli) + Google OAuth or `GEMINI_API_KEY` for Gemini |
 
 ## Plugin Structure
 

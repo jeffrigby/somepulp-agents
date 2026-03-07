@@ -1,10 +1,6 @@
 ---
 description: Get a second opinion from Google Gemini on code or architecture
-arguments:
-  - name: request
-    description: The code, architecture decision, or technical question to get a second opinion on
-    type: string
-    required: true
+argument-hint: "<request>"
 ---
 
 Use the gemini-consultant agent to get a second opinion from Google Gemini on the specified code, architecture decision, or technical question.

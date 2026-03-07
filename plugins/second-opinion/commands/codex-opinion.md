@@ -1,10 +1,6 @@
 ---
 description: Get a second opinion from OpenAI Codex on code or architecture
-arguments:
-  - name: request
-    description: The code, architecture decision, or technical question to get a second opinion on
-    type: string
-    required: true
+argument-hint: "<request>"
 ---
 
 Use the codex-consultant agent to get a second opinion from OpenAI Codex on the specified code, architecture decision, or technical question.

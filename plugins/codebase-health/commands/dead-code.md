@@ -1,10 +1,6 @@
 ---
 description: Detect and clean up dead code (unused imports, exports, files, dependencies)
-arguments:
-  - name: mode
-    description: "'detect' (default) shows findings, 'cleanup' allows removal after approval"
-    type: string
-    required: false
+argument-hint: "<detect|cleanup>"
 ---
 
 # Dead Code Detection
