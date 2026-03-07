@@ -90,14 +90,11 @@ codex exec --sandbox read-only -C "$(pwd)" "Analyze performance bottlenecks"
 
 **Plugin wrapper:**
 ```bash
-# Auto-approval enabled (default)
-codex-review.sh "Analyze performance bottlenecks"
-
-# Auto-approval disabled (manual approval)
-codex-review.sh -n "Analyze performance bottlenecks"
+# Auto-approval enabled (default — gemini wrapper always uses --approval-mode=yolo)
+gemini-review.sh "Analyze performance bottlenecks"
 ```
 
-### -C, --directory DIRECTORY (Codex)
+### -C, --cd DIRECTORY (Codex)
 
 Set the working directory for the session.
 

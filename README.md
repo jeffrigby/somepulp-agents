@@ -49,7 +49,7 @@ git clone https://github.com/jeffrigby/somepulp-agents.git
 
 | Plugin | Requirements |
 |--------|--------------|
-| **research-assistant** | Bundled MCP servers start automatically. **Requires Claude Code restart** after enabling. |
+| **research-assistant** | Recommended: [Context7](https://github.com/upstash/context7) and [Fetch](https://github.com/modelcontextprotocol/servers/tree/main/src/fetch) MCP servers (install separately). Falls back to WebSearch/WebFetch if unavailable. |
 | **second-opinion** | [OpenAI Codex CLI](https://github.com/openai/codex) + `OPENAI_API_KEY` or `CODEX_API_KEY` for Codex; [Google Gemini CLI](https://github.com/google-gemini/gemini-cli) + Google OAuth or `GEMINI_API_KEY` for Gemini |
 
 ## Plugin Structure
