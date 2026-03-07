@@ -10,7 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - **All plugins**: Added `homepage` and `repository` fields to plugin.json
 - **codebase-health**: Added `skills` field to agents for automatic skill loading
-  - `deep-audit`, `quick-check`, `dead-code-cleanup` now load `code-auditing` skill
+  - `deep-audit`, `dead-code-cleanup` now load `code-auditing` skill
   - `update-docs` now loads `docs-maintenance` skill
 - **second-opinion**: Added `skills` field to agents
   - `codex-consultant` and `gemini-consultant` now load `ai-consultation` skill
@@ -87,7 +87,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - **code-auditor**: Added Phase 2.5 (Dead Code Detection) to deep-audit workflow
-- **code-auditor**: Added knip/deadcode to quick-check automated checks
 - **code-auditor**: Added `AskUserQuestion` tool for cleanup approval workflow
 - **code-auditor**: Added Dead Code section to SKILL.md analysis categories
 

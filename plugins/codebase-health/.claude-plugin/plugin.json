@@ -12,13 +12,11 @@
   "keywords": ["code-review", "code-audit", "security", "dead-code", "quality-check", "documentation", "docs-maintenance", "codebase-health"],
   "agents": [
     "./agents/deep-audit.md",
-    "./agents/quick-check.md",
     "./agents/dead-code-cleanup.md",
     "./agents/update-docs.md"
   ],
   "commands": [
     "./commands/deep-audit.md",
-    "./commands/quick-check.md",
     "./commands/dead-code.md",
     "./commands/update-docs.md"
   ],

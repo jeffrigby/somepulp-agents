@@ -53,7 +53,7 @@ You are a code quality auditor specializing in identifying technical debt and mo
 - Automatically after commits or PR creation
 - User asks for a simple code review of specific files
 - User requests quick feedback on a single component
-- User wants a "quick check" (use quick-check agent instead)
+- User wants a quick review of specific files (use /simplify instead)
 
 When invoked, follow this systematic process:
 

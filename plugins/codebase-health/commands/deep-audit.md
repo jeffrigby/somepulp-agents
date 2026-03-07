@@ -5,7 +5,7 @@ argument-hint: "<scope>"
 
 Use the deep-audit agent to perform a comprehensive, resource-intensive code quality audit on the codebase.
 
-**Note**: This is an ON-DEMAND operation for thorough analysis. For quick checks on recent changes, use `/quick-check` instead.
+**Note**: This is an ON-DEMAND operation for thorough analysis. For quick checks on recent changes, use `/simplify` instead.
 
 The deep audit will analyze:
 - Dead code and unused dependencies

@@ -11,7 +11,7 @@
     {
       "name": "codebase-health",
       "source": "./plugins/codebase-health",
-      "description": "Codebase health tools: /deep-audit, /quick-check, /dead-code, /update-docs for code quality and documentation maintenance",
+      "description": "Codebase health tools: /deep-audit, /dead-code, /update-docs for code quality and documentation maintenance",
       "category": "development"
     },
     {
