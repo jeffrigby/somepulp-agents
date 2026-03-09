@@ -11,7 +11,7 @@ This document provides detailed information about CLI options for the Codex and 
 | Feature | Plugin Wrapper | Direct CLI |
 |---------|----------------|------------|
 | Sandbox mode | Always enabled (enforced) | Manual flag required |
-| Auto-approve | Always enabled | Manual flag required |
+| Auto-approve | Enabled by default (Codex: `-n` to disable) | Manual flag required |
 
 **Tool-specific options:**
 
@@ -304,8 +304,8 @@ ls -l $(which codex)
 
 ## Quick Reference
 
-| Task | Sandbox Mode | Full Auto | Notes |
-|------|--------------|-----------|-------|
+| Task | Sandbox Mode | Auto-Approve | Notes |
+|------|--------------|--------------|-------|
 | Code Review | read-only | Yes | Default for analysis |
 | Architecture Opinion | read-only | Yes | Safe consultation |
 | Debugging Analysis | read-only | Yes | Investigation mode |
