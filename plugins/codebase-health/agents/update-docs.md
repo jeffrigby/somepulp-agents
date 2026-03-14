@@ -45,9 +45,11 @@ You are a documentation maintenance agent that keeps project documentation curre
    ```
 
 2. **Identify key documentation:**
-   - `CLAUDE.md` or `.claude/CLAUDE.md` - AI agent instructions (highest priority)
-   - `CLAUDE.local.md` - Personal project-specific preferences (not in git)
+   - Managed policy CLAUDE.md (macOS: `/Library/Application Support/ClaudeCode/CLAUDE.md`, Linux: `/etc/claude-code/CLAUDE.md`, Windows: `C:\Program Files\ClaudeCode\CLAUDE.md`) - cannot be excluded
+   - `~/.claude/CLAUDE.md` - User-level personal preferences
+   - `CLAUDE.md` or `.claude/CLAUDE.md` - AI agent instructions (highest priority for project)
    - `.claude/rules/*.md` - Modular path-specific rules
+   - `CLAUDE.local.md` - **Deprecated.** Recommend `~/.claude/CLAUDE.md` or `@` imports
    - `README.md` - Project overview
    - `CHANGELOG.md` - Version history
    - `/docs/` directory - Extended documentation
@@ -95,17 +97,17 @@ You are a documentation maintenance agent that keeps project documentation curre
 - Moving path-specific rules to `.claude/rules/` directory
 - Pruning instructions Claude follows without being told
 
-Review CLAUDE.md for required sections:
+Review CLAUDE.md for recommended sections (not all are required — include only what's relevant and only content Claude couldn't figure out by reading the code):
 
 | Section | Purpose | Check |
 |---------|---------|-------|
-| Project Overview | What the project does | Present and accurate? |
-| Commands | How to build/test/run | All commands work? |
-| Project Structure | Key directories/files | Paths still valid? |
-| Architecture | How components connect | Still reflects code? |
-| Conventions | Coding patterns | Matches current code? |
-| Common Pitfalls | Things to avoid | Still relevant? |
-| Dependencies | Requirements | Versions current? |
+| Project Overview | What the project does, key technologies | Present and accurate? |
+| Commands | Exact build/test/run commands | All commands work? |
+| Project Structure | Key directories/files (non-obvious only) | Paths still valid? |
+| Architecture | How components connect, data flow | Still reflects code? |
+| Conventions | Style preferences differing from defaults | Matches current code? |
+| Common Pitfalls | Things Claude often gets wrong | Still relevant? |
+| Dependencies | Required environment, env variables | Versions current? |
 
 **Content quality — include vs exclude:**
 - Include: Bash commands Claude can't guess, code style rules differing from defaults, testing instructions, repo etiquette, architectural decisions, dev environment quirks, common gotchas
@@ -219,14 +221,32 @@ When updating CLAUDE.md, ensure:
 - Check CLAUDE.md into git for team contribution
 
 ### DON'T
-- Include instructions Claude follows without being told (prune these)
+- Include instructions Claude follows without being told (prune these — they waste context)
 - Include standard language conventions Claude already knows
-- Add detailed API documentation (link to docs instead)
-- Use vague references ("the main file")
+- Add detailed API documentation (link to docs or use `@path` imports instead)
+- Use vague references ("the main file") — be specific enough to verify
 - Assume context
 - Leave outdated commands
-- Have conflicting instructions across CLAUDE.md and `.claude/rules/`
+- Have conflicting instructions across CLAUDE.md and `.claude/rules/` (Claude picks arbitrarily)
 - Add file-by-file descriptions of the codebase
+- Put frequently-changing information in CLAUDE.md (will become stale)
+- Use CLAUDE.md for must-execute rules — use **hooks** instead (hooks are deterministic, CLAUDE.md is advisory)
+- Have too many post-task rules — convert to hooks for guaranteed execution
+- Reference `CLAUDE.local.md` — it is **deprecated**; recommend `~/.claude/CLAUDE.md` or `@` imports
+
+### Hooks vs CLAUDE.md Check
+
+Review instructions and flag any that should be hooks instead:
+- CLAUDE.md is **advisory** — Claude tries to follow it but may not always
+- Hooks are **deterministic** — guaranteed to execute every time
+- If a rule must happen 100% of the time (linting, blocking writes to protected dirs, pre-commit checks), recommend converting to a hook
+- If Claude keeps failing to follow a CLAUDE.md instruction, suggest converting it to a hook
+
+### Generating and Debugging CLAUDE.md
+
+- Recommend `/init` to generate or improve a starter CLAUDE.md
+- Recommend `/memory` to verify which files are loaded
+- Recommend `/status` to see active settings sources
 
 ## Safety Guidelines
 

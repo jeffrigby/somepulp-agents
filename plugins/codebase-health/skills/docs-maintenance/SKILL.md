@@ -23,7 +23,7 @@ Comprehensive methodology for keeping project documentation current, consistent,
 
 1. Find all documentation files in the project:
    - `CLAUDE.md` or `.claude/CLAUDE.md` - AI agent instructions (highest priority)
-   - `CLAUDE.local.md` - Personal project-specific preferences (not in git)
+   - `CLAUDE.local.md` - **Deprecated.** Use `~/.claude/CLAUDE.md` or `@` imports instead
    - `.claude/rules/*.md` - Modular rules (may have `paths` frontmatter for scoping)
    - `README.md` - Project overview
    - `CHANGELOG.md` - Version history
@@ -60,21 +60,24 @@ Comprehensive methodology for keeping project documentation current, consistent,
 #### File Ecosystem Check
 
 Check for proper use of the CLAUDE.md ecosystem:
-- `CLAUDE.md` or `.claude/CLAUDE.md` - project instructions (checked into git)
-- `CLAUDE.local.md` - personal project-specific preferences (not in git)
+- **Managed policy** - `/Library/Application Support/ClaudeCode/CLAUDE.md` (macOS), `/etc/claude-code/CLAUDE.md` (Linux), `C:\Program Files\ClaudeCode\CLAUDE.md` (Windows). Cannot be excluded.
+- `~/.claude/CLAUDE.md` - user-level personal preferences (all projects)
+- `./CLAUDE.md` or `./.claude/CLAUDE.md` - project instructions (checked into git)
 - `.claude/rules/*.md` - modular, topic-specific rules (can use `paths` frontmatter for scoping)
 - `@path` imports - for referencing additional files without duplicating content
-- `~/.claude/CLAUDE.md` - user-level personal preferences
+- `CLAUDE.local.md` - **deprecated**; recommend `~/.claude/CLAUDE.md` or `@` imports instead
 
-#### Required Sections
+#### Recommended Sections
 
-- [ ] Project Overview - What the project does
-- [ ] Build/Test Commands - Exact commands to run
-- [ ] Key File Locations - Important directories and files
-- [ ] Architecture Overview - How components connect
-- [ ] Coding Conventions - Naming patterns, style preferences
-- [ ] Common Pitfalls - Things AI agents often get wrong
-- [ ] Tool/Dependency Notes - Special requirements
+Not every project needs all of these. Include only what's relevant, and only content Claude couldn't figure out by reading the code:
+
+- [ ] Project Overview - What the project does, key technologies
+- [ ] Commands - Exact build/test/run commands
+- [ ] Project Structure - Key directories and files (non-obvious ones only)
+- [ ] Architecture - How components connect, data flow
+- [ ] Conventions - Style preferences that differ from defaults
+- [ ] Common Pitfalls - Things Claude often gets wrong in this codebase
+- [ ] Dependencies - Required environment, env variables
 
 #### Content Quality: Include vs Exclude
 
@@ -93,10 +96,14 @@ Check for proper use of the CLAUDE.md ecosystem:
 
 #### Anti-Patterns to Fix
 
-- Vague descriptions ("the main file")
-- Outdated commands or paths
-- Conflicting instructions across files (Claude picks arbitrarily)
-- Instructions Claude follows without being told (prune these)
+- **Over-specified CLAUDE.md** — too long, important rules get lost in noise
+- **Too many post-task rules** — convert must-execute actions to hooks instead
+- **Vague instructions** — "format code nicely" gets ignored; be specific enough to verify
+- **Contradicting instructions** across CLAUDE.md files and `.claude/rules/` (Claude picks arbitrarily)
+- **Instructions Claude follows without being told** — prune these, they waste context
+- **Frequently-changing information** — will become stale; link to authoritative sources
+- **Inlined documentation** — use `@path` imports or link to docs instead of pasting
+- **Using CLAUDE.md for hook-worthy rules** — if it must happen 100% of the time, use a hook
 - Assumed context or tribal knowledge
 
 ### Phase 4: README Synchronization

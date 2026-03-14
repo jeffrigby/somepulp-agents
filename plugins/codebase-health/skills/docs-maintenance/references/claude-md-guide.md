@@ -1,12 +1,12 @@
 # CLAUDE.md Optimization Guide
 
-This guide covers how to create and maintain CLAUDE.md files based on the official Claude Code documentation.
+Reference for creating and maintaining CLAUDE.md files, based on official Claude Code documentation.
 
 ## What CLAUDE.md Is
 
 CLAUDE.md is a markdown file that Claude Code reads at the start of every conversation. It provides persistent context — coding standards, architecture decisions, preferred libraries, workflow rules, and build commands.
 
-CLAUDE.md is **context, not enforcement**. Claude reads it and tries to follow it, but there's no guarantee of strict compliance. The more specific and concise the instructions, the more consistently Claude follows them.
+CLAUDE.md is **context, not enforcement**. Claude reads it and tries to follow it, but there's no guarantee of strict compliance. The more specific and concise the instructions, the more consistently Claude follows them. For actions that must happen every time with zero exceptions, use **hooks** instead (see Hooks vs CLAUDE.md below).
 
 ## Critical Constraints
 
@@ -24,30 +24,34 @@ If Claude already does something correctly without the instruction, delete it or
 
 Treat CLAUDE.md like code: review it when things go wrong, prune it regularly, and test changes by observing whether Claude's behavior actually shifts.
 
-## File Locations
+## File Hierarchy
 
-CLAUDE.md files can live in several locations, each with different scope. More specific locations take precedence:
+CLAUDE.md files can live in several locations, loaded in this order. More specific locations take precedence:
 
 | Scope | Location | Purpose | Shared With |
 |-------|----------|---------|-------------|
-| **Managed policy** | `/Library/Application Support/ClaudeCode/CLAUDE.md` (macOS) | Org-wide instructions managed by IT/DevOps | All users in org |
-| **Project** | `./CLAUDE.md` or `./.claude/CLAUDE.md` | Team-shared project instructions | Team via source control |
+| **Managed policy** | macOS: `/Library/Application Support/ClaudeCode/CLAUDE.md`; Linux/WSL: `/etc/claude-code/CLAUDE.md`; Windows: `C:\Program Files\ClaudeCode\CLAUDE.md` | Org-wide instructions managed by IT/DevOps. **Cannot be excluded.** | All users in org |
 | **User** | `~/.claude/CLAUDE.md` | Personal preferences for all projects | Just you (all projects) |
-| **Local** | `./CLAUDE.local.md` | Personal project-specific, not in git | Just you (current project) |
+| **Project** | `./CLAUDE.md` or `./.claude/CLAUDE.md` | Team-shared project instructions | Team via source control |
+| **Parent directories** | `CLAUDE.md` in ancestor directories above cwd | Useful for monorepos | Depends on location |
+| **Child directories** | `CLAUDE.md` in subdirectories below cwd | Loaded on-demand when Claude reads files there | Depends on location |
 
 ### Loading Behavior
 
 - CLAUDE.md files **above** the working directory load in full at launch
 - CLAUDE.md files in **subdirectories** load on-demand when Claude reads files in those directories
+- Claude walks **up** the directory tree from cwd, stopping before the filesystem root
+- User-level rules (`~/.claude/rules/`) load **before** project rules, giving project rules higher priority
 - CLAUDE.md **fully survives** `/compact` — after compaction, Claude re-reads it from disk
-- In monorepos, use `claudeMdExcludes` setting to skip irrelevant CLAUDE.md files from other teams
+- The `--add-dir` flag gives access to additional directories, but their CLAUDE.md files are **not** loaded unless `CLAUDE_CODE_ADDITIONAL_DIRECTORIES_CLAUDE_MD=1` is set
+- In monorepos, use `claudeMdExcludes` in settings to skip irrelevant CLAUDE.md files. Managed policy files cannot be excluded.
 
-### CLAUDE.local.md
+### CLAUDE.local.md (Deprecated)
 
-For personal project-specific preferences that shouldn't be checked into git:
-- Automatically loaded at session start
-- Automatically added to `.gitignore`
-- Good for: sandbox URLs, preferred test data, personal tooling shortcuts
+`CLAUDE.local.md` is deprecated. Use `~/.claude/CLAUDE.md` for personal preferences, or import personal files via `@` syntax:
+```markdown
+@~/.claude/my-project-overrides.md
+```
 
 ## @path Imports
 
@@ -94,30 +98,9 @@ paths:
 # API Development Rules
 
 - All API endpoints must include input validation
-- Use the standard error response format
-- Include OpenAPI documentation comments
 ```
 
-Rules without a `paths` field are loaded unconditionally. Path-scoped rules trigger when Claude reads matching files.
-
-### Glob Patterns
-
-| Pattern | Matches |
-|---------|---------|
-| `**/*.ts` | All TypeScript files in any directory |
-| `src/**/*` | All files under `src/` |
-| `*.md` | Markdown files in project root |
-| `src/components/*.tsx` | React components in a specific directory |
-| `src/**/*.{ts,tsx}` | Multiple extensions via brace expansion |
-
-### Symlinks
-
-`.claude/rules/` supports symlinks for sharing rules across projects:
-
-```bash
-ln -s ~/shared-claude-rules .claude/rules/shared
-ln -s ~/company-standards/security.md .claude/rules/security.md
-```
+Rules without a `paths` field are loaded unconditionally. Path-scoped rules trigger when Claude reads matching files. Supports symlinks for sharing rules across projects.
 
 ## What to Include vs Exclude
 
@@ -133,212 +116,114 @@ ln -s ~/company-standards/security.md .claude/rules/security.md
 
 ## Writing Effective Instructions
 
+### Specificity
+Write instructions that are concrete enough to verify:
+- "Use 2-space indentation" — not "Format code properly"
+- "Run `npm test` before committing" — not "Test your changes"
+- "API handlers live in `src/api/handlers/`" — not "Keep files organized"
+
 ### Structure
 Use markdown headers and bullets to group related instructions. Organized sections are easier to follow than dense paragraphs.
 
-### Specificity
-Write instructions that are concrete enough to verify:
-
-- "Use 2-space indentation" instead of "Format code properly"
-- "Run `npm test` before committing" instead of "Test your changes"
-- "API handlers live in `src/api/handlers/`" instead of "Keep files organized"
-
 ### Emphasis
-Add `IMPORTANT` or `YOU MUST` to critical instructions to improve adherence. Use sparingly.
+Add `IMPORTANT` or `YOU MUST` to critical instructions to improve adherence. Use sparingly — overuse dilutes impact.
 
 ### Consistency
-If two rules contradict each other, Claude may pick one arbitrarily. Review periodically to remove outdated or conflicting instructions.
+If two rules contradict each other, Claude may pick one arbitrarily. Review periodically to remove outdated or conflicting instructions across CLAUDE.md files and `.claude/rules/`.
 
 ### Check Into Git
 CLAUDE.md should be checked into git so the team can contribute. The file compounds in value over time.
 
-## Generating CLAUDE.md
+## Hooks vs CLAUDE.md
 
-Run `/init` to generate a starter CLAUDE.md automatically. Claude analyzes the codebase and creates a file with build commands, test instructions, and project conventions it discovers. If a CLAUDE.md already exists, `/init` suggests improvements rather than overwriting it.
+Unlike CLAUDE.md instructions which are **advisory**, hooks are **deterministic** and guarantee execution. Use the right mechanism:
 
-## Required Sections
+| Use CLAUDE.md for | Use hooks for |
+|-------------------|---------------|
+| Coding conventions and style preferences | Linting after every edit |
+| Architecture guidance | Blocking writes to protected directories |
+| Common gotchas and anti-patterns | Mandatory pre-commit checks |
+| Build/test commands | Enforcing tool restrictions |
+| Project context and rationale | Actions that must happen every time with zero exceptions |
 
-Every project CLAUDE.md should include these sections:
+**Key rule:** If Claude keeps failing to follow a CLAUDE.md instruction despite it being clearly written, consider converting it to a hook instead.
 
-### 1. Project Overview
+## Recommended Sections
 
-```markdown
-## Project Overview
+Not every project needs all of these. Include only sections relevant to your project, and only content that Claude couldn't figure out by reading the code:
 
-[Project name] is a [type of application] that [primary purpose].
+1. **Project Overview** — What it does, key technologies
+2. **Commands** — Exact build/test/run commands with descriptions
+3. **Project Structure** — Key directories and files (only non-obvious ones)
+4. **Architecture** — How components connect, data flow patterns
+5. **Conventions** — Naming patterns, style preferences that differ from defaults
+6. **Common Pitfalls** — Things Claude often gets wrong in this codebase
+7. **Dependencies** — Required environment, environment variables
 
-Key technologies:
-- [Framework/language]
-- [Major dependencies]
-- [Infrastructure/deployment]
-```
+Keep each section concise. If a section would exceed ~30 lines, consider moving details to `.claude/rules/` or a referenced file via `@path` import.
 
-### 2. Build and Test Commands
+## Anti-Patterns
 
-```markdown
-## Commands
+From the official documentation, these are the most common failure modes:
 
-### Development
-- `npm run dev` - Start development server on port 3000
-- `npm run build` - Create production build
+### 1. The Over-Specified CLAUDE.md
+If your CLAUDE.md is too long, Claude ignores half of it because important rules get lost in the noise.
+**Fix:** Ruthlessly prune. If Claude already does something correctly without the instruction, delete it.
 
-### Testing
-- `npm test` - Run all tests
-- `npm run test:unit` - Run unit tests only
-```
+### 2. Too Many Post-Task Rules
+Having many "always do X after Y" rules in CLAUDE.md leads to inconsistent compliance (e.g., "15+ critical rules" where Claude "forgets" post-feature documentation tasks).
+**Fix:** Convert must-execute post-task actions to hooks, which are deterministic.
 
-Key points:
-- Use exact command syntax
-- Include what each command does
-- Note prerequisites ("requires running server")
+### 3. Contradicting Instructions
+If two CLAUDE.md files or rules give conflicting guidance, Claude picks one arbitrarily.
+**Fix:** Review all CLAUDE.md files and `.claude/rules/` periodically for conflicts.
 
-### 3. Key File Locations
+### 4. Vague Instructions
+"Format code nicely" gets ignored; "Use 2-space indentation" gets followed.
+**Fix:** Make every instruction specific enough that compliance is objectively verifiable.
 
-```markdown
-## Project Structure
+### 5. Frequently-Changing Information
+Information that changes often will become stale and cause contradictions.
+**Fix:** Keep volatile data out of CLAUDE.md. Link to authoritative sources instead.
 
-Key files:
-- `src/app/layout.tsx` - Root layout with providers
-- `src/lib/db.ts` - Database connection singleton
-- `src/services/auth.ts` - Authentication logic
-```
+### 6. Inlined Documentation
+Pasting API docs, full schemas, or long examples bloats the file.
+**Fix:** Use `@path` imports or link to external docs.
 
-### 4. Architecture Overview
+### 7. Using CLAUDE.md for Hook-Worthy Rules
+If something must happen 100% of the time (like running a linter after edits), CLAUDE.md is the wrong tool.
+**Fix:** Use hooks for guaranteed execution.
 
-```markdown
-## Architecture
+## Generating and Debugging CLAUDE.md
 
-### Data Flow
-1. API routes in `src/app/api/` handle requests
-2. Routes call services in `src/services/`
-3. Services use Prisma client from `src/lib/db.ts`
-
-### Key Patterns
-- All database access goes through service layer
-- Components fetch data using React Query
-```
-
-### 5. Coding Conventions
-
-```markdown
-## Conventions
-
-### Naming
-- Components: PascalCase (`UserProfile.tsx`)
-- Utilities: camelCase (`formatDate.ts`)
-- Constants: SCREAMING_SNAKE_CASE
-
-### Patterns
-- Use `async/await` over `.then()` chains
-- Prefer named exports over default exports
-```
-
-### 6. Common Pitfalls
-
-```markdown
-## Common Pitfalls
-
-### Do NOT
-- Import from `@/lib/db` in client components (server-only)
-- Use `any` type - always define proper types
-- Skip error boundaries in page components
-
-### Watch Out For
-- The `user` table uses soft deletes (`deleted_at` column)
-- Environment variables need `NEXT_PUBLIC_` prefix for client access
-```
-
-### 7. Tool and Dependency Notes
-
-```markdown
-## Dependencies
-
-### Required Environment
-- Node.js 20+
-- PostgreSQL 15+
-
-### Environment Variables
-- `DATABASE_URL` - PostgreSQL connection string
-- `STRIPE_SECRET_KEY` - Stripe API key (test mode ok for dev)
-```
-
-## AI-Friendly Writing Patterns
-
-### Use Imperative Language
-
-**Good:** "Run `npm test` before committing"
-**Bad:** "You might want to run tests"
-
-### Be Specific About Paths
-
-**Good:** "Edit `src/components/Button/Button.tsx`"
-**Bad:** "Edit the Button component"
-
-### Include Concrete Examples
-
-**Good:**
-```markdown
-Create API routes following this pattern:
-```typescript
-export async function GET() {
-  const users = await userService.getAll();
-  return Response.json(users);
-}
-```
-```
-
-**Bad:** "API routes should follow RESTful conventions"
-
-### State Constraints Explicitly
-
-**Good:** "Maximum 5 items in the cart. Validation in `src/lib/cart.ts:45`"
-**Bad:** "There are some cart limits"
-
-### List Anti-Patterns
-
-Always include what NOT to do. Agents learn from boundaries.
+- Run `/init` to generate a starter CLAUDE.md from the codebase. If one exists, `/init` suggests improvements.
+- Run `/memory` to verify which CLAUDE.md files are actually being loaded.
+- Run `/status` to see which settings sources are active.
 
 ## Troubleshooting
 
 ### Claude Isn't Following CLAUDE.md
-
 1. Run `/memory` to verify files are loaded
-2. Check the file is in a location that gets loaded
-3. Make instructions more specific
-4. Look for conflicting instructions across files
-5. Use the `InstructionsLoaded` hook to debug which files load
+2. Run `/status` to see active settings sources
+3. Check the file is in a location that gets loaded (see hierarchy)
+4. Make instructions more specific
+5. Look for conflicting instructions across files
+6. If over 200 lines, prune — the rule may be getting lost in noise
 
 ### CLAUDE.md Is Too Large
-
 - Move detailed content into `@path` imported files
 - Split instructions into `.claude/rules/` files
 - Ruthlessly prune instructions Claude follows without being told
+- Convert must-execute rules to hooks
 
 ### Instructions Lost After /compact
-
 CLAUDE.md fully survives compaction. If an instruction disappeared, it was given only in conversation, not written to CLAUDE.md.
 
-## Maintenance Checklist
-
-When updating CLAUDE.md, verify:
-
-- [ ] Under 200 lines (or split with @imports / rules)
-- [ ] All commands still work
-- [ ] File paths are accurate
-- [ ] Examples compile/run
-- [ ] Version numbers are current
-- [ ] Removed features are removed from docs
-- [ ] New features are documented
-- [ ] Conventions match current code
-- [ ] Pitfalls are still relevant
-- [ ] No conflicting instructions
-- [ ] No instructions Claude follows without being told (prune these)
-
-## Advanced: Monorepo Configuration
+## Monorepo Configuration
 
 ### claudeMdExcludes Setting
 
-Skip irrelevant CLAUDE.md files in monorepos by adding to `.claude/settings.local.json`:
+Skip irrelevant CLAUDE.md files by adding to `.claude/settings.local.json`:
 
 ```json
 {
@@ -351,56 +236,17 @@ Skip irrelevant CLAUDE.md files in monorepos by adding to `.claude/settings.loca
 
 Patterns match against absolute file paths using glob syntax. Managed policy CLAUDE.md files cannot be excluded.
 
-## Template for New Projects
+## Maintenance Checklist
 
-```markdown
-# CLAUDE.md
+When updating CLAUDE.md, verify:
 
-## Project Overview
-
-[Brief description of what this project does]
-
-Key technologies:
-- [List main technologies]
-
-## Commands
-
-### Development
-- `[command]` - [description]
-
-### Testing
-- `[command]` - [description]
-
-## Project Structure
-
-Key files:
-- `[path]` - [purpose]
-
-## Architecture
-
-[How components connect and data flows]
-
-## Conventions
-
-### Naming
-- [Convention]: [Pattern]
-
-### Patterns
-- [Pattern description]
-
-## Common Pitfalls
-
-### Do NOT
-- [Anti-pattern]
-
-### Watch Out For
-- [Gotcha]
-
-## Dependencies
-
-### Required
-- [Dependency] [version]
-
-### Environment Variables
-- `[VAR_NAME]` - [purpose]
-```
+- [ ] Under 200 lines (or split with @imports / rules)
+- [ ] All commands still work
+- [ ] File paths are accurate
+- [ ] No instructions Claude follows without being told (prune these)
+- [ ] No conflicting instructions across files
+- [ ] Conventions match current code
+- [ ] Removed features removed from docs
+- [ ] New features documented
+- [ ] Must-execute rules use hooks, not CLAUDE.md
+- [ ] Critical rules use `IMPORTANT` sparingly
