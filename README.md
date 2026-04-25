@@ -10,7 +10,7 @@ Claude Code plugins extend functionality through custom slash commands, speciali
 
 | Plugin | Description | Contents |
 |--------|-------------|----------|
-| [codebase-health](./plugins/codebase-health/) | Comprehensive codebase health tools: code audits, dead code detection, and documentation maintenance | **Commands:** `/deep-audit`, `/dead-code`, `/update-docs`<br>**Agents:** `deep-audit`, `dead-code-cleanup`, `update-docs`<br>**Skills:** `code-auditing`, `docs-maintenance` |
+| [codebase-health](./plugins/codebase-health/) | Codebase health tools: orchestrated deep audits, dead code detection, and documentation maintenance | **Commands:** `/deep-audit`, `/dead-code`, `/update-docs`<br>**Agents:** `security-auditor`, `performance-analyzer`, `library-modernizer`, `code-quality-reviewer`, `dead-code-cleanup`, `update-docs`<br>**Skills:** `code-auditing`, `docs-maintenance` |
 | [research-assistant](./plugins/research-assistant/) | Research libraries and APIs using official documentation | **Commands:** `/research`, `/official-docs`<br>**Agents:** `research-assistant`, `official-docs`<br>**MCP:** Context7, Fetch |
 
 ## Installation

@@ -5,6 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.1.0] - 2026-04-25
+
+### Changed
+- **codebase-health 2.1.0**: Refactored `/deep-audit` from a single 360-line monolithic agent into an orchestrator-of-specialists pattern, mirroring the official `pr-review-toolkit` plugin.
+  - The `/deep-audit` command is now the orchestrator: it inspects the project, decides which specialists apply, launches them via `Task` (sequential by default; opt-in `parallel`), and aggregates findings into `code-audit-[timestamp].md`.
+  - Concerns split across four new specialist agents — `security-auditor`, `performance-analyzer`, `library-modernizer`, `code-quality-reviewer` — and the existing `dead-code-cleanup` is reused in detect-only mode.
+  - Specialists return structured findings blocks (Critical/High/Medium severity, confidence ≥ 80, file:line refs); the orchestrator owns the final report.
+  - Each specialist's description says "Used by the deep-audit orchestrator. Do not invoke directly." to prevent auto-triggering in normal conversations.
+  - `$ARGUMENTS` now supports per-aspect scoping (`security`, `perf`, `deps`, `quality`, `dead`, `all`) plus an optional `parallel` token.
+
+### Removed
+- **codebase-health**: Removed the monolithic `deep-audit` agent (replaced by the orchestrator command + specialists).
+
 ## [3.0.1] - 2026-04-25
 
 ### Fixed

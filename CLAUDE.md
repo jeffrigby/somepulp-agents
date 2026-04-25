@@ -122,14 +122,18 @@ claude mcp add fetch -- uvx mcp-server-fetch
 ## Key Patterns
 
 ### Codebase Health Workflow
-The `deep-audit` agent follows a 7-phase process:
-1. Pre-Analysis Setup (check configs, run existing linters)
-2. Discovery (find all code files)
-3. File-by-File Analysis
-4. **Dead Code Detection** (knip/deadcode with verification)
-5. Best Practices Verification (Context7 for official docs)
-6. Library Recommendations
-7. Report Generation (saves to `code-audit-[timestamp].md`)
+`/deep-audit` is an orchestrator command (not a single agent). It inspects the project, decides which specialists apply, launches them via `Task`, and aggregates their findings into `code-audit-[timestamp].md`.
+
+Specialists (peers; the command is the conductor):
+- `security-auditor` — secrets, injection, XSS, weak crypto, CVEs
+- `performance-analyzer` — algorithms, N+1, async/memory, bundle bloat
+- `library-modernizer` — custom code → mature library, deprecated APIs, `@types/*` duplication (uses Context7)
+- `code-quality-reviewer` — smells, complexity, duplication, weak error handling
+- `dead-code-cleanup` — reused in detect-only mode (knip/deadcode + verification)
+
+Sequential by default; pass `parallel` in `$ARGUMENTS` to launch all selected specialists at once.
+
+Each specialist's `description` says "Used by the deep-audit orchestrator. Do not invoke directly." so they don't auto-trigger in normal conversations.
 
 ### Dead Code Detection
 - Uses `scripts/dead-code-detect.sh` helper for auto-detection
