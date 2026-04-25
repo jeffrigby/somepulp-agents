@@ -1,6 +1,6 @@
 {
   "name": "codebase-health",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Comprehensive codebase health tools: code audits, quality checks, dead code detection, and documentation maintenance",
   "author": {
     "name": "Some Pulp LLC",

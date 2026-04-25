@@ -1,7 +1,7 @@
 ---
 name: code-auditing
 description: This skill should be used when the user asks to "audit code", "find technical debt", "perform a security review", "identify dead code", "analyze code quality", "check best practices", "run a code audit", or needs a systematic methodology for comprehensive codebase analysis.
-version: 1.0.0
+allowed-tools: Read, Grep, Glob, Bash, WebSearch, WebFetch
 ---
 
 # Code Auditing Skill

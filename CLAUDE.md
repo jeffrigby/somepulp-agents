@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-This is a Claude Code plugin called `somepulp-agents` that provides specialized AI agents and skills for code auditing, research, and multi-model consultation (Codex, Gemini).
+This is a Claude Code plugin marketplace called `somepulp-agents` that provides specialized AI agents and skills for code auditing, documentation maintenance, and library/API research.
 
 ## Repository Structure
 
@@ -34,12 +34,24 @@ Each plugin follows the standard structure:
 ```yaml
 ---
 name: agent-name
-description: When this agent should be triggered
-tools: Comma-separated list of tools the agent can use
+description: One-line trigger description. Use when user asks "X", "Y", or "Z".
+tools: ["Read", "Grep", "Glob", "Bash"]
+model: inherit
+color: blue
 ---
 
 System prompt content defining agent behavior...
+
+## Example Invocations
+
+<example>
+Context: ...
+user: "..."
+assistant: "..."
+</example>
 ```
+
+**Important**: Keep `description` to a single line. Multi-line content (especially `<example>` blocks) belongs in the body, not the frontmatter — descriptions are truncated at 1,536 characters for auto-routing decisions, so embedded examples get cut off.
 
 ### Skill Files (`skills/*/SKILL.md`)
 ```yaml

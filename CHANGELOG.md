@@ -5,6 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.0.1] - 2026-04-25
+
+### Fixed
+- **All agents**: Moved `<example>` blocks out of YAML `description:` field into the markdown body. Previously the multi-line examples were being parsed as a single oversized `description` scalar, getting truncated at the 1,536-char auto-routing cap and defeating the purpose of the examples.
+- **Skills**: Added `allowed-tools` frontmatter to `code-auditing` and `docs-maintenance` (was missing from current files; documented as required in CLAUDE.md template and matches v1.0.1 state).
+- **Skills**: Removed non-spec `version` field from `code-auditing` and `docs-maintenance` SKILL.md frontmatter (skill version is implied by plugin version).
+- **CLAUDE.md**: Removed stale references to retired second-opinion plugin (Codex/Gemini); marketplace was retitled in v3.0.0 but project description was not updated.
+- **CLAUDE.md**: Updated agent frontmatter template to match the JSON-array `tools:` format actually used in the codebase, and added `model: inherit` / `color:` keys plus a note that examples belong in the body, not the description.
+- **README.md**: Annotated `.mcp.json` in the plugin structure example to clarify it's optional and not bundled in this marketplace; added `hooks/hooks.json` to the example.
+
+### Changed
+- Bumped `codebase-health` to 2.0.1 and `research-assistant` to 1.3.1 to deliver the modernization fixes to installed users.
+
 ## [3.0.0] - 2026-04-25
 
 ### Removed

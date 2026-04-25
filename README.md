@@ -61,8 +61,8 @@ plugin-name/
 ├── agents/                  # Specialized agents (optional)
 ├── skills/                  # Agent skills (optional)
 ├── scripts/                 # Helper scripts (optional)
-├── .mcp.json                # MCP server configuration (optional)
-└── README.md                # Plugin documentation
+├── hooks/hooks.json         # Lifecycle hooks (optional)
+└── .mcp.json                # MCP server configuration (optional, not bundled here)
 ```
 
 ## Contributing
