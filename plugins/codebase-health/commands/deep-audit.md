@@ -1,6 +1,6 @@
 ---
 description: Run a comprehensive deep audit by orchestrating specialist agents
-argument-hint: "[aspects] [parallel]"
+argument-hint: "[aspects] [sequential]"
 allowed-tools: ["Bash", "Glob", "Grep", "Read", "Write", "Task", "TodoWrite"]
 ---
 
@@ -21,13 +21,13 @@ This is **resource-intensive** and should only run when explicitly requested. Fo
 - **dead** → `dead-code-cleanup` in detect-only mode (unused imports/exports/files/deps, with verification)
 - **all** → run every applicable specialist (default if no aspects given)
 
-The launch mode is **sequential by default**. Append the literal token `parallel` to the arguments to launch all selected specialists at once via a single message with multiple `Task` calls. Sequential is easier to follow in the transcript; parallel is faster.
+The launch mode is **parallel by default** — `/deep-audit` produces a batch report, so there's no reason to wait. All selected specialists are launched at once via a single message with multiple `Task` calls. Append the literal token `sequential` to fall back to one-at-a-time execution (useful when debugging a specialist or when a transcript is easier to read serially).
 
 ## Workflow
 
 ### 1. Parse arguments
 
-Split `$ARGUMENTS` on whitespace. Tokens that match an aspect (`security`, `perf`, `deps`, `quality`, `dead`, `all`) select that specialist. The token `parallel` switches launch mode. Anything else is treated as a free-form scope hint to pass into each specialist (e.g., a path, glob, or "src/api only").
+Split `$ARGUMENTS` on whitespace. Tokens that match an aspect (`security`, `perf`, `deps`, `quality`, `dead`, `all`) select that specialist. The token `sequential` switches launch mode to one-at-a-time. Anything else is treated as a free-form scope hint to pass into each specialist (e.g., a path, glob, or "src/api only").
 
 If no aspects are given, treat it as `all`.
 
@@ -62,9 +62,9 @@ Use the `Task` tool to invoke each selected specialist. Pass each one:
 - The **scope** (free-form scope hints from `$ARGUMENTS`, or "full codebase")
 - An instruction to **return only the structured findings block** described in the agent's prompt — not save a file
 
-**Sequential mode (default):** issue one `Task` call, wait for the result, capture the markdown, then issue the next.
+**Parallel mode (default):** issue all selected `Task` calls in a single assistant message so they run concurrently. Capture each result as it returns.
 
-**Parallel mode (`parallel` arg present):** issue all selected `Task` calls in a single assistant message so they run concurrently. Capture each result.
+**Sequential mode (`sequential` arg present):** issue one `Task` call, wait for the result, capture the markdown, then issue the next.
 
 For `dead`, invoke `dead-code-cleanup` and instruct it to **detect only** (no removal). Tell it to return its verified findings as a markdown block matching the format below.
 
@@ -121,19 +121,22 @@ After saving, print a short summary:
 
 ```
 /deep-audit
-# All applicable specialists, sequential
+# All applicable specialists, in parallel (default)
 
-/deep-audit all parallel
-# All applicable specialists, in parallel
+/deep-audit all sequential
+# All applicable specialists, one at a time
 
 /deep-audit security
 # Just the security specialist
 
-/deep-audit security perf parallel
+/deep-audit security perf
 # Security + perf, in parallel
 
 /deep-audit quality src/api
 # Code-quality specialist scoped to src/api
+
+/deep-audit security sequential
+# Security only, sequential (rarely useful — only one specialist)
 ```
 
 ## Notes

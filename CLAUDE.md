@@ -131,7 +131,7 @@ Specialists (peers; the command is the conductor):
 - `code-quality-reviewer` — smells, complexity, duplication, weak error handling
 - `dead-code-cleanup` — reused in detect-only mode (knip/deadcode + verification)
 
-Sequential by default; pass `parallel` in `$ARGUMENTS` to launch all selected specialists at once.
+Parallel by default (it's a batch report — no reason to wait). Pass `sequential` in `$ARGUMENTS` to fall back to one-at-a-time execution.
 
 Each specialist's `description` says "Used by the deep-audit orchestrator. Do not invoke directly." so they don't auto-trigger in normal conversations.
 
