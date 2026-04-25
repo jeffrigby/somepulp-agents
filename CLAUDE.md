@@ -15,7 +15,6 @@ somepulp-agents/
 ├── .claude-plugin/marketplace.json    # Marketplace manifest
 ├── plugins/
 │   ├── codebase-health/               # Code auditing & documentation
-│   ├── second-opinion/                # Codex & Gemini consultations
 │   └── research-assistant/            # Library/API research with MCP
 ├── CLAUDE.md                          # This file
 ├── README.md                          # User-facing documentation
@@ -83,27 +82,6 @@ Standard tools: `Read`, `Write`, `Edit`, `Grep`, `Glob`, `Bash`, `WebSearch`, `W
 
 ## External Tool Integration
 
-### Second Opinion Plugin (Codex + Gemini)
-Consolidated plugin providing second opinions from multiple AI tools:
-
-**Codex Consultant:**
-- Uses `scripts/codex-review.sh` helper
-- Requires: `npm install -g @openai/codex` and `OPENAI_API_KEY` (or `CODEX_API_KEY`)
-- Invocation: `${CLAUDE_PLUGIN_ROOT}/scripts/codex-review.sh "<prompt>"`
-- **Important**: Script uses `-c 'ask_for_approval="on-request"'` instead of `--full-auto` to preserve read-only sandbox
-
-**Gemini Consultant:**
-- Uses `scripts/gemini-review.sh` helper
-- Requires: `npm install -g @google/gemini-cli` and Google OAuth (browser prompt on first run) or `GEMINI_API_KEY`
-- Invocation: `${CLAUDE_PLUGIN_ROOT}/scripts/gemini-review.sh "<prompt>"`
-- Uses `--approval-mode=yolo` (replaces deprecated `--yolo`) and `-p` for headless mode
-
-**Commands:** `/codex-opinion`, `/gemini-opinion`
-**Agents:** `codex-consultant`, `gemini-consultant`
-**Skill:** `ai-consultation` (shared methodology)
-
-**Safety:** All consultations operate in read-only/sandbox mode. Never allow file modifications from external tools.
-
 ### Research Assistant
 - Prioritizes Context7 MCP for official documentation
 - Uses `gh` CLI for GitHub operations and code examples
@@ -130,9 +108,6 @@ claude mcp add fetch -- uvx mcp-server-fetch
 - **Output format**: Reference summary (overview, quick start, key APIs, example, sources)
 
 ## Key Patterns
-
-### Safety-First Consultation
-All external AI consultations (Codex, Gemini) operate in read-only/sandbox mode. Never allow file modifications from external tools.
 
 ### Codebase Health Workflow
 The `deep-audit` agent follows a 7-phase process:
