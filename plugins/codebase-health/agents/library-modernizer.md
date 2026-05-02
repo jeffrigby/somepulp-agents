@@ -76,6 +76,9 @@ _Docs source:_ Context7 [list of libs queried]
 
 ### Library Health
 - [version drift, abandoned deps]
+
+### Notes
+- [tools/lookups that were unavailable, registries skipped, or anything the orchestrator should know — e.g., "Context7 unavailable; relied on local manifest only"]
 ```
 
 If a section yields nothing, say so explicitly. Don't fill space.

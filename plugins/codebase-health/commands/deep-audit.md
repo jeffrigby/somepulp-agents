@@ -50,7 +50,7 @@ Build a short "project brief" that you'll include in every specialist's task inp
 | `performance-analyzer` | Always |
 | `library-modernizer` | A dependency manifest exists (`package.json`, `requirements.txt`, `go.mod`, etc.) |
 | `code-quality-reviewer` | Always |
-| `dead-code-cleanup` | A dependency manifest exists; otherwise note that automated tools won't run |
+| `dead-code-cleanup` | A dependency manifest exists. If `dead` was requested (or selected via `all`) but no manifest exists, **the Notes section must include an explicit `Dead code: skipped — no manifest` line** before the report is written — never silently omit. |
 
 If the user requested specific aspects, only run those — don't override their selection.
 
@@ -67,6 +67,20 @@ Use the `Task` tool to invoke each selected specialist. Pass each one:
 **Sequential mode (`sequential` arg present):** issue one `Task` call, wait for the result, capture the markdown, then issue the next.
 
 For `dead`, invoke `dead-code-cleanup` and instruct it to **detect only** (no removal). Tell it to return its verified findings as a markdown block matching the format below.
+
+### 4a. Verify each specialist returned a valid findings block
+
+Before pasting a result into the report, confirm it starts with the specialist's expected `## ` heading and contains at least one of `### Critical`, `### High`, or `### Medium`. A specialist with literally zero findings still emits the heading and severity sections (possibly empty).
+
+| Specialist | Expected heading |
+| --- | --- |
+| `security-auditor` | `## Security Findings` |
+| `performance-analyzer` | `## Performance Findings` |
+| `library-modernizer` | `## Library Modernization Findings` |
+| `code-quality-reviewer` | `## Code Quality Findings` |
+| `dead-code-cleanup` | `## Dead Code Analysis Report` (or `## Dead Code Findings`) |
+
+If a result is empty, missing the expected heading, or has no severity sections, treat the specialist as **failed**: do not paste a placeholder block. Record it under `Specialists that failed:` in the Notes section (step 5) with a one-line cause (`empty result`, `missing findings heading`, `task error: <message>`). A launched specialist must never be silently dropped from the report.
 
 ### 5. Aggregate the report
 
@@ -103,6 +117,8 @@ Compose `code-audit-[YYYY-MM-DD-HHmmss].md` in the project root:
 
 ## Notes
 - Tools that were unavailable and what was skipped
+- Specialists that failed: list each as `<name> — <cause>` (omit this line entirely if all specialists returned valid blocks; never omit a launched specialist silently)
+- Dead code: skipped — no manifest (REQUIRED line when `dead` was requested or selected via `all` and no dependency manifest exists; required regardless of whether other specialists ran)
 - Findings flagged by multiple specialists (deduped or cross-referenced)
 ```
 
