@@ -81,6 +81,9 @@ _Project conventions read from:_ [CLAUDE.md | README | none]
 
 ### Error-handling hot list
 - [file:line refs of the worst error-handling offenders]
+
+### Notes
+- [tools/lookups that were unavailable, conventions inferred without a CLAUDE.md, or anything the orchestrator should know about scope/coverage]
 ```
 
 If a category is clean, say so: `### High\n_None found._` Don't pad.
