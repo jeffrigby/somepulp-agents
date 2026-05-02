@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [3.1.0] - 2026-04-25
+## [3.1.0] - 2026-05-02
 
 ### Changed
 - **codebase-health 2.1.0**: Refactored `/deep-audit` from a single 360-line monolithic agent into an orchestrator-of-specialists pattern, mirroring the official `pr-review-toolkit` plugin.
@@ -18,7 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Removed
 - **codebase-health**: Removed the monolithic `deep-audit` agent (replaced by the orchestrator command + specialists).
 
-## [3.0.1] - 2026-04-25
+## [3.0.1] - 2026-05-02
 
 ### Fixed
 - **All agents**: Moved `<example>` blocks out of YAML `description:` field into the markdown body. Previously the multi-line examples were being parsed as a single oversized `description` scalar, getting truncated at the 1,536-char auto-routing cap and defeating the purpose of the examples.
@@ -31,7 +31,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Bumped `codebase-health` to 2.0.1 and `research-assistant` to 1.3.1 to deliver the modernization fixes to installed users.
 
-## [3.0.0] - 2026-04-25
+## [3.0.0] - 2026-05-02
 
 ### Removed
 - **BREAKING**: Removed `second-opinion` plugin (Codex + Gemini consultants)
