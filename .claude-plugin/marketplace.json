@@ -2,7 +2,7 @@
   "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
   "name": "somepulp-agents",
   "version": "3.1.0",
-  "description": "AI-powered developer assistants for code auditing, research, and multi-model consultation",
+  "description": "AI-powered developer assistants for code auditing, documentation maintenance, and library/API research",
   "owner": {
     "name": "Some Pulp LLC",
     "email": "claude-plugin@somepulp.net"

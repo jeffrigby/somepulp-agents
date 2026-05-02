@@ -1,6 +1,6 @@
 # Somepulp Agents
 
-A plugin marketplace for [Claude Code](https://docs.anthropic.com/claude-code) providing specialized agents for code auditing, research, and multi-model consultation.
+A plugin marketplace for [Claude Code](https://docs.anthropic.com/claude-code) providing specialized agents for code auditing, documentation maintenance, and library/API research.
 
 ## What Are These Plugins?
 

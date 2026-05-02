@@ -8,7 +8,7 @@ allowed-tools: ["Bash", "Glob", "Grep", "Read", "Write", "Task", "TodoWrite"]
 
 Run a comprehensive, on-demand codebase audit by inspecting the project, deciding which specialist agents apply, launching them, and aggregating their findings into a single dated report.
 
-This is **resource-intensive** and should only run when explicitly requested. For quick checks on recent changes, use `/codebase-health:quick-check` if installed, or just ask Claude to review the diff.
+This is **resource-intensive** and should only run when explicitly requested. For quick checks on recent changes, just ask Claude to review the diff.
 
 **Aspects requested (optional):** "$ARGUMENTS"
 
