@@ -5,6 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.1.1] - 2026-05-02
+
+### Fixed
+- **codebase-health 2.1.1**: Hardened `/deep-audit` orchestrator boundary (follow-up to PR #8 review).
+  - Orchestrator now verifies each specialist's return value against the expected `## <Name> Findings` heading and severity sections (`### Critical` / `### High` / `### Medium`) before pasting it into the report. Empty, missing-heading, or malformed results are recorded under a new `Specialists that failed:` line in the Notes section instead of being silently dropped — a launched specialist is never omitted from the final report.
+  - The dead-code skip note is now mandatory: when `dead` is requested (or selected via `all`) but no dependency manifest exists, the Notes section must include an explicit `Dead code: skipped — no manifest` line, regardless of whether other specialists ran.
+  - Added a `### Notes` section to `library-modernizer` and `code-quality-reviewer` output templates so per-specialist skip-notes (e.g., Context7 unavailable, no CLAUDE.md to read conventions from) survive aggregation — closing a parity gap with `security-auditor` and `performance-analyzer`.
+
 ## [3.1.0] - 2026-05-02
 
 ### Changed
