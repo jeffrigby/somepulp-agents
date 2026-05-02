@@ -1,7 +1,7 @@
 {
   "name": "codebase-health",
-  "version": "2.0.0",
-  "description": "Comprehensive codebase health tools: code audits, quality checks, dead code detection, and documentation maintenance",
+  "version": "2.1.0",
+  "description": "Codebase health tools: deep audits via orchestrated specialists (security, performance, libraries, quality, dead code) plus dead-code cleanup and documentation maintenance",
   "author": {
     "name": "Some Pulp LLC",
     "url": "https://github.com/jeffrigby"
@@ -11,7 +11,10 @@
   "license": "MIT",
   "keywords": ["code-review", "code-audit", "security", "dead-code", "quality-check", "documentation", "docs-maintenance", "codebase-health"],
   "agents": [
-    "./agents/deep-audit.md",
+    "./agents/security-auditor.md",
+    "./agents/performance-analyzer.md",
+    "./agents/library-modernizer.md",
+    "./agents/code-quality-reviewer.md",
     "./agents/dead-code-cleanup.md",
     "./agents/update-docs.md"
   ],

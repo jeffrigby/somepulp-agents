@@ -1,6 +1,6 @@
 # Somepulp Agents
 
-A plugin marketplace for [Claude Code](https://docs.anthropic.com/claude-code) providing specialized agents for code auditing, research, and multi-model consultation.
+A plugin marketplace for [Claude Code](https://docs.anthropic.com/claude-code) providing specialized agents for code auditing, documentation maintenance, and library/API research.
 
 ## What Are These Plugins?
 
@@ -10,8 +10,7 @@ Claude Code plugins extend functionality through custom slash commands, speciali
 
 | Plugin | Description | Contents |
 |--------|-------------|----------|
-| [codebase-health](./plugins/codebase-health/) | Comprehensive codebase health tools: code audits, dead code detection, and documentation maintenance | **Commands:** `/deep-audit`, `/dead-code`, `/update-docs`<br>**Agents:** `deep-audit`, `dead-code-cleanup`, `update-docs`<br>**Skills:** `code-auditing`, `docs-maintenance` |
-| [second-opinion](./plugins/second-opinion/) | Get second opinions from Codex CLI and Gemini CLI | **Commands:** `/codex-opinion`, `/gemini-opinion`<br>**Agents:** `codex-consultant`, `gemini-consultant`<br>**Skill:** `ai-consultation` |
+| [codebase-health](./plugins/codebase-health/) | Codebase health tools: orchestrated deep audits, dead code detection, and documentation maintenance | **Commands:** `/deep-audit`, `/dead-code`, `/update-docs`<br>**Agents:** `security-auditor`, `performance-analyzer`, `library-modernizer`, `code-quality-reviewer`, `dead-code-cleanup`, `update-docs`<br>**Skills:** `code-auditing`, `docs-maintenance` |
 | [research-assistant](./plugins/research-assistant/) | Research libraries and APIs using official documentation | **Commands:** `/research`, `/official-docs`<br>**Agents:** `research-assistant`, `official-docs`<br>**MCP:** Context7, Fetch |
 
 ## Installation
@@ -26,7 +25,6 @@ Claude Code plugins extend functionality through custom slash commands, speciali
 2. Install the plugins you want:
    ```
    /plugin install codebase-health@somepulp-agents
-   /plugin install second-opinion@somepulp-agents
    /plugin install research-assistant@somepulp-agents
    ```
 
@@ -50,7 +48,6 @@ git clone https://github.com/jeffrigby/somepulp-agents.git
 | Plugin | Requirements |
 |--------|--------------|
 | **research-assistant** | Recommended: [Context7](https://github.com/upstash/context7) and [Fetch](https://github.com/modelcontextprotocol/servers/tree/main/src/fetch) MCP servers (install separately). Falls back to WebSearch/WebFetch if unavailable. |
-| **second-opinion** | [OpenAI Codex CLI](https://github.com/openai/codex) + `OPENAI_API_KEY` or `CODEX_API_KEY` for Codex; [Google Gemini CLI](https://github.com/google-gemini/gemini-cli) + Google OAuth or `GEMINI_API_KEY` for Gemini |
 
 ## Plugin Structure
 
@@ -64,8 +61,8 @@ plugin-name/
 ├── agents/                  # Specialized agents (optional)
 ├── skills/                  # Agent skills (optional)
 ├── scripts/                 # Helper scripts (optional)
-├── .mcp.json                # MCP server configuration (optional)
-└── README.md                # Plugin documentation
+├── hooks/hooks.json         # Lifecycle hooks (optional)
+└── .mcp.json                # MCP server configuration (optional, not bundled here)
 ```
 
 ## Contributing

@@ -1,7 +1,7 @@
 ---
 name: docs-maintenance
 description: This skill should be used when the user asks to "update docs", "sync documentation", "update CLAUDE.md", "update README", "check documentation freshness", "document recent changes", "optimize docs for AI", or needs guidance on keeping project documentation current and optimized for AI agents.
-version: 1.0.0
+allowed-tools: Read, Grep, Glob, Bash
 ---
 
 # Documentation Maintenance Skill

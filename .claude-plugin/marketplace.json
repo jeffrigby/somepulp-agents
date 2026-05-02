@@ -1,8 +1,8 @@
 {
   "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
   "name": "somepulp-agents",
-  "version": "2.2.0",
-  "description": "AI-powered developer assistants for code auditing, research, and multi-model consultation",
+  "version": "3.1.0",
+  "description": "AI-powered developer assistants for code auditing, documentation maintenance, and library/API research",
   "owner": {
     "name": "Some Pulp LLC",
     "email": "claude-plugin@somepulp.net"
@@ -12,12 +12,6 @@
       "name": "codebase-health",
       "source": "./plugins/codebase-health",
       "description": "Codebase health tools: /deep-audit, /dead-code, /update-docs for code quality and documentation maintenance",
-      "category": "development"
-    },
-    {
-      "name": "second-opinion",
-      "source": "./plugins/second-opinion",
-      "description": "Get second opinions from Codex CLI and Gemini CLI: /codex-opinion and /gemini-opinion for code reviews and architecture",
       "category": "development"
     },
     {

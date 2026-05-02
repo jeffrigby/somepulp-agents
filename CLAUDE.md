@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-This is a Claude Code plugin called `somepulp-agents` that provides specialized AI agents and skills for code auditing, research, and multi-model consultation (Codex, Gemini).
+This is a Claude Code plugin marketplace called `somepulp-agents` that provides specialized AI agents and skills for code auditing, documentation maintenance, and library/API research.
 
 ## Repository Structure
 
@@ -15,7 +15,6 @@ somepulp-agents/
 ├── .claude-plugin/marketplace.json    # Marketplace manifest
 ├── plugins/
 │   ├── codebase-health/               # Code auditing & documentation
-│   ├── second-opinion/                # Codex & Gemini consultations
 │   └── research-assistant/            # Library/API research with MCP
 ├── CLAUDE.md                          # This file
 ├── README.md                          # User-facing documentation
@@ -35,12 +34,24 @@ Each plugin follows the standard structure:
 ```yaml
 ---
 name: agent-name
-description: When this agent should be triggered
-tools: Comma-separated list of tools the agent can use
+description: One-line trigger description. Use when user asks "X", "Y", or "Z".
+tools: ["Read", "Grep", "Glob", "Bash"]
+model: inherit
+color: blue
 ---
 
 System prompt content defining agent behavior...
+
+## Example Invocations
+
+<example>
+Context: ...
+user: "..."
+assistant: "..."
+</example>
 ```
+
+**Important**: Keep `description` to a single line. Multi-line content (especially `<example>` blocks) belongs in the body, not the frontmatter — descriptions are truncated at 1,536 characters for auto-routing decisions, so embedded examples get cut off.
 
 ### Skill Files (`skills/*/SKILL.md`)
 ```yaml
@@ -83,27 +94,6 @@ Standard tools: `Read`, `Write`, `Edit`, `Grep`, `Glob`, `Bash`, `WebSearch`, `W
 
 ## External Tool Integration
 
-### Second Opinion Plugin (Codex + Gemini)
-Consolidated plugin providing second opinions from multiple AI tools:
-
-**Codex Consultant:**
-- Uses `scripts/codex-review.sh` helper
-- Requires: `npm install -g @openai/codex` and `OPENAI_API_KEY` (or `CODEX_API_KEY`)
-- Invocation: `${CLAUDE_PLUGIN_ROOT}/scripts/codex-review.sh "<prompt>"`
-- **Important**: Script uses `-c 'ask_for_approval="on-request"'` instead of `--full-auto` to preserve read-only sandbox
-
-**Gemini Consultant:**
-- Uses `scripts/gemini-review.sh` helper
-- Requires: `npm install -g @google/gemini-cli` and Google OAuth (browser prompt on first run) or `GEMINI_API_KEY`
-- Invocation: `${CLAUDE_PLUGIN_ROOT}/scripts/gemini-review.sh "<prompt>"`
-- Uses `--approval-mode=yolo` (replaces deprecated `--yolo`) and `-p` for headless mode
-
-**Commands:** `/codex-opinion`, `/gemini-opinion`
-**Agents:** `codex-consultant`, `gemini-consultant`
-**Skill:** `ai-consultation` (shared methodology)
-
-**Safety:** All consultations operate in read-only/sandbox mode. Never allow file modifications from external tools.
-
 ### Research Assistant
 - Prioritizes Context7 MCP for official documentation
 - Uses `gh` CLI for GitHub operations and code examples
@@ -131,18 +121,19 @@ claude mcp add fetch -- uvx mcp-server-fetch
 
 ## Key Patterns
 
-### Safety-First Consultation
-All external AI consultations (Codex, Gemini) operate in read-only/sandbox mode. Never allow file modifications from external tools.
-
 ### Codebase Health Workflow
-The `deep-audit` agent follows a 7-phase process:
-1. Pre-Analysis Setup (check configs, run existing linters)
-2. Discovery (find all code files)
-3. File-by-File Analysis
-4. **Dead Code Detection** (knip/deadcode with verification)
-5. Best Practices Verification (Context7 for official docs)
-6. Library Recommendations
-7. Report Generation (saves to `code-audit-[timestamp].md`)
+`/deep-audit` is an orchestrator command (not a single agent). It inspects the project, decides which specialists apply, launches them via `Task`, and aggregates their findings into `code-audit-[timestamp].md`.
+
+Specialists (peers; the command is the conductor):
+- `security-auditor` — secrets, injection, XSS, weak crypto, CVEs
+- `performance-analyzer` — algorithms, N+1, async/memory, bundle bloat
+- `library-modernizer` — custom code → mature library, deprecated APIs, `@types/*` duplication (uses Context7)
+- `code-quality-reviewer` — smells, complexity, duplication, weak error handling
+- `dead-code-cleanup` — reused in detect-only mode (knip/deadcode + verification)
+
+Parallel by default (it's a batch report — no reason to wait). Pass `sequential` in `$ARGUMENTS` to fall back to one-at-a-time execution.
+
+Each specialist's `description` says "Used by the deep-audit orchestrator. Do not invoke directly." so they don't auto-trigger in normal conversations.
 
 ### Dead Code Detection
 - Uses `scripts/dead-code-detect.sh` helper for auto-detection
