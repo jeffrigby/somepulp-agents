@@ -1,7 +1,7 @@
 {
   "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
   "name": "somepulp-agents",
-  "version": "3.1.1",
+  "version": "3.1.2",
   "description": "AI-powered developer assistants for code auditing, documentation maintenance, and library/API research",
   "owner": {
     "name": "Some Pulp LLC",
@@ -10,12 +10,14 @@
   "plugins": [
     {
       "name": "codebase-health",
+      "displayName": "Codebase Health",
       "source": "./plugins/codebase-health",
       "description": "Codebase health tools: /deep-audit, /dead-code, /update-docs for code quality and documentation maintenance",
       "category": "development"
     },
     {
       "name": "research-assistant",
+      "displayName": "Research Assistant",
       "source": "./plugins/research-assistant",
       "description": "Research libraries and APIs: /research for comprehensive research, /official-docs for pre-task doc lookups",
       "category": "productivity"
