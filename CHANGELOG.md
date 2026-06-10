@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.1.2] - 2026-06-10
+
+### Fixed
+- **codebase-health 2.1.2**: Fixed two plugin manifest bugs that made `/doctor` report "skills load failed" and "Hook load failed".
+  - `plugin.json` `skills` entries now point at the skill directories (`./skills/code-auditing`, `./skills/docs-maintenance`) instead of the `SKILL.md` files inside them.
+  - `hooks/hooks.json` events are now nested under the required top-level `"hooks"` key (the `Stop` event was previously at the root, failing validation).
+
 ## [3.1.1] - 2026-05-02
 
 ### Fixed
