@@ -2,6 +2,11 @@
 description: Run a comprehensive deep audit by orchestrating specialist agents
 argument-hint: "[aspects] [sequential]"
 allowed-tools: ["Bash", "Glob", "Grep", "Read", "Write", "Task", "TodoWrite"]
+hooks:
+  Stop:
+    - hooks:
+        - type: prompt
+          prompt: "Verify the deep-audit report file (code-audit-*.md) was created. If it exists, approve. If it was not created, block and remind that the audit findings must be saved to code-audit-[timestamp].md."
 ---
 
 # Deep Audit (Orchestrator)
