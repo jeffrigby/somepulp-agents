@@ -1,5 +1,6 @@
 {
   "name": "codebase-health",
+  "displayName": "Codebase Health",
   "version": "2.1.2",
   "description": "Codebase health tools: deep audits via orchestrated specialists (security, performance, libraries, quality, dead code) plus dead-code cleanup and documentation maintenance",
   "author": {

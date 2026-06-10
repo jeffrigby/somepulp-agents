@@ -11,7 +11,7 @@ Claude Code plugins extend functionality through custom slash commands, speciali
 | Plugin | Description | Contents |
 |--------|-------------|----------|
 | [codebase-health](./plugins/codebase-health/) | Codebase health tools: orchestrated deep audits, dead code detection, and documentation maintenance | **Commands:** `/deep-audit`, `/dead-code`, `/update-docs`<br>**Agents:** `security-auditor`, `performance-analyzer`, `library-modernizer`, `code-quality-reviewer`, `dead-code-cleanup`, `update-docs`<br>**Skills:** `code-auditing`, `docs-maintenance` |
-| [research-assistant](./plugins/research-assistant/) | Research libraries and APIs using official documentation | **Commands:** `/research`, `/official-docs`<br>**Agents:** `research-assistant`, `official-docs`<br>**MCP:** Context7, Fetch |
+| [research-assistant](./plugins/research-assistant/) | Research libraries and APIs using official documentation | **Commands:** `/research`, `/official-docs`<br>**Agents:** `research-assistant`, `official-docs`<br>**MCP:** Context7, Fetch, AWS Documentation (all optional) |
 
 ## Installation
 
@@ -47,7 +47,7 @@ git clone https://github.com/jeffrigby/somepulp-agents.git
 
 | Plugin | Requirements |
 |--------|--------------|
-| **research-assistant** | Recommended: [Context7](https://github.com/upstash/context7) and [Fetch](https://github.com/modelcontextprotocol/servers/tree/main/src/fetch) MCP servers (install separately). Falls back to WebSearch/WebFetch if unavailable. |
+| **research-assistant** | Recommended: [Context7](https://github.com/upstash/context7) and [Fetch](https://github.com/modelcontextprotocol/servers/tree/main/src/fetch) MCP servers (install separately). Optional: [AWS Documentation](https://github.com/awslabs/mcp/tree/main/src/aws-documentation-mcp-server) MCP server for AWS docs research. Falls back to WebSearch/WebFetch if unavailable. |
 
 ## Plugin Structure
 

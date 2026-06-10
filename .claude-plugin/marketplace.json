@@ -10,12 +10,14 @@
   "plugins": [
     {
       "name": "codebase-health",
+      "displayName": "Codebase Health",
       "source": "./plugins/codebase-health",
       "description": "Codebase health tools: /deep-audit, /dead-code, /update-docs for code quality and documentation maintenance",
       "category": "development"
     },
     {
       "name": "research-assistant",
+      "displayName": "Research Assistant",
       "source": "./plugins/research-assistant",
       "description": "Research libraries and APIs: /research for comprehensive research, /official-docs for pre-task doc lookups",
       "category": "productivity"
