@@ -5,6 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.1.3] - 2026-06-10
+
+### Fixed
+- **codebase-health 2.1.3**: Scoped the audit-report Stop hook to `/deep-audit` runs only — it was firing on every turn-end in every session.
+  - The v3.1.2 hooks.json repair activated a plugin-level Stop hook that had silently never loaded (broken since its introduction in v2.2.0). Once loaded, it evaluated "was an audit report created?" at the end of every conversation turn, constantly nagging in sessions where no audit ever ran.
+  - The hook now lives in the `/deep-audit` command's frontmatter (`hooks:` field), which scopes it to the skill's lifecycle per the official hooks spec — active only while the command runs, cleaned up when it finishes.
+  - Removed the plugin-level `hooks/hooks.json` and the `hooks` entry from `plugin.json`; the prompt now also states the approve path explicitly so it cannot re-block in a loop.
+
 ## [3.1.2] - 2026-06-10
 
 ### Fixed
