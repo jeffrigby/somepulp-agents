@@ -1,9 +1,11 @@
 ---
 description: Research a library, framework, or technical topic
 argument-hint: "<topic>"
+context: fork
+agent: research-assistant
 ---
 
-Use the research-assistant agent to research the specified topic.
+Research the following topic thoroughly.
 
 Prioritize:
 1. Context7 for official documentation

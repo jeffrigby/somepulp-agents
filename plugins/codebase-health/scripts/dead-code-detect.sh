@@ -64,6 +64,10 @@ ${YELLOW}NOTES:${NC}
     • In detect mode, no files are modified
     • Fix mode requires explicit user approval before running
     • JSON format is recommended for programmatic parsing
+    • Mixed projects (Node.js + Python) with --format json emit a single
+      JSON envelope: {"nodejs": <knip JSON or null>, "python": "<deadcode
+      text>"} (requires jq; without jq, stdout carries knip JSON only and
+      deadcode text goes to stderr with a warning)
 
 EOF
 }
@@ -305,15 +309,53 @@ case "$PROJECT_TYPE" in
             exit 1
         fi
 
-        if [[ "$NODEJS_OK" == "true" ]]; then
-            echo -e "${GREEN}=== Node.js/TypeScript Analysis ===${NC}" >&2
-            run_knip "$DIR" "$MODE" "$FORMAT" || true
-            echo "" >&2
-        fi
+        if [[ "$MODE" == "detect" && "$FORMAT" == "json" ]]; then
+            # Keep stdout parseable: capture each tool's output, then emit a
+            # single JSON envelope. Deadcode has no JSON reporter, so its
+            # plain-text output is embedded as a JSON string.
+            KNIP_OUT=""
+            DEADCODE_OUT=""
 
-        if [[ "$PYTHON_OK" == "true" ]]; then
-            echo -e "${GREEN}=== Python Analysis ===${NC}" >&2
-            run_deadcode "$DIR" "$MODE" "$FORMAT" || true
+            if [[ "$NODEJS_OK" == "true" ]]; then
+                echo -e "${GREEN}=== Node.js/TypeScript Analysis ===${NC}" >&2
+                KNIP_OUT="$(run_knip "$DIR" "$MODE" "$FORMAT")" || true
+            fi
+
+            if [[ "$PYTHON_OK" == "true" ]]; then
+                echo -e "${GREEN}=== Python Analysis ===${NC}" >&2
+                DEADCODE_OUT="$(run_deadcode "$DIR" "$MODE" "$FORMAT")" || true
+            fi
+
+            if command -v jq &> /dev/null; then
+                if [[ -n "$KNIP_OUT" ]] && jq -e . <<< "$KNIP_OUT" > /dev/null 2>&1; then
+                    jq -n --argjson nodejs "$KNIP_OUT" --arg python "$DEADCODE_OUT" \
+                        '{nodejs: $nodejs, python: $python}'
+                else
+                    # knip output empty or not valid JSON: embed as string/null
+                    jq -n --arg nodejs "$KNIP_OUT" --arg python "$DEADCODE_OUT" \
+                        '{nodejs: (if $nodejs == "" then null else $nodejs end), python: $python}'
+                fi
+            else
+                echo -e "${YELLOW}Warning: jq not available; JSON output covers Node.js only.${NC}" >&2
+                if [[ -n "$DEADCODE_OUT" ]]; then
+                    echo -e "${YELLOW}Python (deadcode) findings, plain text:${NC}" >&2
+                    printf '%s\n' "$DEADCODE_OUT" >&2
+                fi
+                if [[ -n "$KNIP_OUT" ]]; then
+                    printf '%s\n' "$KNIP_OUT"
+                fi
+            fi
+        else
+            if [[ "$NODEJS_OK" == "true" ]]; then
+                echo -e "${GREEN}=== Node.js/TypeScript Analysis ===${NC}" >&2
+                run_knip "$DIR" "$MODE" "$FORMAT" || true
+                echo "" >&2
+            fi
+
+            if [[ "$PYTHON_OK" == "true" ]]; then
+                echo -e "${GREEN}=== Python Analysis ===${NC}" >&2
+                run_deadcode "$DIR" "$MODE" "$FORMAT" || true
+            fi
         fi
         ;;
     unknown)

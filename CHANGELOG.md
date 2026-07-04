@@ -5,6 +5,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.2.0] - 2026-07-04
+
+### Added
+- **Marketplace**: Replaced the dead `$schema` URL in `marketplace.json` with the SchemaStore marketplace schema, and added a top-level `renames` map recording the plugin lineage (`code-auditor` → `codebase-health`, `codex-consultant`/`gemini-consultant` → `second-opinion`, `second-opinion` → retired).
+- **All plugins**: Added `$schema` (SchemaStore plugin-manifest schema) as the first key in each `plugin.json`.
+- **codebase-health 2.2.0**: `disable-model-invocation: true` on `/deep-audit` and `/update-docs` so these resource-intensive commands only run when the user invokes them.
+- **research-assistant 1.4.0**: `/research` and `/official-docs` now declare `context: fork` and `agent:` in frontmatter, running directly as their agents in a forked context; command bodies reworded from "Use the X agent to…" to direct instructions.
+
+### Changed
+- **All plugins**: Trimmed `plugin.json` manifests to metadata only — removed the explicit `agents`, `commands`, and `skills` arrays so default directory auto-discovery applies.
+- **codebase-health 2.2.0**: `/deep-audit` hardening — replaced bare `Bash` in `allowed-tools` with five scoped pre-approvals (dead-code-detect.sh, `npx knip`, `npm run lint`, `npm run typecheck`, `deadcode`), renamed the `Task` tool to `Agent` throughout (v2.1.63 rename; `Task` remains an alias), and rewrote the Stop hook prompt with a `stop_hook_active` loop guard and an explicit `{"ok": true}` / `{"ok": false, "reason": …}` response contract.
+- **codebase-health 2.2.0**: Reworked `dead-code-cleanup` and `update-docs` agents for subagent reality — `AskUserQuestion` removed from their tools lists (unavailable inside subagents). Agents now return a verified findings report plus a plan (cleanup groups by confidence; file-by-file doc updates with before/after snippets) and hand off to the main conversation, where `/dead-code` and `/update-docs` gather user approval via `AskUserQuestion` before applying changes. Interactive "Would you like to…" error prompts replaced with fallback-and-report behavior.
+- **codebase-health 2.2.0**: Skills modernized — `references/` paths in both SKILL.md files now use `${CLAUDE_SKILL_DIR}/`, frontmatter descriptions rewritten as one-line capability statements with trigger phrases moved to a new `when_to_use` field, and `docs-maintenance` gains `Edit`/`Write` in `allowed-tools`.
+- **codebase-health 2.2.0**: `dead-code-detect.sh` mixed-project detection with `--format json` now emits a single JSON envelope (`{"nodejs": <knip JSON>, "python": "<deadcode text>"}`) instead of interleaved output, with graceful fallbacks for invalid/empty knip output and for systems without `jq` (deadcode text routed to stderr). Documented script invocations now quote the expansion: `"${CLAUDE_PLUGIN_ROOT}"/scripts/dead-code-detect.sh`.
+- **CLAUDE.md**: Updated repo conventions to match — `Agent` tool rename, `AskUserQuestion` unavailable in subagents, metadata-only manifests with auto-discovery, `when_to_use` skill field, `${CLAUDE_SKILL_DIR}` for skill-bundled files, and the optional command frontmatter used in this repo (`disable-model-invocation`, `context: fork` + `agent:`).
+
 ## [3.1.3] - 2026-06-10
 
 ### Fixed

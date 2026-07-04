@@ -1,9 +1,11 @@
 ---
 description: Fetch official documentation and code examples before starting a task
 argument-hint: "<topic>"
+context: fork
+agent: official-docs
 ---
 
-Use the official-docs agent to fetch official documentation for the specified topic.
+Fetch official documentation for the following topic.
 
 IMPORTANT RULES:
 1. Only use official sources (Context7, official docs sites, official GitHub repos)

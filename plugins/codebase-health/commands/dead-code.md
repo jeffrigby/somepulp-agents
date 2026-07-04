@@ -44,12 +44,13 @@ For each flagged item:
 
 ## Workflow
 
-1. Run detection tool via `${CLAUDE_PLUGIN_ROOT}/scripts/dead-code-detect.sh`
-2. Parse findings into categories
-3. **Verify each item** - read code, filter false positives
-4. Present verified report to user
-5. If cleanup mode: ask user to approve/exclude/cancel
-6. Apply approved fixes
+1. Invoke the `dead-code-cleanup` agent to run detection and verification:
+   - The agent runs the detection tool via `"${CLAUDE_PLUGIN_ROOT}"/scripts/dead-code-detect.sh`
+   - It parses findings into categories and **verifies each item** (reads code, filters false positives)
+   - It returns a verified report plus a proposed cleanup plan grouped by confidence (safe / needs-review)
+2. Present the returned report and plan to the user
+3. If cleanup mode: use AskUserQuestion to ask which groups to remove
+4. Apply only the approved removals
 
 ## Report Format
 
@@ -75,12 +76,15 @@ Present findings as:
 
 ## Cleanup Flow
 
-If mode=cleanup, after showing report:
+If mode=cleanup, after the agent returns its report and plan:
 
-1. Ask: "Does this look correct? Would you like to proceed with cleanup?"
-2. Options: Apply all / Exclude specific items / Cancel
-3. If excluding, let user specify what to keep
-4. Run `npx knip --fix` or `deadcode --fix` for approved items
-5. Show summary of changes
+1. Use AskUserQuestion to ask which groups to remove:
+   - Safe-to-remove group only
+   - Safe + needs-review groups
+   - Exclude specific items
+   - Cancel
+2. If excluding, let user specify what to keep
+3. Apply only the approved removals: re-invoke the `dead-code-cleanup` agent with the explicitly approved list, or apply them directly here (`npx knip --fix` / `deadcode --fix` only when everything was approved; otherwise remove items surgically)
+4. Show summary of changes and recommend running tests
 
-Use the `dead-code-cleanup` agent for the cleanup workflow.
+Note: the `dead-code-cleanup` agent runs as a subagent and cannot prompt the user itself — approval always happens here, in the main conversation.

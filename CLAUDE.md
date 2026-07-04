@@ -22,7 +22,7 @@ somepulp-agents/
 ```
 
 Each plugin follows the standard structure:
-- **`.claude-plugin/plugin.json`** - Plugin manifest
+- **`.claude-plugin/plugin.json`** - Plugin manifest (metadata only; agents/commands/skills are auto-discovered from their default directories, not enumerated in the manifest)
 - **`agents/`** - Markdown agents with YAML frontmatter
 - **`commands/`** - Slash command definitions
 - **`skills/`** - Skills with reference documentation
@@ -57,14 +57,15 @@ assistant: "..."
 ```yaml
 ---
 name: skill-name
-description: When this skill should be invoked
+description: What the skill does and which use cases it covers (use-case-first)
+when_to_use: Trigger phrases, e.g. when the user asks to "X", "Y", or "Z"
 allowed-tools: Read, Grep, Glob, Bash
 ---
 
 Skill methodology and guidance...
 ```
 
-Reference materials go in `skills/*/references/*.md`.
+Reference materials go in `skills/*/references/*.md` and are referenced from the skill body via `${CLAUDE_SKILL_DIR}` (e.g. `${CLAUDE_SKILL_DIR}/references/checklist.md`).
 
 ### Command Files (`commands/*.md`)
 ```yaml
@@ -75,6 +76,10 @@ description: Brief description of what the command does
 Command prompt content...
 $ARGUMENTS
 ```
+
+Optional frontmatter used in this repo:
+- `disable-model-invocation: true` - user-invoked only, never auto-triggered (set on `/deep-audit` and `/update-docs`)
+- `context: fork` + `agent: <agent-name>` - run the command in a forked context as the named agent (used by the research-assistant commands)
 
 ## Tool Naming Conventions
 
@@ -89,7 +94,8 @@ MCP tool names must be **lowercase**. Examples:
 Standard tools: `Read`, `Write`, `Edit`, `Grep`, `Glob`, `Bash`, `WebSearch`, `WebFetch`, `TodoWrite`, `AskUserQuestion`
 
 **Tools unavailable in subagent context** (cannot be used in agent/skill tool lists):
-- `Task` - Used by main Claude to spawn subagents; subagents cannot spawn other subagents
+- `Agent` (renamed from `Task` in Claude Code v2.1.63; `Task` remains an alias) - Used by main Claude to spawn subagents; subagents cannot spawn other subagents
+- `AskUserQuestion` - Unavailable inside subagents even when listed in `tools`
 - `LS` - Not a standard Claude Code tool; use `Glob` for file discovery or `Bash` with `ls`
 
 ## External Tool Integration
@@ -122,7 +128,7 @@ claude mcp add fetch -- uvx mcp-server-fetch
 ## Key Patterns
 
 ### Codebase Health Workflow
-`/deep-audit` is an orchestrator command (not a single agent). It inspects the project, decides which specialists apply, launches them via `Task`, and aggregates their findings into `code-audit-[timestamp].md`.
+`/deep-audit` is an orchestrator command (not a single agent). It inspects the project, decides which specialists apply, launches them via `Agent`, and aggregates their findings into `code-audit-[timestamp].md`.
 
 Specialists (peers; the command is the conductor):
 - `security-auditor` — secrets, injection, XSS, weak crypto, CVEs
@@ -140,7 +146,7 @@ Each specialist's `description` says "Used by the deep-audit orchestrator. Do no
 - **JavaScript/TypeScript**: Uses knip (`npx knip --reporter json`)
 - **Python**: Uses deadcode (`deadcode .`)
 - **Critical**: Always verify tool findings before reporting (filter false positives)
-- Invocation: `${CLAUDE_PLUGIN_ROOT}/scripts/dead-code-detect.sh --format json`
+- Invocation: `"${CLAUDE_PLUGIN_ROOT}"/scripts/dead-code-detect.sh --format json`
 
 **False Positive Verification:**
 Before reporting dead code findings, check for:
@@ -156,4 +162,4 @@ Before reporting dead code findings, check for:
 
 ## Plugin Variables
 
-Use `${CLAUDE_PLUGIN_ROOT}` to reference paths within this plugin directory (e.g., for script invocations or reading reference files).
+Use `${CLAUDE_PLUGIN_ROOT}` to reference paths within this plugin directory (e.g., for script invocations). Within a skill, reference its bundled files (e.g. `references/*.md`) via `${CLAUDE_SKILL_DIR}` instead.

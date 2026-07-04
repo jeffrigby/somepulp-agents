@@ -1,7 +1,8 @@
 {
+  "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "codebase-health",
   "displayName": "Codebase Health",
-  "version": "2.1.3",
+  "version": "2.2.0",
   "description": "Codebase health tools: deep audits via orchestrated specialists (security, performance, libraries, quality, dead code) plus dead-code cleanup and documentation maintenance",
   "author": {
     "name": "Some Pulp LLC",
@@ -10,22 +11,5 @@
   "homepage": "https://github.com/jeffrigby/somepulp-agents",
   "repository": "https://github.com/jeffrigby/somepulp-agents",
   "license": "MIT",
-  "keywords": ["code-review", "code-audit", "security", "dead-code", "quality-check", "documentation", "docs-maintenance", "codebase-health"],
-  "agents": [
-    "./agents/security-auditor.md",
-    "./agents/performance-analyzer.md",
-    "./agents/library-modernizer.md",
-    "./agents/code-quality-reviewer.md",
-    "./agents/dead-code-cleanup.md",
-    "./agents/update-docs.md"
-  ],
-  "commands": [
-    "./commands/deep-audit.md",
-    "./commands/dead-code.md",
-    "./commands/update-docs.md"
-  ],
-  "skills": [
-    "./skills/code-auditing",
-    "./skills/docs-maintenance"
-  ]
+  "keywords": ["code-review", "code-audit", "security", "dead-code", "quality-check", "documentation", "docs-maintenance", "codebase-health"]
 }
