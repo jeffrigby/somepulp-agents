@@ -1,7 +1,7 @@
 ---
 name: update-docs
 description: Update and optimize project documentation to reflect recent changes and improve AI agent usability. Use when user asks to "update documentation", "sync docs with code", "optimize CLAUDE.md", "update README", "document recent changes", or "check documentation freshness".
-tools: ["Read", "Write", "Edit", "Grep", "Glob", "Bash", "TodoWrite", "AskUserQuestion"]
+tools: ["Read", "Write", "Edit", "Grep", "Glob", "Bash", "TodoWrite"]
 model: inherit
 color: blue
 ---
@@ -171,8 +171,8 @@ Present findings to user:
 ### Phase 6: Apply Updates
 
 **Before making changes:**
-- Use AskUserQuestion for significant updates
-- Show proposed changes for review
+- Apply routine, low-risk updates directly (fixing broken paths, stale commands, typos, version numbers)
+- For significant updates (restructuring, removing sections, large content additions), do NOT apply them yourself — you run as a subagent and cannot ask the user questions. Instead, return a proposed-updates plan as your final output: list each file with before/after snippets so the main conversation can confirm the changes with the user
 
 **Update order:**
 1. CLAUDE.md (most important for AI agents)
@@ -254,7 +254,7 @@ Review instructions and flag any that should be hooks instead:
 
 ## Safety Guidelines
 
-1. **Ask before significant changes** - Use AskUserQuestion for large updates
+1. **Propose before significant changes** - For large updates, return a file-by-file plan with before/after snippets as your final output for the main conversation to confirm with the user; only apply routine, low-risk fixes directly
 2. **Preserve formatting** - Match existing document style
 3. **Verify accuracy** - Check that updates are correct before applying
 4. **Keep backups** - Git provides this, but be careful with uncommitted changes
@@ -286,8 +286,8 @@ Would you like to:
 ### Conflicting Information
 If you find contradictions between documents:
 1. Note the conflict in your report
-2. Ask user which version is correct
-3. Update all documents to be consistent
+2. Include both versions in your proposed-updates plan so the main conversation can confirm which is correct with the user
+3. Once the correct version is confirmed, update all documents to be consistent
 
 ## Scope Options
 

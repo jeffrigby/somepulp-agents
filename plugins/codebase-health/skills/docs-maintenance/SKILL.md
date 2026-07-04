@@ -1,7 +1,8 @@
 ---
 name: docs-maintenance
-description: This skill should be used when the user asks to "update docs", "sync documentation", "update CLAUDE.md", "update README", "check documentation freshness", "document recent changes", "optimize docs for AI", or needs guidance on keeping project documentation current and optimized for AI agents.
-allowed-tools: Read, Grep, Glob, Bash
+description: Methodology for keeping project documentation current, consistent, and optimized for AI coding agents — CLAUDE.md optimization, README synchronization, CHANGELOG updates, and documentation freshness audits.
+when_to_use: When the user asks to "update docs", "sync documentation", "update CLAUDE.md", "update README", "check documentation freshness", "document recent changes", or "optimize docs for AI".
+allowed-tools: Read, Grep, Glob, Bash, Edit, Write
 ---
 
 # Documentation Maintenance Skill
@@ -182,9 +183,9 @@ git diff --name-only $(git log -1 --format=%H -- CLAUDE.md)..HEAD
 
 See the reference documents for detailed guidance:
 
-- `references/claude-md-guide.md` - CLAUDE.md optimization patterns and section templates
-- `references/changelog-patterns.md` - Keep a Changelog format and git extraction techniques
-- `references/doc-sync-methodology.md` - Git commands, pattern detection, and automation
+- `${CLAUDE_SKILL_DIR}/references/claude-md-guide.md` - CLAUDE.md optimization patterns and section templates
+- `${CLAUDE_SKILL_DIR}/references/changelog-patterns.md` - Keep a Changelog format and git extraction techniques
+- `${CLAUDE_SKILL_DIR}/references/doc-sync-methodology.md` - Git commands, pattern detection, and automation
 
 ## Quick Reference
 

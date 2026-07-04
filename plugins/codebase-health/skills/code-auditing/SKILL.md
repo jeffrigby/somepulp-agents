@@ -1,6 +1,7 @@
 ---
 name: code-auditing
-description: This skill should be used when the user asks to "audit code", "find technical debt", "perform a security review", "identify dead code", "analyze code quality", "check best practices", "run a code audit", or needs a systematic methodology for comprehensive codebase analysis.
+description: Systematic methodology for comprehensive codebase analysis — security review, technical debt identification, dead code detection, code quality checks, and best-practices verification against official library documentation.
+when_to_use: When the user asks to "audit code", "find technical debt", "perform a security review", "identify dead code", "analyze code quality", "check best practices", or "run a code audit".
 allowed-tools: Read, Grep, Glob, Bash, WebSearch, WebFetch
 ---
 
@@ -131,8 +132,8 @@ Generate detailed report with:
 
 See the reference documents for complete methodologies:
 
-- `references/audit-methodology.md` - Full 6-phase audit process with detailed checklists
-- `references/dead-code-methodology.md` - Dead code detection tools, verification, and cleanup workflows
+- `${CLAUDE_SKILL_DIR}/references/audit-methodology.md` - Full 6-phase audit process with detailed checklists
+- `${CLAUDE_SKILL_DIR}/references/dead-code-methodology.md` - Dead code detection tools, verification, and cleanup workflows
 
 ## Quick Reference
 

@@ -203,7 +203,7 @@ For each flagged item, the agent MUST:
 ### 1. Run Detection Tool
 ```bash
 # Use the helper script
-${CLAUDE_PLUGIN_ROOT}/scripts/dead-code-detect.sh --format json
+"${CLAUDE_PLUGIN_ROOT}"/scripts/dead-code-detect.sh --format json
 ```
 
 ### 2. Parse and Categorize

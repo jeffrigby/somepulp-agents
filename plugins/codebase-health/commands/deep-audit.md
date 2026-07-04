@@ -1,12 +1,30 @@
 ---
 description: Run a comprehensive deep audit by orchestrating specialist agents
 argument-hint: "[aspects] [sequential]"
-allowed-tools: ["Bash", "Glob", "Grep", "Read", "Write", "Task", "TodoWrite"]
+allowed-tools:
+  - Bash("${CLAUDE_PLUGIN_ROOT}/scripts/dead-code-detect.sh" *)
+  - Bash(npx knip*)
+  - Bash(npm run lint*)
+  - Bash(npm run typecheck*)
+  - Bash(deadcode*)
+  - Glob
+  - Grep
+  - Read
+  - Write
+  - Agent
+  - TodoWrite
+disable-model-invocation: true
 hooks:
   Stop:
     - hooks:
         - type: prompt
-          prompt: "Verify the deep-audit report file (code-audit-*.md) was created. If it exists, approve. If it was not created, block and remind that the audit findings must be saved to code-audit-[timestamp].md."
+          prompt: >-
+            Hook input: $ARGUMENTS. If stop_hook_active is true in the input,
+            respond {"ok": true} immediately. Otherwise, check whether a
+            code-audit-*.md report file was created during this audit; if it
+            exists respond {"ok": true}, if the audit ran but no report was
+            saved respond {"ok": false, "reason": "The audit findings must be
+            saved to code-audit-[timestamp].md before stopping"}.
 ---
 
 # Deep Audit (Orchestrator)
@@ -26,7 +44,7 @@ This is **resource-intensive** and should only run when explicitly requested. Fo
 - **dead** → `dead-code-cleanup` in detect-only mode (unused imports/exports/files/deps, with verification)
 - **all** → run every applicable specialist (default if no aspects given)
 
-The launch mode is **parallel by default** — `/deep-audit` produces a batch report, so there's no reason to wait. All selected specialists are launched at once via a single message with multiple `Task` calls. Append the literal token `sequential` to fall back to one-at-a-time execution (useful when debugging a specialist or when a transcript is easier to read serially).
+The launch mode is **parallel by default** — `/deep-audit` produces a batch report, so there's no reason to wait. All selected specialists are launched at once via a single message with multiple `Agent` calls. Append the literal token `sequential` to fall back to one-at-a-time execution (useful when debugging a specialist or when a transcript is easier to read serially).
 
 ## Workflow
 
@@ -61,15 +79,15 @@ If the user requested specific aspects, only run those — don't override their 
 
 ### 4. Launch specialists
 
-Use the `Task` tool to invoke each selected specialist. Pass each one:
+Use the `Agent` tool to invoke each selected specialist. Pass each one:
 
 - The **project brief** from step 2
 - The **scope** (free-form scope hints from `$ARGUMENTS`, or "full codebase")
 - An instruction to **return only the structured findings block** described in the agent's prompt — not save a file
 
-**Parallel mode (default):** issue all selected `Task` calls in a single assistant message so they run concurrently. Capture each result as it returns.
+**Parallel mode (default):** issue all selected `Agent` calls in a single assistant message so they run concurrently. Capture each result as it returns.
 
-**Sequential mode (`sequential` arg present):** issue one `Task` call, wait for the result, capture the markdown, then issue the next.
+**Sequential mode (`sequential` arg present):** issue one `Agent` call, wait for the result, capture the markdown, then issue the next.
 
 For `dead`, invoke `dead-code-cleanup` and instruct it to **detect only** (no removal). Tell it to return its verified findings as a markdown block matching the format below.
 
@@ -85,7 +103,7 @@ Before pasting a result into the report, confirm it starts with the specialist's
 | `code-quality-reviewer` | `## Code Quality Findings` |
 | `dead-code-cleanup` | `## Dead Code Analysis Report` (or `## Dead Code Findings`) |
 
-If a result is empty, missing the expected heading, or has no severity sections, treat the specialist as **failed**: do not paste a placeholder block. Record it under `Specialists that failed:` in the Notes section (step 5) with a one-line cause (`empty result`, `missing findings heading`, `task error: <message>`). A launched specialist must never be silently dropped from the report.
+If a result is empty, missing the expected heading, or has no severity sections, treat the specialist as **failed**: do not paste a placeholder block. Record it under `Specialists that failed:` in the Notes section (step 5) with a one-line cause (`empty result`, `missing findings heading`, `agent error: <message>`). A launched specialist must never be silently dropped from the report.
 
 ### 5. Aggregate the report
 
