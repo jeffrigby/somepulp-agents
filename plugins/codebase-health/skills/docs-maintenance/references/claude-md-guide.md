@@ -2,6 +2,23 @@
 
 Reference for creating and maintaining CLAUDE.md files, based on official Claude Code documentation.
 
+## Contents
+
+- What CLAUDE.md Is
+- Critical Constraints
+- File Hierarchy
+- @path Imports
+- .claude/rules/ Directory
+- What to Include vs Exclude
+- Writing Effective Instructions
+- Hooks vs CLAUDE.md
+- Recommended Sections
+- Anti-Patterns
+- Generating and Debugging CLAUDE.md
+- Troubleshooting
+- Monorepo Configuration
+- Maintenance Checklist
+
 ## What CLAUDE.md Is
 
 CLAUDE.md is a markdown file that Claude Code reads at the start of every conversation. It provides persistent context — coding standards, architecture decisions, preferred libraries, workflow rules, and build commands.

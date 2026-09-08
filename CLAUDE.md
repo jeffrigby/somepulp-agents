@@ -22,11 +22,12 @@ somepulp-agents/
 ```
 
 Each plugin follows the standard structure:
-- **`.claude-plugin/plugin.json`** - Plugin manifest (metadata only; agents/commands/skills are auto-discovered from their default directories, not enumerated in the manifest)
+- **`.claude-plugin/plugin.json`** - Plugin manifest (metadata only; agents and skills are auto-discovered from their default directories, not enumerated in the manifest)
 - **`agents/`** - Markdown agents with YAML frontmatter
-- **`commands/`** - Slash command definitions
-- **`skills/`** - Skills with reference documentation
+- **`skills/`** - Skills (`skills/<name>/SKILL.md`), each of which is also the `/<name>` slash command
 - **`scripts/`** - Helper shell scripts (optional)
+
+There is no `commands/` directory. Custom commands were merged into skills — `commands/deploy.md` and `skills/deploy/SKILL.md` both create `/deploy` and behave identically — and the docs direct new plugins to `skills/`, which additionally supports a directory of bundled files, `name`, and `paths`.
 
 ## Agent and Skill Format
 
@@ -51,7 +52,7 @@ assistant: "..."
 </example>
 ```
 
-**Important**: Keep `description` to a single line. Multi-line content (especially `<example>` blocks) belongs in the body, not the frontmatter — descriptions are truncated at 1,536 characters for auto-routing decisions, so embedded examples get cut off.
+**Important**: Keep `description` to a single line. Multi-line content (especially `<example>` blocks) belongs in the body, not the frontmatter — the description is what Claude reads when deciding whether to delegate, and every non-built-in subagent's description shares a ~15,000-token budget (exceeding it produces a startup warning). Skills are capped separately: `description` + `when_to_use` are truncated at 1,536 characters in the skill listing (configurable via `skillListingMaxDescChars`).
 
 ### Skill Files (`skills/*/SKILL.md`)
 ```yaml
@@ -67,24 +68,23 @@ Skill methodology and guidance...
 
 Reference materials go in `skills/*/references/*.md` and are referenced from the skill body via `${CLAUDE_SKILL_DIR}` (e.g. `${CLAUDE_SKILL_DIR}/references/checklist.md`).
 
-### Command Files (`commands/*.md`)
-```yaml
----
-description: Brief description of what the command does
----
+**Target**: this marketplace is Claude-Code-only. `when_to_use` and `argument-hint` are Claude Code extensions, not Agent Skills spec fields — do not strip them for spec portability (`package_skill.py` would reject them, but we don't package for claude.ai upload or the Skills API).
 
-Command prompt content...
-$ARGUMENTS
-```
+The directory name is the slash command: `skills/deep-audit/SKILL.md` → `/deep-audit`. Keep `name` equal to the directory name.
 
 Optional frontmatter used in this repo:
-- `disable-model-invocation: true` - user-invoked only, never auto-triggered (set on `/deep-audit` and `/update-docs`)
-- `context: fork` + `agent: <agent-name>` - run the command in a forked context as the named agent (used by the research-assistant commands)
+- `argument-hint` - autocomplete hint for expected arguments
+- `disable-model-invocation: true` - user-invoked only, never auto-triggered (set on `/deep-audit` and `/update-docs`, whose auto-routing is handled by the `code-auditing` and `docs-maintenance` methodology skills instead)
+- `allowed-tools` - tools usable without a permission prompt while the skill is active (`/deep-audit`)
+- `hooks` - lifecycle hooks registered while the skill is active. Use `type: agent` (not `type: prompt`) when the hook must inspect files or run commands; a prompt hook sees only the hook's JSON input. Both return `{"ok": true}` or `{"ok": false, "reason": "..."}`. Agent hooks are experimental.
+- `context: fork` + `agent: <agent-name>` - run the skill in a forked subagent context as the named agent (`/research`, `/official-docs`)
+
+Argument substitution: `$ARGUMENTS` for everything, `$ARGUMENTS[N]` / `$N` for a positional argument.
 
 ## Tool Naming Conventions
 
 ### MCP Tools
-MCP tool names must be **lowercase**. Examples:
+MCP tool names take the form `mcp__<server>__<tool>` (plugin-bundled servers: `mcp__plugin_<plugin>_<server>__<tool>`). This repo additionally requires the **lowercase** server segment as a house convention — the docs specify the shape but not the casing. Examples:
 - `mcp__context7__resolve-library-id` (correct)
 - `mcp__context7__query-docs` (correct)
 - `mcp__fetch__fetch` (correct)
@@ -93,9 +93,9 @@ MCP tool names must be **lowercase**. Examples:
 ### Valid Claude Code Tools
 Standard tools: `Read`, `Write`, `Edit`, `Grep`, `Glob`, `Bash`, `WebSearch`, `WebFetch`, `TodoWrite`, `AskUserQuestion`
 
-**Tools unavailable in subagent context** (cannot be used in agent/skill tool lists):
-- `Agent` (renamed from `Task` in Claude Code v2.1.63; `Task` remains an alias) - Used by main Claude to spawn subagents; subagents cannot spawn other subagents
-- `AskUserQuestion` - Unavailable inside subagents even when listed in `tools`
+**Tools filtered in subagent context** (applies to `agents/*.md` only — not to skills, which run in the main conversation unless they set `context: fork`):
+- `Agent` (renamed from `Task` in Claude Code v2.1.63; `Task` remains an alias) - Stripped only when the subagent is at the nesting depth limit. Subagent `tools` supports `Agent(type)` syntax to restrict which subagent types may be spawned. This repo's specialists are spawned by `/deep-audit`, so they are at the limit in practice — don't list `Agent` in them.
+- `AskUserQuestion` - Unavailable inside subagents even when listed in `tools`. Valid in a skill's `allowed-tools` when the skill runs in the main conversation.
 - `LS` - Not a standard Claude Code tool; use `Glob` for file discovery or `Bash` with `ls`
 
 ## External Tool Integration

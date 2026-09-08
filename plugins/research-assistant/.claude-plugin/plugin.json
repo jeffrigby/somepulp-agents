@@ -2,7 +2,7 @@
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "research-assistant",
   "displayName": "Research Assistant",
-  "version": "1.4.0",
+  "version": "1.5.0",
   "description": "Research libraries, frameworks, and APIs using official documentation. Includes /research for comprehensive investigation and /official-docs for pre-task doc lookups. Works best with Context7 and Fetch MCP servers installed (falls back to WebSearch/WebFetch if unavailable).",
   "author": {
     "name": "Some Pulp LLC",

@@ -1,5 +1,7 @@
 ---
-description: Research a library, framework, or technical topic
+name: research
+description: Research a library, framework, API, or technical topic using official documentation, GitHub code examples, and web sources.
+when_to_use: When the user asks to "research", "investigate", "compare", or "learn about" a library, framework, or technical concept.
 argument-hint: "<topic>"
 context: fork
 agent: research-assistant

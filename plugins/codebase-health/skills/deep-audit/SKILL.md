@@ -1,5 +1,7 @@
 ---
-description: Run a comprehensive deep audit by orchestrating specialist agents
+name: deep-audit
+description: Run a comprehensive deep audit by orchestrating specialist agents (security, performance, libraries, quality, dead code) into a single dated report.
+when_to_use: When the user explicitly asks for a "deep audit", "full codebase audit", or "comprehensive code review". Resource-intensive — never run it for a quick diff review.
 argument-hint: "[aspects] [sequential]"
 allowed-tools:
   - Bash("${CLAUDE_PLUGIN_ROOT}/scripts/dead-code-detect.sh" *)
@@ -17,11 +19,12 @@ disable-model-invocation: true
 hooks:
   Stop:
     - hooks:
-        - type: prompt
+        - type: agent
+          timeout: 120
           prompt: >-
             Hook input: $ARGUMENTS. If stop_hook_active is true in the input,
-            respond {"ok": true} immediately. Otherwise, check whether a
-            code-audit-*.md report file was created during this audit; if it
+            respond {"ok": true} immediately. Otherwise, glob the project root
+            for a code-audit-*.md report file created during this audit; if one
             exists respond {"ok": true}, if the audit ran but no report was
             saved respond {"ok": false, "reason": "The audit findings must be
             saved to code-audit-[timestamp].md before stopping"}.
