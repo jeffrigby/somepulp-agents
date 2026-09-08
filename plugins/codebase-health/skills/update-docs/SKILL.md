@@ -1,5 +1,7 @@
 ---
-description: Update and synchronize project documentation with recent code changes
+name: update-docs
+description: Update and synchronize project documentation — CLAUDE.md, README, CHANGELOG — with recent code changes.
+when_to_use: When the user asks to "update docs", "sync documentation with code", "optimize CLAUDE.md", or "document recent changes".
 argument-hint: "<scope> <since>"
 disable-model-invocation: true
 ---

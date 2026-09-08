@@ -2,7 +2,7 @@
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "codebase-health",
   "displayName": "Codebase Health",
-  "version": "2.2.0",
+  "version": "2.3.0",
   "description": "Codebase health tools: deep audits via orchestrated specialists (security, performance, libraries, quality, dead code) plus dead-code cleanup and documentation maintenance",
   "author": {
     "name": "Some Pulp LLC",

@@ -2,6 +2,16 @@
 
 This guide covers techniques for detecting when documentation is out of sync with code and methods for keeping them aligned.
 
+## Contents
+
+- Documentation Freshness Analysis
+- Change Detection Patterns
+- Cross-Document Consistency Checks
+- Documentation Update Triggers
+- Documentation Sync Workflow
+- Freshness Report Template
+- Automation Opportunities
+
 ## Documentation Freshness Analysis
 
 ### Timestamp Comparison

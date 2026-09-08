@@ -1,5 +1,7 @@
 ---
-description: Detect and clean up dead code (unused imports, exports, files, dependencies)
+name: dead-code
+description: Detect and clean up dead code — unused imports, exports, files, and dependencies — using knip or deadcode with agent verification to filter false positives.
+when_to_use: When the user asks to "find dead code", "remove unused code", "clean up unused imports/exports", or "check for unused dependencies".
 argument-hint: "<detect|cleanup>"
 ---
 

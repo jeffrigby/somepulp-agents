@@ -2,6 +2,20 @@
 
 This document provides a comprehensive, systematic approach to code quality auditing. Follow these phases for thorough analysis.
 
+## Contents
+
+- Phase 0: Pre-Analysis Setup
+- Phase 1: Discovery
+- Phase 2: File-by-File Analysis
+- Phase 3: Best Practices Verification
+- Phase 3.5: TypeScript Types Verification
+- Phase 4: Pattern Detection
+- Phase 5: Library Recommendations
+- Phase 6: Report Generation
+- Tool Usage Reference
+- Common Pitfalls to Avoid
+- Performance Optimization
+
 ## Phase 0: Pre-Analysis Setup
 
 Before analyzing code, establish the context:

@@ -120,7 +120,7 @@ Generate detailed report with:
 
 **Tools:**
 - JavaScript/TypeScript: `npx knip --reporter json`
-- Python: `deadcode . --dry`
+- Python: `deadcode .`
 
 **Important:** Always verify tool findings before reporting. Check for:
 - Dynamic imports (`import(variable)`)

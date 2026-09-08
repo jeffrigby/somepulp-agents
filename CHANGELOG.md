@@ -5,6 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.3.0] - 2026-09-08
+
+### Changed
+- **All plugins**: Migrated every slash command from `commands/*.md` to `skills/<name>/SKILL.md`. Custom commands have been merged into skills upstream — both forms create the same `/<name>` and behave identically — and the docs now direct new plugins to `skills/`. The `commands/` directories are gone; `/deep-audit`, `/dead-code`, `/update-docs`, `/research`, and `/official-docs` are unchanged for users. Each migrated file gained a `name` matching its directory and a `when_to_use` field.
+- **codebase-health 2.3.0**: `/deep-audit`'s Stop hook switched from `type: prompt` to `type: agent` with `timeout: 120`. The hook checks the filesystem for the `code-audit-*.md` report, which a prompt hook cannot see — it receives only the hook's JSON input. Agent hooks are marked experimental upstream.
+- **codebase-health 2.3.0**: Added a `## Contents` table of contents to all five skill reference files over 100 lines, per the Agent Skills best-practices guidance.
+- **CLAUDE.md**: Corrected three claims that the official docs contradict — the 1,536-character cap is the *skill listing* cap on `description` + `when_to_use` (subagent descriptions instead share a ~15,000-token budget); `Agent` is stripped from a subagent only at the nesting depth limit, and `tools` supports `Agent(type)`; the subagent tool filter does not apply to skills, which run in the main conversation unless they set `context: fork`. Also documented the skills-only structure, skill argument substitution, and demoted the "MCP names must be lowercase" rule to a house convention (the docs specify the `mcp__<server>__<tool>` shape, not the casing).
+
+### Fixed
+- **codebase-health 2.3.0**: `dead-code-methodology.md` documented `deadcode . --verbose`, which is not a deadcode flag; replaced with `--count`.
+- **codebase-health 2.3.0**: `code-auditing` SKILL.md listed `deadcode . --dry` as the *detection* command; detection is `deadcode .` (`--dry` previews fixes).
+
 ## [3.2.1] - 2026-07-04
 
 ### Fixed

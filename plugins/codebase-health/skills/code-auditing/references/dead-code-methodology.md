@@ -2,6 +2,16 @@
 
 This document provides guidance on detecting and removing dead code using automated tools and manual verification.
 
+## Contents
+
+- Overview
+- Types of Dead Code
+- Detection Tools
+- False Positive Detection
+- Workflow
+- Integration with Audits
+- Best Practices
+
 ## Overview
 
 Dead code is code that exists in the codebase but is never executed. It increases maintenance burden, bundle size, and cognitive load. This methodology uses specialized tools combined with agent verification to filter false positives.
@@ -104,8 +114,8 @@ pip install deadcode
 # Detection
 deadcode .
 
-# With verbose output
-deadcode . --verbose
+# Count only
+deadcode . --count
 
 # Fix automatically
 deadcode . --fix

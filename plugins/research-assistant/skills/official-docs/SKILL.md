@@ -1,5 +1,7 @@
 ---
-description: Fetch official documentation and code examples before starting a task
+name: official-docs
+description: Fetch official documentation and code examples for a library or API from authoritative sources only — Context7, official docs sites, official GitHub repos. Never blogs or forums.
+when_to_use: When the user says "get the docs for", "fetch official docs", "look up the documentation", or needs authoritative reference material before implementing something.
 argument-hint: "<topic>"
 context: fork
 agent: official-docs

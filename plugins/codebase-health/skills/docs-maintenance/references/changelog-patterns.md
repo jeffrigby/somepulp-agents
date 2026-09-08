@@ -2,6 +2,18 @@
 
 This guide covers the Keep a Changelog format and techniques for extracting changes from git history.
 
+## Contents
+
+- Keep a Changelog Format
+- Change Categories
+- Writing Good Changelog Entries
+- Extracting Changes from Git
+- Semantic Versioning Alignment
+- Changelog Entry Templates
+- Automating Changelog Updates
+- Common Mistakes to Avoid
+- Verification Checklist
+
 ## Keep a Changelog Format
 
 The standard format from [keepachangelog.com](https://keepachangelog.com):
