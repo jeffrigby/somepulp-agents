@@ -76,6 +76,7 @@ _Docs source:_ Context7 [list of libs queried]
 
 ### Library Health
 - [version drift, abandoned deps]
+- [If any major-version drift was found, end this section with: "Run `/update-deps` to analyze and apply the safe ones."]
 
 ### Notes
 - [tools/lookups that were unavailable, registries skipped, or anything the orchestrator should know — e.g., "Context7 unavailable; relied on local manifest only"]

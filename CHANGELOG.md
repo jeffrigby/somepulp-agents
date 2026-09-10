@@ -5,6 +5,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.4.0] - 2026-09-10
+
+### Added
+- **codebase-health 2.4.0**: New `/update-deps` skill — a two-pass dependency updater for JavaScript/TypeScript projects. It snapshots what's outdated first, launches a `major-upgrade-analyzer` subagent per pending major in parallel, then presents one plan covering both passes behind a single `AskUserQuestion` gate before writing anything — after which it applies the in-range updates and only the majors proven safe for this codebase. Taking the snapshot before any write is what lets the plan and report name exact `from → to` versions. Held-back majors are reported with a specific blocker and a rough migration cost, not a generic "may have breaking changes". A coupling-resolution pass runs before the plan: when several analyzers report exact peer pins on each other, the packages collapse into one group whose verdict is re-derived with the mutual-pin gate discounted, so a locked family is presented and applied as a single atomic change rather than N separate hold-backs. Modes: `minors-only`, `majors-only`, `dry-run`, `sequential`. `disable-model-invocation: true` — it mutates `package.json`.
+- **codebase-health 2.4.0**: New `major-upgrade-analyzer` agent. Given one package and a project brief, it gathers the breaking-change record (Context7 → `npm view` → the project's own changelog → web as a last resort), checks four hard gates (Node runtime floor, peer deps, ESM-only module format, TypeScript floor), then greps each documented breaking change against real call sites. Returns `safe`, `safe-with-edits` (≤ 5 files, each edit enumerated), or `wait`, plus a machine-readable `Coupled with` line naming any sibling pinned to an exact version (checked in both directions, since the installed sibling usually pins back). Confidence floor of 80, ties break toward `wait`.
+- **codebase-health 2.4.0**: New `scripts/dep-outdated.sh` helper. Detects the package manager (Corepack `packageManager` field → lockfile → npm) and emits one normalized JSON shape across npm, pnpm, and yarn, including the manager-appropriate `updateCommand`, `updateCommandTemplate`, and `majorInstallTemplate` so consumers never hardcode a manager's syntax. Read-only; requires `node` for normalization. Workspace owners are matched on both the package name and the directory basename, because npm identifies the root package in `dependent` by its directory, not its name. Packages whose versions can't be compared are reported as `upgrade: "unknown"` (rather than dropped) so the skill can surface them — the common cause is a missing `node_modules`, including yarn PnP.
+
+### Changed
+- **codebase-health 2.4.0**: `library-modernizer`'s Library Health section now ends with a `/update-deps` handoff when it finds major-version drift, mirroring the existing dead-code → `/dead-code cleanup` pattern. That agent reports drift as an audit finding; `/update-deps` applies the upgrades.
+- **CLAUDE.md**: Documented the dependency-update pattern — the two independent axes in `dep-outdated.sh` output (`upgrade`, the gap to `latest`; `inRangeUpdate`, what the declared range already permits) and why they overlap rather than partition, plus the yarn quirks the script absorbs (`yarn outdated` is NDJSON on classic and absent on berry, so npm's read-only resolver is used against `node_modules`; `yarn up '*'` crosses majors on berry, so its `updateCommand` is null).
+
+### Notes
+- Monorepos are supported rather than skipped: findings are attributed to the workspace that declared them, and upgrades target that workspace (`-w` / `--filter` / `yarn workspace`) instead of the root manifest.
+- `/update-deps` never commits and never auto-reverts. On a verification failure it reports the error and names the applied packages, leaving the working tree for the user to resolve.
+- Python, Rust, and Go ecosystems are out of scope for this release.
+
 ## [3.3.0] - 2026-09-08
 
 ### Changed
