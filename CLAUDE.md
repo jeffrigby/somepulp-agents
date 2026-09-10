@@ -74,8 +74,8 @@ The directory name is the slash command: `skills/deep-audit/SKILL.md` → `/deep
 
 Optional frontmatter used in this repo:
 - `argument-hint` - autocomplete hint for expected arguments
-- `disable-model-invocation: true` - user-invoked only, never auto-triggered (set on `/deep-audit` and `/update-docs`, whose auto-routing is handled by the `code-auditing` and `docs-maintenance` methodology skills instead)
-- `allowed-tools` - tools usable without a permission prompt while the skill is active (`/deep-audit`)
+- `disable-model-invocation: true` - user-invoked only, never auto-triggered (set on `/deep-audit`, `/update-docs`, and `/update-deps` — the first two have their auto-routing handled by the `code-auditing` and `docs-maintenance` methodology skills instead; `/update-deps` mutates `package.json`)
+- `allowed-tools` - tools usable without a permission prompt while the skill is active (`/deep-audit`, `/update-deps`)
 - `hooks` - lifecycle hooks registered while the skill is active. Use `type: agent` (not `type: prompt`) when the hook must inspect files or run commands; a prompt hook sees only the hook's JSON input. Both return `{"ok": true}` or `{"ok": false, "reason": "..."}`. Agent hooks are experimental.
 - `context: fork` + `agent: <agent-name>` - run the skill in a forked subagent context as the named agent (`/research`, `/official-docs`)
 
@@ -137,9 +137,39 @@ Specialists (peers; the command is the conductor):
 - `code-quality-reviewer` — smells, complexity, duplication, weak error handling
 - `dead-code-cleanup` — reused in detect-only mode (knip/deadcode + verification)
 
+`major-upgrade-analyzer` is a peer specialist too, but it belongs to `/update-deps`, not `/deep-audit`.
+
 Parallel by default (it's a batch report — no reason to wait). Pass `sequential` in `$ARGUMENTS` to fall back to one-at-a-time execution.
 
-Each specialist's `description` says "Used by the deep-audit orchestrator. Do not invoke directly." so they don't auto-trigger in normal conversations.
+Each specialist's `description` says "Used by the deep-audit orchestrator. Do not invoke directly." so they don't auto-trigger in normal conversations. `major-upgrade-analyzer` uses the same pattern, naming the update-deps orchestrator.
+
+### Dependency Updates
+`/update-deps` is an orchestrator skill for **JavaScript/TypeScript only** (npm, pnpm, yarn classic and berry). Two passes:
+
+1. Each pending major is analyzed by a parallel `major-upgrade-analyzer` subagent, which returns `safe` / `safe-with-edits` / `wait` for *that package against this codebase*.
+2. Coupled families (exact mutual peer pins, e.g. `vitest` + `@vitest/coverage-v8` + `@vitest/browser-playwright`) are collapsed into one group before the plan is built, and the group verdict is re-derived with the mutual-pin gate discounted — otherwise a locked family reports as N separate hold-backs that all say "can't move alone."
+3. In-range minor/patch updates via the detected manager's bulk command.
+
+The outdated snapshot is taken **before** anything is written, so the plan and the report can name exact `from → to` versions; both passes then go behind a single approval gate.
+
+One `AskUserQuestion` approval gate before anything is written; then apply, run `typecheck`/`build`/`test`, and **report failures without reverting** (the skill never commits and never rolls back — the user owns the dirty tree).
+
+`scripts/dep-outdated.sh` normalizes package-manager differences into one JSON shape. Two fields carry the decision and **they are independent, not a partition**:
+- `upgrade` — gap from installed to `latest` (`major` when the major differs, *or* when the major is 0 and the minor differs, since 0.x minors are breaking)
+- `inRangeUpdate` — whether the declared range already permits a move
+
+A package can be both, so `counts.inRangeUpdate + counts.major != counts.total`.
+
+Package-manager quirks the script absorbs:
+- **yarn** (classic and berry) — `yarn outdated` emits NDJSON on classic and doesn't exist on berry, so the script runs read-only `npm outdated --json` against the installed `node_modules` tree and reports `outdatedSource: "npm-fallback"`.
+- **yarn berry** — `updateCommand` is `null` because `yarn up '*'` resolves to latest and crosses majors. Use `updateCommandTemplate` (`yarn up '{name}@{range}'`) per package instead.
+- Consumers should use `updateCommand` / `updateCommandTemplate` / `majorInstallTemplate` from the script rather than hardcoding a manager's syntax.
+
+Monorepos are handled, not skipped. `npm outdated` at a workspace root reports the union across every workspace and names the owner in `dependent`, so the script reads every workspace manifest and resolves each finding back to the package that declared it. Each finding carries `dependents[]` (workspace + that workspace's range + section); `type` is the strictest section across consumers and `range` is null when workspaces disagree.
+
+Two traps this closes, both of which shipped as bugs before a real monorepo caught them:
+- Reading only the root manifest reports a workspace devDependency as a prod dependency.
+- A bare `npm install <pkg>@<ver>` at a workspace root adds the package to the **root** manifest as a new `dependencies` entry and leaves the owning workspace untouched. Use `workspaceFlagTemplate` (npm `-w {workspace}`, pnpm `--filter {workspace}`, yarn berry the `prefix:yarn workspace {workspace}` command prefix).
 
 ### Dead Code Detection
 - Uses `scripts/dead-code-detect.sh` helper for auto-detection

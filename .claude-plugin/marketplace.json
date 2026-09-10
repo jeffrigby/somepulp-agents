@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-marketplace.json",
   "name": "somepulp-agents",
-  "version": "3.3.0",
+  "version": "3.4.0",
   "renames": {
     "code-auditor": "codebase-health",
     "code-quality-auditor": "codebase-health",
@@ -9,7 +9,7 @@
     "gemini-consultant": "second-opinion",
     "second-opinion": null
   },
-  "description": "AI-powered developer assistants for code auditing, documentation maintenance, and library/API research",
+  "description": "AI-powered developer assistants for code auditing, dependency updates, documentation maintenance, and library/API research",
   "owner": {
     "name": "Some Pulp LLC",
     "email": "claude-plugin@somepulp.net"
@@ -19,7 +19,7 @@
       "name": "codebase-health",
       "displayName": "Codebase Health",
       "source": "./plugins/codebase-health",
-      "description": "Codebase health tools: /deep-audit, /dead-code, /update-docs for code quality and documentation maintenance",
+      "description": "Codebase health tools: /deep-audit, /dead-code, /update-deps, /update-docs for code quality, dependency freshness, and documentation maintenance",
       "category": "development"
     },
     {
